@@ -1,0 +1,25 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://blsf1a6ijxi4a"
+path="res://.godot/imported/counter_100.png-10e9d153b6eaa1e206f10a6d4acefb5b.fontdata"
+
+[deps]
+
+source_file="res://assets/game/combo/counter_100.png"
+dest_files=["res://.godot/imported/counter_100.png-10e9d153b6eaa1e206f10a6d4acefb5b.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("48-57")
+kerning_pairs=PackedStringArray()
+columns=10
+rows=1
+image_margin=Rect2i(0, 0, 0, 0)
+character_margin=Rect2i(0, 0, 0, 0)
+ascent=0
+descent=0
+fallbacks=[]
+compress=true
+scaling_mode=2

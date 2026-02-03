@@ -1,0 +1,7 @@
+[gd_resource type="FontVariation" format=3 uid="uid://d3smj1473uwcc"]
+
+[ext_resource type="FontFile" uid="uid://blsf1a6ijxi4a" path="res://assets/game/combo/counter_100.png" id="1_7eune"]
+
+[resource]
+base_font = ExtResource("1_7eune")
+spacing_glyph = -18

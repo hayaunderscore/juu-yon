@@ -1,0 +1,891 @@
+[gd_scene format=3 uid="uid://vxy0gpt3o0c8"]
+
+[ext_resource type="Script" uid="uid://djhrkoo8fyt6u" path="res://scripts/scenes/entry.gd" id="1_npjjd"]
+[ext_resource type="AudioStream" uid="uid://ld4puhi508db" path="res://assets/mus/entry.ogg" id="1_u4kja"]
+[ext_resource type="Texture2D" uid="uid://dhm3sgkuis5y3" path="res://assets/entry/curtain.png" id="2_u4kja"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="3_25ert"]
+[ext_resource type="Texture2D" uid="uid://cijkd1du6h6fa" path="res://assets/songselect/bg.png" id="3_a075a"]
+[ext_resource type="Texture2D" uid="uid://c0646iv5ugswm" path="res://assets/entry/hole.png" id="3_syqqh"]
+[ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="4_mi5g8"]
+[ext_resource type="Texture2D" uid="uid://dwkmkqv8lk4dv" path="res://assets/entry/hole_bottom.png" id="5_a075a"]
+[ext_resource type="SpriteFrames" uid="uid://bt0qubgkbthyc" path="res://assets/entry/entry_fan_p1.tres" id="6_frbhy"]
+[ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="7_syqqh"]
+[ext_resource type="Texture2D" uid="uid://bi7nkf1o7uoic" path="res://assets/entry/p1_banner.png" id="9_eaxmw"]
+[ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="9_npjjd"]
+[ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="10_frbhy"]
+[ext_resource type="AudioStream" uid="uid://do7um7dhugxta" path="res://assets/snd/entry/voice_player_entry.wav" id="12_a075a"]
+[ext_resource type="PackedScene" uid="uid://bg6jjlqnir6j0" path="res://scenes/objects/bumpin_panel.tscn" id="15_bfx6h"]
+[ext_resource type="Texture2D" uid="uid://cpo5uc7htwuml" path="res://assets/game/notes/kat.png" id="16_1vsll"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eaxmw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mi5g8"]
+atlas = ExtResource("7_syqqh")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="Animation" id="Animation_eaxmw"]
+resource_name = "Confirm"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BigDons/Player1/Taiko:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.4, 0.5, 0.75),
+"transitions": PackedFloat32Array(2, 3.482203, 0.5, 2, 1),
+"update": 0,
+"values": [Vector2(80, -56), Vector2(80, 0), Vector2(80, -192), Vector2(80, -200), Vector2(80, 596)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BigDons/Player1/Taiko/Chara:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.4, 0.75),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(-24, -248), Vector2(-24, -1476)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BigDons/Player1/Banner:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(2, 2, 1),
+"update": 0,
+"values": [Vector2(96, 120), Vector2(96, 104), Vector2(96, 216)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BigDons/Player1/Fan:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Close"]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BigDons/Player1/Fan:frame")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.53333336, 0.56666666, 0.6, 0.6333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 0, 1, 2, 3, 4]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BigDons/Player1/Fan:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [Vector2(248, -240), Vector2(248, -240), Vector2(248.00002, 520)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BumperP1:scale")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_npjjd"]
+resource_name = "Enter"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BigDons/Player1/Taiko:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.7),
+"transitions": PackedFloat32Array(0.5, 2, 1),
+"update": 0,
+"values": [Vector2(80, 496), Vector2(80, -80), Vector2(80, -56)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BigDons/Player1/Banner:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.5, 0.7),
+"transitions": PackedFloat32Array(1, 0.5, 2, 1),
+"update": 0,
+"values": [Vector2(96, 216), Vector2(96, 216), Vector2(96, 104), Vector2(96, 120)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BigDons/Player1/Taiko/Chara:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.25, 0.6, 0.8),
+"transitions": PackedFloat32Array(0.5, 2, 1),
+"update": 0,
+"values": [Vector2(-24, -248), Vector2(-24, -272), Vector2(-24, -248)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BigDons/Player1/Fan:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BigDons/Player1/Fan:frame")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.53333336, 0.5666667, 0.6, 0.6333334, 0.6666667, 0.70000005, 0.73333335, 0.7666667, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BigDons/Player1/Fan:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.5, 0.65, 0.8),
+"transitions": PackedFloat32Array(0.5, 2, 1),
+"update": 0,
+"values": [Vector2(248, -240), Vector2(248, -288), Vector2(248, -240)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BumperP1:scale")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_a075a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BigDons/Player1/Taiko:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(80, 496)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BigDons/Player1/Taiko/Chara:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-24, -248)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BigDons/Player1/Banner:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(88, 216)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BigDons/Player1/Fan:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BigDons/Player1/Fan:frame")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BigDons/Player1/Fan:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Open"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BigDons/Player1/Fan:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(248, -240)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BumperP1:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eaxmw"]
+_data = {
+&"Confirm": SubResource("Animation_eaxmw"),
+&"Enter": SubResource("Animation_npjjd"),
+&"RESET": SubResource("Animation_a075a")
+}
+
+[sub_resource type="Animation" id="Animation_frbhy"]
+resource_name = "MoveCurtain"
+length = 1.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BigDons:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 720)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BigDons/Player1/Taiko/Chara:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BigDons/Player2/Taiko/Chara:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Curtain:region_rect")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.6),
+"transitions": PackedFloat32Array(0, 0, 0, 0, 0, 0, 1),
+"update": 0,
+"values": [Rect2(0, 0, 240, 720), Rect2(240, 0, 240, 720), Rect2(480, 0, 240, 720), Rect2(720, 0, 240, 720), Rect2(960, 0, 240, 720), Rect2(1200, 0, 240, 720), Rect2(1440, 0, 240, 720)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Curtain:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.6, 1),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [Vector2(-24, 0), Vector2(-24, 0), Vector2(960, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BannerTop:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.73333335, 1.25),
+"transitions": PackedFloat32Array(2, 1, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -104), Vector2(0, -104), Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BannerTop/TaikoText:text")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": ["Player Entry", "Song Select"]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BannerTop/TaikoText:first_outline_color")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(0, 1),
+"update": 0,
+"values": [Color(0.972549, 0.28235295, 0.15686275, 1), Color(0.99215686, 0.3529412, 0.078431375, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("BumperP2/Panel:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 1e-05)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("BumperP1/Panel:scale")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(0.13869601, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_bfx6h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BigDons:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BigDons/Player1/Taiko/Chara:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BigDons/Player2/Taiko/Chara:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Curtain:region_rect")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(0, 0, 240, 720)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Curtain:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-24, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BannerTop:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BannerTop/TaikoText:text")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["Player Entry"]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BannerTop/TaikoText:first_outline_color")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.972549, 0.28235295, 0.15686275, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("BumperP2/Panel:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("BumperP1/Panel:scale")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1vsll"]
+_data = {
+&"MoveCurtain": SubResource("Animation_frbhy"),
+&"RESET": SubResource("Animation_bfx6h")
+}
+
+[node name="Control" type="Control" unique_id=434649083]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_npjjd")
+
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=1876473365]
+stream = ExtResource("1_u4kja")
+autoplay = true
+bus = &"Music"
+
+[node name="Background" type="TextureRect" parent="." unique_id=707491871]
+z_index = -5
+material = SubResource("ShaderMaterial_eaxmw")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(480, 360)
+texture = ExtResource("3_a075a")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Curtain" type="Sprite2D" parent="." unique_id=404059248]
+z_index = -2
+position = Vector2(-24, 0)
+texture = ExtResource("2_u4kja")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 240, 720)
+metadata/_edit_group_ = true
+
+[node name="ColorRect" type="ColorRect" parent="Curtain" unique_id=14311362]
+anchors_preset = -1
+anchor_right = 4.1000004
+anchor_bottom = 1.0
+offset_left = 240.0
+offset_right = -0.00012207031
+color = Color(0.65882355, 0.08235294, 0, 1)
+
+[node name="BigDons" type="Control" parent="." unique_id=1971947327]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -0.00024414063
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1" type="TextureRect" parent="BigDons" unique_id=430556171]
+layout_mode = 0
+offset_top = 384.0
+offset_right = 480.0
+offset_bottom = 660.0
+texture = ExtResource("3_syqqh")
+
+[node name="Fan" type="AnimatedSprite2D" parent="BigDons/Player1" unique_id=1714402911]
+visible = false
+position = Vector2(248, -240)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("6_frbhy")
+animation = &"Open"
+
+[node name="Taiko" type="TextureRect" parent="BigDons/Player1" unique_id=1245770324]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 496.0
+offset_right = 405.0
+offset_bottom = 869.00055
+texture = ExtResource("4_mi5g8")
+metadata/_edit_group_ = true
+
+[node name="Chara" type="TextureRect" parent="BigDons/Player1/Taiko" unique_id=1717131247]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -248.0
+offset_right = 232.0
+offset_bottom = 8.0
+scale = Vector2(1.5, 1.5)
+texture = SubResource("AtlasTexture_mi5g8")
+
+[node name="HoleBottom" type="TextureRect" parent="BigDons/Player1" unique_id=803144163]
+layout_mode = 0
+offset_top = 72.0
+offset_right = 480.0
+offset_bottom = 276.0
+texture = ExtResource("5_a075a")
+
+[node name="Banner" type="TextureRect" parent="BigDons/Player1" unique_id=1182704698]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 216.0
+offset_right = 382.0
+offset_bottom = 336.0008
+texture = ExtResource("9_eaxmw")
+
+[node name="Player2" type="TextureRect" parent="BigDons" unique_id=1451118920]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 384.0
+offset_right = 960.0
+offset_bottom = 660.0
+texture = ExtResource("3_syqqh")
+
+[node name="Fan" type="AnimatedSprite2D" parent="BigDons/Player2" unique_id=950327381]
+visible = false
+position = Vector2(248, -240)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("6_frbhy")
+animation = &"Open"
+
+[node name="Taiko" type="TextureRect" parent="BigDons/Player2" unique_id=1949877569]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 496.0
+offset_right = 405.0
+offset_bottom = 869.0
+texture = ExtResource("4_mi5g8")
+
+[node name="Chara" type="TextureRect" parent="BigDons/Player2/Taiko" unique_id=2031578667]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -248.0
+offset_right = 232.0
+offset_bottom = 8.0
+scale = Vector2(1.5, 1.5)
+texture = SubResource("AtlasTexture_mi5g8")
+flip_h = true
+
+[node name="HoleBottom" type="TextureRect" parent="BigDons/Player2" unique_id=306306008]
+layout_mode = 0
+offset_top = 72.0
+offset_right = 480.0
+offset_bottom = 276.0
+texture = ExtResource("5_a075a")
+
+[node name="Banner" type="TextureRect" parent="BigDons/Player2" unique_id=1939001708]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 216.0
+offset_right = 382.0
+offset_bottom = 336.0
+texture = ExtResource("9_eaxmw")
+
+[node name="BannerTop" type="ColorRect" parent="." unique_id=487658281]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.056
+offset_bottom = -0.31999207
+color = Color(0.10747974, 0.10747973, 0.107479684, 1)
+
+[node name="TaikoText" type="Control" parent="BannerTop" unique_id=1664750206]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 240.0
+offset_bottom = 88.0
+script = ExtResource("9_npjjd")
+font = ExtResource("3_25ert")
+text = "Player Entry"
+first_outline_color = Color(0.972549, 0.28235295, 0.15686275, 1)
+second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
+text_size = 48
+first_outline_size = 32
+second_outline_size = 48
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="ControlBanner" type="ColorRect" parent="." unique_id=1433032761]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 1)
+
+[node name="Player1" type="ColorRect" parent="ControlBanner" unique_id=658503061]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.056
+anchor_right = 0.49600002
+anchor_bottom = 1.0
+offset_top = -0.064003944
+offset_right = -0.16003418
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.49019608, 0.16078432, 0.15686275, 1)
+
+[node name="TaikoP1" parent="ControlBanner/Player1" unique_id=436386889 instance=ExtResource("10_frbhy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 224.0
+offset_top = -38.656006
+offset_right = 416.0
+offset_bottom = 153.344
+
+[node name="ControlLabelP1" type="Label" parent="ControlBanner/Player1" unique_id=1091021461]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("3_25ert")
+theme_override_font_sizes/font_size = 32
+text = "Hit P1 Taiko to Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player2" type="ColorRect" parent="ControlBanner" unique_id=699599950]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.504
+anchor_top = 0.056
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.16000366
+offset_top = -0.06400013
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.16862746, 0.32156864, 0.3764706, 1)
+
+[node name="TaikoP2" parent="ControlBanner/Player2" unique_id=1385810792 instance=ExtResource("10_frbhy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 52.0
+offset_top = -30.656006
+offset_right = 244.0
+offset_bottom = 161.344
+
+[node name="ControlLabelP2" type="Label" parent="ControlBanner/Player2" unique_id=1087352628]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("3_25ert")
+theme_override_font_sizes/font_size = 32
+text = "Hit P2 Taiko to Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player1Anim" type="AnimationPlayer" parent="." unique_id=511577530]
+libraries/ = SubResource("AnimationLibrary_eaxmw")
+
+[node name="GlobalAnims" type="AnimationPlayer" parent="." unique_id=1233940771]
+libraries/ = SubResource("AnimationLibrary_1vsll")
+
+[node name="Timer" type="Timer" parent="." unique_id=1314765379]
+one_shot = true
+
+[node name="Voice" type="AudioStreamPlayer" parent="." unique_id=622764686]
+stream = ExtResource("12_a075a")
+volume_db = 5.81
+bus = &"Sound"
+
+[node name="BumperP1" type="Control" parent="." unique_id=431660677]
+layout_mode = 1
+anchor_left = 0.4
+anchor_top = 0.48900002
+anchor_right = 0.79200006
+anchor_bottom = 0.72200006
+offset_left = -336.0
+offset_top = -160.08002
+offset_right = -320.32007
+offset_bottom = -159.84003
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(192, 82)
+metadata/_edit_group_ = true
+
+[node name="Panel" parent="BumperP1" unique_id=625071510 instance=ExtResource("15_bfx6h")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(196, 84.000015)
+
+[node name="BumperP2" type="Control" parent="." unique_id=575731052]
+layout_mode = 1
+anchor_left = 0.4
+anchor_top = 0.48900002
+anchor_right = 0.79200006
+anchor_bottom = 0.72200006
+offset_left = 144.0
+offset_top = -168.08002
+offset_right = 159.67993
+offset_bottom = -167.84003
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(192, 82)
+metadata/_edit_group_ = true
+
+[node name="Panel" parent="BumperP2" unique_id=123753076 instance=ExtResource("15_bfx6h")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(196, 84.000015)
+note_texture = ExtResource("16_1vsll")
+color = Color(0.4117647, 0.7490196, 0.7529412, 1)
+text = "Hit P2 Taiko
+to Start"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

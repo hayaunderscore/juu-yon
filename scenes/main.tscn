@@ -1,0 +1,226 @@
+[gd_scene format=3 uid="uid://b4ghiedy6q5i"]
+
+[ext_resource type="Script" uid="uid://ceb4j17lee54m" path="res://scripts/scenes/main.gd" id="1_o5qli"]
+[ext_resource type="FontFile" uid="uid://brdppdgm2mx56" path="res://assets/fonts/DomCasualD.ttf" id="2_eb6dy"]
+[ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
+[ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
+[ext_resource type="Texture2D" uid="uid://dy1pcpkiy7qeo" path="res://assets/game/taiko/taiko.svg" id="5_trceg"]
+[ext_resource type="Texture2D" uid="uid://bghl26fhmb1sp" path="res://assets/game/taiko/kat.svg" id="7_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://dsccsct76o452" path="res://assets/game/taiko/don.svg" id="8_trceg"]
+[ext_resource type="Texture2D" uid="uid://b1w8cy2l6dj4f" path="res://assets/game/lane/lane.png" id="10_a8y0u"]
+[ext_resource type="Script" uid="uid://c6ihd62tvky4e" path="res://scripts/obj/taiko_number.gd" id="10_jkv2x"]
+[ext_resource type="Texture2D" uid="uid://bcfj0snnteyw7" path="res://assets/game/combo/taiko/counter_100.png" id="11_jkv2x"]
+[ext_resource type="Texture2D" uid="uid://d1oi5rdfqby8" path="res://assets/game/lane/judge.png" id="11_trceg"]
+[ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
+
+[sub_resource type="Gradient" id="Gradient_trceg"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.14482759, 0.6689655, 1)
+colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_a8y0u"]
+gradient = SubResource("Gradient_trceg")
+
+[sub_resource type="Gradient" id="Gradient_o6xl0"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tipki"]
+gradient = SubResource("Gradient_o6xl0")
+
+[sub_resource type="Gradient" id="Gradient_choun"]
+interpolation_mode = 2
+colors = PackedColorArray(9.433627e-06, 0.69255006, 0.99156994, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ya4ey"]
+gradient = SubResource("Gradient_choun")
+
+[node name="Main" type="Control" unique_id=481630010]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_o5qli")
+metadata/_edit_use_anchors_ = true
+
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=2006869510]
+bus = &"Music"
+
+[node name="TimeLeft" type="Label" parent="." unique_id=1345153710]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 144.0
+offset_right = 264.0
+offset_bottom = 186.0
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_eb6dy")
+theme_override_font_sizes/font_size = 32
+text = "fuck"
+
+[node name="Beat" type="Label" parent="." unique_id=1276363920]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 104.0
+offset_right = 264.0
+offset_bottom = 146.0
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_eb6dy")
+theme_override_font_sizes/font_size = 32
+text = "fuck"
+
+[node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
+layout_mode = 0
+offset_top = 168.0
+offset_right = 192.0
+offset_bottom = 360.0
+texture = ExtResource("3_85g3d")
+metadata/_edit_group_ = true
+
+[node name="SongBorder" type="ColorRect" parent="TaikoArea" unique_id=393156074]
+unique_name_in_owner = true
+z_index = -1
+layout_mode = 1
+offset_top = 176.0
+offset_right = 960.0
+offset_bottom = 216.0
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/SongBorder" unique_id=356770363]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 6
+
+[node name="SongTitle" type="Label" parent="TaikoArea/SongBorder/MarginContainer" unique_id=620570811]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 28
+text = "fuck"
+horizontal_alignment = 2
+
+[node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up")]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_trceg")
+script = ExtResource("4_85g3d")
+don_light_up = NodePath("../Lane/DonGradient")
+kat_light_up = NodePath("../Lane/KatGradient")
+
+[node name="Kat_0" type="TextureRect" parent="TaikoArea/Taiko" unique_id=313047216]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("7_a8y0u")
+
+[node name="Kat_1" type="TextureRect" parent="TaikoArea/Taiko" unique_id=1682605327]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("7_a8y0u")
+flip_h = true
+
+[node name="Don_0" type="TextureRect" parent="TaikoArea/Taiko" unique_id=1451286300]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("8_trceg")
+
+[node name="Don_1" type="TextureRect" parent="TaikoArea/Taiko" unique_id=333110557]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("8_trceg")
+flip_h = true
+
+[node name="ComboText" type="Control" parent="TaikoArea/Taiko" unique_id=592098379]
+visible = false
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 0.54200006
+offset_top = 8.0
+offset_bottom = -0.06401062
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(96, 92)
+script = ExtResource("10_jkv2x")
+font = ExtResource("11_jkv2x")
+font_size = Vector2i(60, 60)
+glyph_offset = -16.0
+scaling_pivot = Vector2(30, 60)
+scaling_add = Vector2(0, 0.2)
+letters_scale = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+
+[node name="Lane" type="TextureRect" parent="TaikoArea" unique_id=252513849]
+z_index = -1
+layout_mode = 0
+offset_left = 178.0
+offset_top = 18.0
+offset_right = 960.0
+offset_bottom = 177.0
+texture = ExtResource("10_a8y0u")
+expand_mode = 1
+
+[node name="GogoGradient" type="TextureRect" parent="TaikoArea/Lane" unique_id=343743430]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 3.0
+offset_top = 4.999996
+offset_right = 798.0
+offset_bottom = 117.0
+scale = Vector2(1, 1e-05)
+pivot_offset = Vector2(0, 56)
+texture = SubResource("GradientTexture2D_a8y0u")
+
+[node name="DonGradient" type="TextureRect" parent="TaikoArea/Lane" unique_id=1259622862]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 798.0
+offset_bottom = 117.0
+texture = SubResource("GradientTexture2D_tipki")
+
+[node name="KatGradient" type="TextureRect" parent="TaikoArea/Lane" unique_id=712480539]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 798.0
+offset_bottom = 117.0
+texture = SubResource("GradientTexture2D_ya4ey")
+
+[node name="Judge" type="TextureRect" parent="TaikoArea/Lane" unique_id=330562658]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 14.0
+offset_right = 107.0
+offset_bottom = 110.0
+texture = ExtResource("11_trceg")
+
+[node name="NoteDrawer" type="Node2D" parent="TaikoArea/Lane/Judge" unique_id=999984305 node_paths=PackedStringArray("lane_texture")]
+position = Vector2(48, 48)
+script = ExtResource("11_ya4ey")
+lane_texture = NodePath("../..")
+
+[node name="Timer" type="Timer" parent="." unique_id=1631690980]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

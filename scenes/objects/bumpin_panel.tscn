@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://bg6jjlqnir6j0"]
+
+[ext_resource type="Script" uid="uid://cp1bxm8kwoa6k" path="res://scripts/scenes/entry/bumpin_panel.gd" id="1_36w4m"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_2lnqr"]
+[ext_resource type="Texture2D" uid="uid://dvdlb0niy4pjj" path="res://assets/game/notes/don.png" id="3_fqa84"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlh76"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mis08"]
+bg_color = Color(0.972549, 0.28235295, 0.15686275, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="Animation" id="Animation_h7bxu"]
+resource_name = "Bump"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(0.5, 2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -24), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5xesb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_004xe"]
+_data = {
+&"Bump": SubResource("Animation_h7bxu"),
+&"RESET": SubResource("Animation_5xesb")
+}
+
+[node name="Panel" type="Panel" unique_id=625071510]
+anchors_preset = -1
+anchor_right = 0.4
+anchor_bottom = 0.21100001
+offset_bottom = 24.079987
+theme_override_styles/panel = SubResource("StyleBoxFlat_dlh76")
+script = ExtResource("1_36w4m")
+color = Color(0.972549, 0.28235295, 0.15686275, 1)
+text = "Hit P1 Taiko
+to Start"
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1761987343]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=310646645]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mis08")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer" unique_id=1284478500]
+layout_mode = 2
+theme_override_constants/margin_top = 40
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer" unique_id=475197917]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_2lnqr")
+theme_override_font_sizes/font_size = 42
+text = "Hit P1 Taiko
+to Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1442342194]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -72.0
+offset_top = -72.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("3_fqa84")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2052237697]
+libraries/ = SubResource("AnimationLibrary_004xe")

@@ -1,0 +1,11 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://f368l2w6q21b"]
+
+[ext_resource type="Texture2D" uid="uid://j42hkortckhh" path="res://assets/songselect/bar_small.png" id="1_76gry"]
+
+[resource]
+texture = ExtResource("1_76gry")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+modulate_color = Color(1.6907797, 1.0773606, 0.5406189, 1)

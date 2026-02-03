@@ -1,0 +1,273 @@
+[gd_scene format=3 uid="uid://ce6lxrt1keyai"]
+
+[ext_resource type="Texture2D" uid="uid://dy1pcpkiy7qeo" path="res://assets/game/taiko/taiko.svg" id="1_ocdxv"]
+[ext_resource type="Script" uid="uid://cb34kd2i5lfv7" path="res://scripts/obj/select_taiko.gd" id="2_cqakd"]
+[ext_resource type="Texture2D" uid="uid://pplho6h1h26x" path="res://assets/songselect/kat_hit.svg" id="3_hxw5w"]
+[ext_resource type="Texture2D" uid="uid://cva4qhr43shkh" path="res://assets/songselect/don_hit.svg" id="4_ei5th"]
+[ext_resource type="Texture2D" uid="uid://bghl26fhmb1sp" path="res://assets/game/taiko/kat.svg" id="5_hxw5w"]
+[ext_resource type="Texture2D" uid="uid://dsccsct76o452" path="res://assets/game/taiko/don.svg" id="6_ei5th"]
+[ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="7_ei5th"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="8_1ru0b"]
+
+[sub_resource type="Animation" id="Animation_hxw5w"]
+resource_name = "Default"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fade/KatLeft:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fade/KatRight:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Fade/DonLeft:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Fade/DonRight:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ei5th"]
+resource_name = "DefaultDonOnly"
+
+[sub_resource type="Animation" id="Animation_1ru0b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fade/KatLeft:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fade/KatRight:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Fade/DonLeft:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Fade/DonRight:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m8ip1"]
+_data = {
+&"Default": SubResource("Animation_hxw5w"),
+&"DefaultDonOnly": SubResource("Animation_ei5th"),
+&"RESET": SubResource("Animation_1ru0b")
+}
+
+[node name="TaikoP1" type="TextureRect" unique_id=436386889]
+z_index = 1
+anchors_preset = -1
+anchor_right = 0.2
+anchor_bottom = 0.26700002
+offset_bottom = -0.24002075
+texture = ExtResource("1_ocdxv")
+script = ExtResource("2_cqakd")
+metadata/_custom_type_script = "uid://cb34kd2i5lfv7"
+
+[node name="KatLeft" type="TextureRect" parent="." unique_id=1548233603]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_hxw5w")
+
+[node name="KatRight" type="TextureRect" parent="." unique_id=2037886699]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 192.0
+texture = ExtResource("3_hxw5w")
+flip_h = true
+
+[node name="DonLeft" type="TextureRect" parent="." unique_id=1846148249]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_ei5th")
+
+[node name="DonRight" type="TextureRect" parent="." unique_id=743444238]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 192.0
+texture = ExtResource("4_ei5th")
+flip_h = true
+
+[node name="Label" type="Label" parent="." unique_id=578767320]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Fade" type="Control" parent="." unique_id=1621458152]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="KatLeft" type="TextureRect" parent="Fade" unique_id=25792463]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_hxw5w")
+
+[node name="KatRight" type="TextureRect" parent="Fade" unique_id=1958246368]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 192.0
+texture = ExtResource("5_hxw5w")
+flip_h = true
+
+[node name="DonLeft" type="TextureRect" parent="Fade" unique_id=1134200516]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_ei5th")
+
+[node name="DonRight" type="TextureRect" parent="Fade" unique_id=523297484]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 192.0
+texture = ExtResource("6_ei5th")
+flip_h = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=27429903]
+libraries/ = SubResource("AnimationLibrary_m8ip1")
+
+[node name="Timer" type="Timer" parent="." unique_id=1465262922]
+wait_time = 0.35
+one_shot = true
+
+[node name="ControlLabels" type="Control" parent="." unique_id=314886027]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Decide" type="Control" parent="ControlLabels" unique_id=701907842]
+anchors_preset = 0
+offset_top = 32.0
+offset_right = 192.0
+offset_bottom = 104.0
+script = ExtResource("7_ei5th")
+font = ExtResource("8_1ru0b")
+text = "決定"
+alignment = 1
+first_outline_color = Color(0.9411765, 0.08627451, 0.03137255, 1)
+second_outline_color = Color(0.2627451, 0.03137255, 0.003921569, 1)
+text_size = 36
+first_outline_size = 24
+second_outline_size = 36
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="Left" type="Control" parent="ControlLabels" unique_id=1325146876]
+anchors_preset = 0
+offset_left = 168.0
+offset_top = 48.0
+offset_right = 232.0
+offset_bottom = 112.0
+script = ExtResource("7_ei5th")
+font = ExtResource("8_1ru0b")
+text = "右"
+alignment = 1
+first_outline_color = Color(0.25490198, 0.49019608, 0.6784314, 1)
+second_outline_color = Color(0.0627451, 0.08235294, 0.23137255, 1)
+text_size = 36
+first_outline_size = 24
+second_outline_size = 36
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="Right" type="Control" parent="ControlLabels" unique_id=790079132]
+anchors_preset = 0
+offset_left = -40.0
+offset_top = 48.0
+offset_right = 24.0
+offset_bottom = 112.0
+script = ExtResource("7_ei5th")
+font = ExtResource("8_1ru0b")
+text = "左"
+alignment = 1
+first_outline_color = Color(0.25490198, 0.49019608, 0.6784314, 1)
+second_outline_color = Color(0.0627451, 0.08235294, 0.23137255, 1)
+text_size = 36
+first_outline_size = 24
+second_outline_size = 36
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
