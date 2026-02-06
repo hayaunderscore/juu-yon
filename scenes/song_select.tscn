@@ -246,7 +246,7 @@ theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 16
 
-[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "visual_taiko", "background", "header_text", "anim")]
+[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "visual_taiko", "background", "header_text", "genre_text", "anim")]
 layout_mode = 2
 script = ExtResource("2_f7aea")
 padding = 48.0
@@ -256,6 +256,7 @@ voice = NodePath("../../Voice")
 visual_taiko = NodePath("../../ControlBanner/Player1/TaikoP1")
 background = NodePath("../../Parallax2D/Back")
 header_text = NodePath("../../BannerTop/TaikoText")
+genre_text = NodePath("../../BannerTop/TaikoText2")
 anim = NodePath("../../AnimationPlayer")
 
 [node name="BannerTop" type="ColorRect" parent="." unique_id=44728522]
@@ -270,17 +271,38 @@ color = Color(0.10747974, 0.10747973, 0.107479684, 1)
 [node name="TaikoText" type="Control" parent="BannerTop" unique_id=384038579]
 anchors_preset = 0
 offset_left = 32.0
-offset_top = 48.0
+offset_top = 40.0
 offset_right = 240.0
-offset_bottom = 88.0
+offset_bottom = 80.0
 script = ExtResource("5_vakh2")
 font = ExtResource("2_fi1wv")
 text = "Song Select"
 first_outline_color = Color(0.99215686, 0.3529412, 0.078431375, 1)
 second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
-text_size = 48
-first_outline_size = 32
-second_outline_size = 48
+text_size = 42
+first_outline_size = 28
+second_outline_size = 42
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="TaikoText2" type="Control" parent="BannerTop" unique_id=1604116234]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_top = 40.0
+offset_right = -32.0
+offset_bottom = 80.0
+grow_horizontal = 0
+script = ExtResource("5_vakh2")
+font = ExtResource("2_fi1wv")
+text = "Song Select"
+alignment = 2
+first_outline_color = Color(0.99215686, 0.3529412, 0.078431375, 1)
+second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
+text_size = 42
+first_outline_size = 28
+second_outline_size = 42
 metadata/_custom_type_script = "uid://bx3a6gprpnff0"
 
 [node name="ControlBanner" type="ColorRect" parent="." unique_id=293924262]
@@ -352,6 +374,8 @@ z_index = -2
 repeat_size = Vector2(1284, 0)
 autoscroll = Vector2(-48, 0)
 repeat_times = 2
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Back" type="Sprite2D" parent="Parallax2D" unique_id=1579990411]
 unique_name_in_owner = true

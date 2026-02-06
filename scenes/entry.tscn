@@ -634,17 +634,17 @@ color = Color(0.10747974, 0.10747973, 0.107479684, 1)
 [node name="TaikoText" type="Control" parent="BannerTop" unique_id=1664750206]
 anchors_preset = 0
 offset_left = 32.0
-offset_top = 48.0
+offset_top = 40.0
 offset_right = 240.0
-offset_bottom = 88.0
+offset_bottom = 80.0
 script = ExtResource("9_npjjd")
 font = ExtResource("3_25ert")
 text = "Player Entry"
 first_outline_color = Color(0.972549, 0.28235295, 0.15686275, 1)
 second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
-text_size = 48
-first_outline_size = 32
-second_outline_size = 48
+text_size = 42
+first_outline_size = 28
+second_outline_size = 42
 metadata/_custom_type_script = "uid://bx3a6gprpnff0"
 
 [node name="ControlBanner" type="ColorRect" parent="." unique_id=1433032761]

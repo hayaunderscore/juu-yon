@@ -8,6 +8,7 @@ extends Control
 @export var visual_taiko: SelectTaiko
 @export var background: Sprite2D
 @export var header_text: TaikoText
+@export var genre_text: TaikoText
 var visual_taiko_position: Vector2
 @export var anim: AnimationPlayer
 
@@ -66,6 +67,7 @@ func play_voice_line(voice_line: String):
 	voice.play()
 
 var box_stack: Array[TJAMeta]
+var box_prev_positions: PackedInt64Array
 var deep: int = 0
 var prev_box: TJAMeta
 var pref_box: TJAMeta
@@ -202,6 +204,7 @@ func box_select():
 	var box: TJAMeta = songs[selected_index].duplicate()
 	if box.back and box_stack.size() > 0:
 		box_stack.pop_back()
+		
 		if box_stack.size() == 0:
 			# Annoying fix
 			box.path = Configuration.get_section_key("game", "song_folder")
@@ -220,13 +223,12 @@ func box_select():
 	songs.clear()
 	if box.path != Configuration.get_section_key("game", "song_folder"):
 		songs.push_back(back)
+		
 	pref_box = box
 	if box.back:
 		pref_box = prev
 	find_tjas(box.path, true)
 	pref_box = null
-	selected_index = 0
-	smoothed_selected_index = 0
 	entry_retransition = false
 	entry_transition = 0
 	box_transition = 0
@@ -234,6 +236,14 @@ func box_select():
 	
 	if not box.back:
 		box_stack.push_back(box)
+		box_prev_positions.push_back(selected_index)
+		selected_index = 0
+		smoothed_selected_index = 0
+	else:
+		var idx: int = box_prev_positions[-1]
+		selected_index = idx
+		smoothed_selected_index = idx
+		box_prev_positions.remove_at(box_prev_positions.size() - 1)
 	
 	await get_tree().create_timer(0.3).timeout
 	
@@ -294,6 +304,9 @@ func _process(delta: float) -> void:
 	background.modulate = lerp(background.modulate, back_color, delta*6)
 	header_text.first_outline_color = header_color
 	header_text.first_outline_color.a = 1.0
+	genre_text.first_outline_color = header_text.first_outline_color
+	if song.box and not song.back:
+		genre_text.text = song.title_localized.get("ja", song.title)
 	
 	if entry_retransition:
 		entry_transition -= delta*3
