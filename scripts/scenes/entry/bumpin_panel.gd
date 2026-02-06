@@ -33,9 +33,16 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pivot_offset = size / 2.0
 
+var disabled: bool = false
 func disable():
+	if disabled: return
+	disabled = true
 	pivot_offset = size / 2.0
 	var tween: Tween = get_tree().create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(self, "scale:x", 2.0, 0.4).set_ease(Tween.EASE_IN)
-	tween.tween_property(self, "scale:y", 0, 0.4).set_ease(Tween.EASE_IN)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "scale:x", 2, 0.4)
+	tween.tween_property(self, "scale:y", 0, 0.4)
+	tween.set_trans(Tween.TRANS_SINE)
+	# tween.tween_property(self, "modulate:a", 0, 0.4)

@@ -36,6 +36,7 @@ Configuration="*uid://dc2ub4grkqx3y"
 
 window/size/viewport_width=960
 window/size/viewport_height=720
+window/stretch/aspect="keep_height"
 window/vsync/vsync_mode=0
 
 [input]

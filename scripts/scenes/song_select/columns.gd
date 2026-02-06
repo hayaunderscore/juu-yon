@@ -6,6 +6,8 @@ extends Control
 @export var music: AudioStreamPlayer
 @export var voice: AudioStreamPlayer
 @export var visual_taiko: SelectTaiko
+@export var background: Sprite2D
+@export var header_text: TaikoText
 var visual_taiko_position: Vector2
 @export var anim: AnimationPlayer
 
@@ -13,7 +15,7 @@ var visual_taiko_position: Vector2
 @onready var song_box_small: StyleBoxTexture = preload("res://assets/songselect/song_box_small.tres")
 @onready var folder_box: StyleBoxTexture = preload("res://assets/songselect/song_box.tres")
 @onready var box_selected: StyleBoxTexture = preload("res://assets/songselect/box_selected.tres")
-@onready var font: Font = preload("res://assets/fonts/Modified-DFPKanteiryu-XB.ttf")
+@onready var font: Font = preload("uid://cpafoyo5od38s")
 @onready var index_font: Font = preload("uid://cd45agtyt8161")
 @onready var box_index: StyleBoxFlat = preload("uid://bedug0hi2tv7y")
 @onready var box_difficulty: StyleBox = preload("uid://d2bbohpu08pon")
@@ -46,6 +48,7 @@ var songs: Array[TJAMeta]
 var selected_index: int = 0
 var box_transition: float = 0
 var box_out: bool = false
+var entry_retransition: bool = false
 var box_side_transition: float = 0
 var entry_transition: float = 0
 
@@ -62,9 +65,20 @@ func play_voice_line(voice_line: String):
 	voice.stream = voice_lines[voice_line]
 	voice.play()
 
-func find_tjas(path: String):
+var box_stack: Array[TJAMeta]
+var deep: int = 0
+var prev_box: TJAMeta
+var pref_box: TJAMeta
+
+func find_tjas(path: String, skip_box: bool = false):
 	var dir: DirAccess = DirAccess.open(path)
 	if dir:
+		if dir.file_exists("box.def") and not skip_box:
+			var box: TJAMeta = TJAMeta.load_from_file(path + "box.def")
+			box.set_style_box()
+			box.set_text()
+			songs.push_back(box)
+			return
 		var files: PackedStringArray = dir.get_directories()
 		files.append_array(dir.get_files())
 		for file in files:
@@ -73,7 +87,12 @@ func find_tjas(path: String):
 				find_tjas(npath)
 				continue
 			if file.get_extension() == "tja":
-				songs.push_back(TJAMeta.load_from_file(path + file))
+				var tja: TJAMeta = TJAMeta.load_from_file(path + file)
+				tja.set_text()
+				if pref_box:
+					tja.from_box = pref_box
+					tja.set_style_box()
+				songs.push_back(tja)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -88,6 +107,9 @@ func _ready() -> void:
 		OS.alert("No songs found!\nPlease check your song folder.")
 		get_tree().quit()
 		return
+	
+	if songs[0].box and songs[0].box_back_color:
+		background.modulate = songs[0].box_back_color
 	
 	queue_redraw()
 	
@@ -107,10 +129,10 @@ func _ready() -> void:
 func start_music():
 	if Engine.is_editor_hint(): return
 	var song: TJAMeta = songs[selected_index]
+	if song.box: return
 	if !song.wave and song.wave_path:
 		var header_value: String = song.wave_path
 		var ext: String = header_value.get_extension()
-		print(song.path + header_value)
 		match ext.to_lower():
 			"ogg": song.wave = AudioStreamOggVorbis.load_from_file(song.path + header_value)
 			"mp3": song.wave = AudioStreamMP3.load_from_file(song.path + header_value)
@@ -157,6 +179,7 @@ var selected_diff: int = 0
 var stupid_fucking_alpha_hack_i_will_remove_someday: bool = false
 
 func song_select_move_cursor(s: int = 1):
+	anim.stop()
 	anim.play("DonMove")
 	# SoundHandler.play_sound("ka.wav")
 	# visual_taiko.global_position.x += 8 * s
@@ -164,6 +187,59 @@ func song_select_move_cursor(s: int = 1):
 	ss_cursor_offset_y = 4
 	song_select_cursor = wrapi(song_select_cursor + s, 0, 1 + selected_chart.size())
 	selected_diff = song_select_cursor - 1
+
+func box_select():
+	visual_taiko.side_active = false
+	anim.play("DonSelect")
+	state = State.SONG_TO_DIFF
+	box_transition = 1.0
+	box_side_transition = 0.0
+	entry_transition = 3.0
+	entry_retransition = true
+	can_choose = false
+	await get_tree().create_timer(1).timeout
+	
+	var box: TJAMeta = songs[selected_index].duplicate()
+	if box.back and box_stack.size() > 0:
+		box_stack.pop_back()
+		if box_stack.size() == 0:
+			# Annoying fix
+			box.path = Configuration.get_section_key("game", "song_folder")
+	
+	var back: TJAMeta = TJAMeta.new()
+	var prev: TJAMeta = box_stack.back() if box_stack.size() > 0 else null
+	back.title = "Back"
+	back.box_back_color = Color.CHOCOLATE
+	back.box = true
+	back.set_style_box()
+	back.set_text()
+	back.back = true
+	back.from_box = prev if box.back else box
+	back.path = prev.path if prev and prev.box else Configuration.get_section_key("game", "song_folder")
+	
+	songs.clear()
+	if box.path != Configuration.get_section_key("game", "song_folder"):
+		songs.push_back(back)
+	pref_box = box
+	if box.back:
+		pref_box = prev
+	find_tjas(box.path, true)
+	pref_box = null
+	selected_index = 0
+	smoothed_selected_index = 0
+	entry_retransition = false
+	entry_transition = 0
+	box_transition = 0
+	state = State.SONG_SELECT
+	
+	if not box.back:
+		box_stack.push_back(box)
+	
+	await get_tree().create_timer(0.3).timeout
+	
+	can_choose = true
+	visual_taiko.side_active = true
+	timer.start()
 
 func song_select_to_diff_select():
 	visual_taiko.side_active = false
@@ -201,9 +277,28 @@ func diff_select_to_song_select():
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	
+	var song: TJAMeta = songs[selected_index]
+	
+	if target_box_size == box_open_size:
+		target_box_size = 480 if not song.box else 256
+	box_open_size = 480 if not song.box else 256
 	queue_redraw()
 	
-	entry_transition += delta*3
+	var back_color: Color = song.box_back_color
+	var header_color: Color = song.index_box.bg_color
+	if song.back or song.from_box: 
+		back_color = song.from_box.box_back_color
+		header_color = song.from_box.index_box.bg_color
+
+	background.modulate = lerp(background.modulate, back_color, delta*6)
+	header_text.first_outline_color = header_color
+	header_text.first_outline_color.a = 1.0
+	
+	if entry_retransition:
+		entry_transition -= delta*3
+	else:
+		entry_transition += delta*3
 	# entry_transition = minf(1.0, entry_transition)
 	
 	if not can_choose: 
@@ -218,10 +313,10 @@ func _process(delta: float) -> void:
 	# visual_taiko.global_position.y = move_toward(visual_taiko.global_position.y, visual_taiko_position.y, delta*64)
 	ss_cursor_offset_y = move_toward(ss_cursor_offset_y, 0, delta*24)
 	
-	if music.playing or state > State.SONG_SELECT: 
-		box_transition += delta*3
+	if music.playing or state > State.SONG_SELECT or (songs[selected_index].box and timer.is_stopped()): 
+		box_transition += delta*(6 if song.box else 3)
 	
-	if state == State.SONG_TO_DIFF:
+	if state == State.SONG_TO_DIFF and not songs[selected_index].box:
 		box_side_transition += delta * 2
 	if state == State.SONG_SELECT:
 		box_side_transition -= delta * 2
@@ -235,7 +330,7 @@ func _process(delta: float) -> void:
 		return
 	if box_out: 
 		visual_taiko.active = false
-		var speed: float = 6
+		var speed: float = 6 if not songs[selected_index].box else 16
 		box_transition -= delta*speed
 		if box_transition <= 0:
 			box_transition = 0
@@ -264,6 +359,9 @@ func _process(delta: float) -> void:
 	last_selected_index = selected_index
 
 	if Input.is_action_just_pressed("don_left") or Input.is_action_just_pressed("don_right"):
+		if songs[selected_index].box:
+			box_select()
+			return
 		if state == State.SONG_SELECT:
 			# SoundHandler.play_sound("dong.wav")
 			song_select_to_diff_select()
@@ -283,14 +381,16 @@ func ease_out_back(x: float):
 	return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2)
 
 func _draw() -> void:
+	if songs.size() == 0: return
+	
 	var x: float = 0
 	var bwidth: float = minf(target_box_size, lerpf(target_prev_box_size, target_box_size, box_transition))
-	x = (get_window().size.x / 2.0) - (bwidth / 2.0) - ((box_width + padding) * smoothed_selected_index) - ((8 - selected_index) * (box_width + padding))
+	x = (get_window().size.x / 2.0) - (bwidth / 2.0) - ((box_width + padding) * smoothed_selected_index) - ((5 - selected_index) * (box_width + padding))
 	
 	var trans: float = box_transition
 	draw_set_transform(Vector2.RIGHT * x)
-	var min_size: int = selected_index - 8
-	var max_size: int = selected_index + 8
+	var min_size: int = selected_index - 5
+	var max_size: int = selected_index + 5
 	for i in range(min_size, max_size):
 		var wrapped_i: int = wrapi(i, 0, songs.size())
 		var song: TJAMeta = songs[wrapped_i]
@@ -306,7 +406,7 @@ func _draw() -> void:
 		
 		var right: Vector2 = Vector2.RIGHT
 		if entry_transition < 16:
-			right.y = lerpf(480, 0, ease_out_back(minf(1.0, (entry_transition) - (i / 4.0 + 1.25))))
+			right.y = lerpf(480, 0, ease_out_back(minf(1.0, (entry_transition) - ((i - selected_index) / 4.0 + 1.25))))
 		if state >= State.DIFF_SELECT:
 			var t_ofs: float = 0.0
 			if state == State.DIFF_SELECT:
@@ -320,7 +420,7 @@ func _draw() -> void:
 		
 		# Main box
 		draw_set_transform(offset_x.call(x + box_ofs))
-		var box: StyleBox = song_box
+		var box: StyleBox = song.style_box
 		if i == selected_index: bsize.x = minf(target_box_size, lerpf(target_prev_box_size, target_box_size, trans))
 		draw_style_box(box, Rect2(Vector2.ZERO, bsize + (23*Vector2.ONE)))
 		if i == selected_index:
@@ -330,7 +430,7 @@ func _draw() -> void:
 			trans = 1.0
 		
 		# Song index
-		box = box_index
+		box = song.index_box
 		bsize.y = 30
 		var alpha: float = 1.0 - minf(1.0, box_side_transition)
 		if state == State.DIFF_SELECT:
@@ -356,7 +456,7 @@ func _draw() -> void:
 			draw_string(font, Vector2(48, 80), "Back", HORIZONTAL_ALIGNMENT_CENTER, -1, 24, bl, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		
 		# Difficulties
-		if i == selected_index:
+		if i == selected_index and not song.box:
 			var base_padding: float = 24
 			if state >= State.DIFF_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
 				base_padding = lerpf(24, 96, minf(1.0, box_transition))
@@ -419,36 +519,53 @@ func _draw() -> void:
 				diff_x += diff_padding + 24*2
 		
 		# Song title
-		var title: String = song.title_localized.get("ja", song.title)
 		var y: float = right.y + 24
 		if state >= State.DIFF_SELECT:
 			var t_ofs: float = 0.0
 			if state == State.DIFF_SELECT:
 				t_ofs = 1.0
 			y = lerpf(24, 0, minf(1.0, maxf(0.0, box_transition - t_ofs)))
-		var font_size: int = 28
-		var height: float = font.get_string_size(title, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size,TextServer.JUSTIFICATION_NONE,TextServer.DIRECTION_AUTO,TextServer.ORIENTATION_VERTICAL).y
-		var font_v_scale: float = minf(1.0, 424.0 / height)
-		var x_ofs: float = 48 + (bsize.x - box_width)
-		draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
-		draw_string_outline(font, Vector2.ZERO, title, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 18, Color.BLACK, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
-		draw_string(font, Vector2.ZERO, title, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
+		var height: float = 0 if not song.title_texture else song.title_texture.get_height()
+		var x_ofs: float = 36 + (bsize.x - box_width)
+		if song.box and i == selected_index:
+			x_ofs -= lerp(0, 28, minf(1.0, box_transition))
+		var outline_color: Color = Color.BLACK
+		if not song.back and song.from_box:
+			outline_color = song.from_box.box_fore_color
+		if song.box and not song.back:
+			outline_color = song.box_fore_color
+		if i == selected_index:
+			outline_color = Color.BLACK
+		if song.title_texture:
+			song.title_texture.outline_color = outline_color
+			# song.title_texture.scale.y = font_v_scale
+		draw_texture(song.title_texture, Vector2((x + box_ofs) + x_ofs, y))
+		
+		# Boxes may have descriptions
+		if song.box and i == selected_index:
+			x_ofs -= song.title_texture.get_width() + 14
+			for j in len(song.box_description):
+				var ccolor: Color = Color.WHITE
+				ccolor.a = minf(1, trans)
+				# draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
+				if song.box_description_texture[j]:
+					draw_texture(song.box_description_texture[j], Vector2((x + box_ofs) + x_ofs, y), ccolor)
+					x_ofs -= 32
 		
 		# Subtitle if applicable
 		var subtitle: String = song.subtitle.lstrip("--")
 		if subtitle.is_empty() or i != selected_index:
 			x += padding + bsize.x
 			continue
-		font_size = 22
-		x_ofs -= font_size + 16
-		height = font.get_string_size(subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size,TextServer.JUSTIFICATION_NONE,TextServer.DIRECTION_AUTO,TextServer.ORIENTATION_VERTICAL).y
+		x_ofs -= song.title_texture.get_width() + 16
+		height = song.subtitle_texture.get_height()
 		y += 48
-		font_v_scale = minf(1.0, 376.0 / height)
-		var outline_color: Color = Color.BLACK
 		var subtitle_color: Color = Color.WHITE
 		outline_color.a = minf(1, trans)
 		subtitle_color.a = minf(1, trans)
-		draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
-		draw_string_outline(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 18, outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
-		draw_string(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, subtitle_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
+		# song.subtitle_texture.scale.y = font_v_scale
+		# draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
+		draw_texture(song.subtitle_texture, Vector2((x + box_ofs) + x_ofs, y), subtitle_color)
+		#draw_string_outline(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 18, outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
+		#draw_string(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, subtitle_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		x += padding + bsize.x

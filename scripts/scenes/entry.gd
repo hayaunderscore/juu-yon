@@ -12,6 +12,10 @@ extends Control
 	%TaikoP1,
 	%TaikoP2
 ]
+@onready var bumpers: Array[BumpinPanel] = [
+	$BumperP1/Panel,
+	$BumperP2/Panel
+]
 
 var done: bool = false
 
@@ -37,9 +41,12 @@ func _process(delta: float) -> void:
 			anims[0].play("Enter")
 			taikos[0].show()
 			taikos[0].active = true
+			bumpers[0].disable()
 			$Voice.play()
 		else:
 			anims[0].play("Confirm")
+			for bumper in bumpers:
+				bumper.disable()
 			$Timer.start()
 			done = true
 		# SoundHandler.play_sound("dong.wav")

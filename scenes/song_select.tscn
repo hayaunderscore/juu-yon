@@ -1,16 +1,14 @@
 [gd_scene format=3 uid="uid://b8jopawilsvnu"]
 
 [ext_resource type="Script" uid="uid://dyibum6nuanjj" path="res://scripts/scenes/song_select/song_select.gd" id="1_insur"]
-[ext_resource type="Texture2D" uid="uid://cijkd1du6h6fa" path="res://assets/songselect/bg.png" id="1_kjvwo"]
 [ext_resource type="AudioStream" uid="uid://duxn4mg3d1s8e" path="res://assets/snd/songselect/voice_enter.ogg" id="2_a50jo"]
 [ext_resource type="Script" uid="uid://caji8nwd755xg" path="res://scripts/scenes/song_select/columns.gd" id="2_f7aea"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_fi1wv"]
 [ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="5_vakh2"]
 [ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="6_insur"]
+[ext_resource type="Texture2D" uid="uid://rqccl8a5tcbi" path="res://assets/songselect/back.png" id="9_a50jo"]
 [ext_resource type="Texture2D" uid="uid://cqa2b7hx02ile" path="res://assets/game/chara/default/combo.png" id="9_iw0ol"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="9_vakh2"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rtea6"]
 
 [sub_resource type="Animation" id="Animation_insur"]
 resource_name = "DonMove"
@@ -235,19 +233,6 @@ script = ExtResource("1_insur")
 [node name="Voice" type="AudioStreamPlayer" parent="." unique_id=1700448202]
 stream = ExtResource("2_a50jo")
 
-[node name="Background" type="TextureRect" parent="." unique_id=1161361206]
-material = SubResource("ShaderMaterial_rtea6")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(480, 360)
-texture = ExtResource("1_kjvwo")
-expand_mode = 3
-stretch_mode = 6
-
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=2119744865]
 layout_mode = 1
 anchors_preset = -1
@@ -261,7 +246,7 @@ theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 16
 
-[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "visual_taiko", "anim")]
+[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "visual_taiko", "background", "header_text", "anim")]
 layout_mode = 2
 script = ExtResource("2_f7aea")
 padding = 48.0
@@ -269,6 +254,8 @@ timer = NodePath("../../Timer")
 music = NodePath("../../Music")
 voice = NodePath("../../Voice")
 visual_taiko = NodePath("../../ControlBanner/Player1/TaikoP1")
+background = NodePath("../../Parallax2D/Back")
+header_text = NodePath("../../BannerTop/TaikoText")
 anim = NodePath("../../AnimationPlayer")
 
 [node name="BannerTop" type="ColorRect" parent="." unique_id=44728522]
@@ -359,3 +346,14 @@ one_shot = true
 wait_time = 0.5
 one_shot = true
 autostart = true
+
+[node name="Parallax2D" type="Parallax2D" parent="." unique_id=773154933]
+z_index = -2
+repeat_size = Vector2(1284, 0)
+autoscroll = Vector2(-48, 0)
+repeat_times = 2
+
+[node name="Back" type="Sprite2D" parent="Parallax2D" unique_id=1579990411]
+unique_name_in_owner = true
+texture = ExtResource("9_a50jo")
+centered = false
