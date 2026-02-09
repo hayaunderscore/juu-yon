@@ -1,15 +1,13 @@
 @tool
 extends Control
 
-@export var padding: float = 32
+@export var padding: float = 24
 @export var timer: Timer
 @export var music: AudioStreamPlayer
 @export var voice: AudioStreamPlayer
-@export var visual_taiko: SelectTaiko
 @export var background: Sprite2D
 @export var header_text: TaikoText
 @export var genre_text: TaikoText
-var visual_taiko_position: Vector2
 @export var anim: AnimationPlayer
 
 @onready var song_box: StyleBoxTexture = preload("res://assets/songselect/song_box.tres")
@@ -21,6 +19,7 @@ var visual_taiko_position: Vector2
 @onready var box_index: StyleBoxFlat = preload("uid://bedug0hi2tv7y")
 @onready var box_difficulty: StyleBox = preload("uid://d2bbohpu08pon")
 @onready var star_tex: Texture2D = preload("uid://diije4rcsic5f")
+@onready var box_highlight: StyleBox = preload("uid://bkaa0v40ceirc")
 
 @onready var cursors: Array[Texture2D] = [
 	preload("uid://b57gmo6jjosyi")
@@ -53,7 +52,15 @@ var entry_retransition: bool = false
 var box_side_transition: float = 0
 var entry_transition: float = 0
 
-var can_choose: bool = false
+var can_choose: bool = false:
+	set(value):
+		if value == can_choose: return
+		can_choose = value
+		if Globals and Globals.control_banner:
+			if value:
+				Globals.control_banner.activate()
+			else:
+				Globals.control_banner.deactivate()
 
 signal _box_done
 
@@ -80,6 +87,7 @@ func find_tjas(path: String, skip_box: bool = false):
 			box.set_style_box()
 			box.set_text()
 			songs.push_back(box)
+			Globals.log("COLUMNS", "Found box definition for folder %s" % [path])
 			return
 		var files: PackedStringArray = dir.get_directories()
 		files.append_array(dir.get_files())
@@ -94,13 +102,20 @@ func find_tjas(path: String, skip_box: bool = false):
 				if pref_box:
 					tja.from_box = pref_box
 					tja.set_style_box()
+				Globals.log("COLUMNS", "Found song definition with filename %s" % [file])
 				songs.push_back(tja)
+
+func _exit_tree() -> void:
+	Globals.control_banner.don_pressed.disconnect(don_pressed)
+	Globals.control_banner.kat_pressed.disconnect(kat_pressed)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	visual_taiko.active = false
-	visual_taiko_position = visual_taiko.global_position
+	Globals.control_banner.deactivate()
+	Globals.control_banner.activate_side()
+	Globals.control_banner.don_pressed.connect(don_pressed)
+	Globals.control_banner.kat_pressed.connect(kat_pressed)
 	for bvoice in ResourceLoader.list_directory("res://assets/snd/songselect/"):
 		voice_lines.set(bvoice.replace("voice_", "").get_basename(), load("res://assets/snd/songselect/" + bvoice))
 	find_tjas(Configuration.get_section_key("game", "song_folder"))
@@ -117,15 +132,10 @@ func _ready() -> void:
 	
 	timer.timeout.connect(start_music)
 	play_voice_line("enter")
-	anim.play("DonStart")
-	anim.advance(0)
-	
-	await anim.animation_finished
-	anim.play("RESET")
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.9).timeout
 	
 	can_choose = true
-	visual_taiko.active = true
+	Globals.control_banner.activate()
 	timer.start()
 
 func start_music():
@@ -140,15 +150,15 @@ func start_music():
 			"mp3": song.wave = AudioStreamMP3.load_from_file(song.path + header_value)
 			"wav": song.wave = AudioStreamWAV.load_from_file(song.path + header_value)
 			_: printerr("Unknown music file extension! (Must be vorbis (ogg), mp3 or wav)")
+		Globals.log("COLUMNS", "Loaded music file for %s" % [song.title])
 	music.stream = song.wave
 	music.play(song.demo_start)
 
 func select_song():
-	visual_taiko.side_active = false
+	Globals.control_banner.deactivate_side()
 	play_voice_line("start_song_1p")
 	var song: TJAMeta = songs[selected_index]
-	anim.play("SongTransition")
-	await anim.animation_finished
+	await get_tree().create_timer(0.7).timeout
 	SongLoadHandler.select_song(song, selected_diff)
 
 var selected: bool = false
@@ -159,19 +169,22 @@ var target_box_size: float = box_open_size
 var target_prev_box_size: float = box_width
 
 func move_cursor(s: int = 1):
-	anim.stop()
-	anim.play("DonMove")
-	# SoundHandler.play_sound("ka.wav")
-	# visual_taiko.global_position.x += 8 * s
-	# visual_taiko.global_position.y = visual_taiko_position.y + 8
 	music.stop()
 	if box_transition > 0:
 		box_transition = minf(box_transition, 1.0)
 		box_out = true
+		Globals.control_banner.deactivate()
 		await _box_done
+		Globals.control_banner.activate()
 	
 	box_transition = 0
 	selected_index = wrapi(selected_index + s, 0, songs.size())
+	# First to last
+	if last_selected_index == 0 and (selected_index == songs.size() - 1):
+		smoothed_selected_index = songs.size()
+	# Last to first
+	if selected_index == 0 and (last_selected_index == songs.size() - 1):
+		smoothed_selected_index = -1
 	timer.start()
 
 var song_select_cursor: int = 0
@@ -181,18 +194,12 @@ var selected_diff: int = 0
 var stupid_fucking_alpha_hack_i_will_remove_someday: bool = false
 
 func song_select_move_cursor(s: int = 1):
-	anim.stop()
-	anim.play("DonMove")
-	# SoundHandler.play_sound("ka.wav")
-	# visual_taiko.global_position.x += 8 * s
-	# visual_taiko.global_position.y = visual_taiko_position.y + 8
 	ss_cursor_offset_y = 4
 	song_select_cursor = wrapi(song_select_cursor + s, 0, 1 + selected_chart.size())
 	selected_diff = song_select_cursor - 1
 
 func box_select():
-	visual_taiko.side_active = false
-	anim.play("DonSelect")
+	Globals.control_banner.deactivate_side()
 	state = State.SONG_TO_DIFF
 	box_transition = 1.0
 	box_side_transition = 0.0
@@ -248,12 +255,12 @@ func box_select():
 	await get_tree().create_timer(0.3).timeout
 	
 	can_choose = true
-	visual_taiko.side_active = true
+	Globals.control_banner.activate_side()
 	timer.start()
 
 func song_select_to_diff_select():
-	visual_taiko.side_active = false
-	anim.play("DonSelect")
+	Globals.control_banner.deactivate()
+	Globals.control_banner.deactivate_side()
 	state = State.SONG_TO_DIFF
 	box_transition = 1.0
 	box_side_transition = 0.0
@@ -265,11 +272,12 @@ func song_select_to_diff_select():
 	selected_chart = songs[selected_index].chart_metadata
 	await get_tree().create_timer(0.25).timeout
 	play_voice_line("select_diff")
-	visual_taiko.side_active = true
+	Globals.control_banner.activate()
+	Globals.control_banner.activate_side()
 
 func diff_select_to_song_select():
-	visual_taiko.side_active = false
-	anim.play("DonSelect")
+	Globals.control_banner.deactivate()
+	Globals.control_banner.deactivate_side()
 	state = State.DIFF_TO_SONG
 	box_transition = 1.0
 	target_prev_box_size = box_open_size
@@ -283,7 +291,31 @@ func diff_select_to_song_select():
 	target_box_size = box_open_size
 	target_prev_box_size = box_width
 	stupid_fucking_alpha_hack_i_will_remove_someday = false
-	visual_taiko.side_active = true
+	Globals.control_banner.activate()
+	Globals.control_banner.activate_side()
+
+func don_pressed(_id):
+	if songs[selected_index].box:
+		box_select()
+		return
+	if state == State.SONG_SELECT:
+		# SoundHandler.play_sound("dong.wav")
+		song_select_to_diff_select()
+	elif state == State.DIFF_SELECT and song_select_cursor == 0 and box_transition >= 1.0:
+		SoundHandler.play_sound("cancel.wav")
+		diff_select_to_song_select()
+	elif state == State.DIFF_SELECT and box_transition >= 1.0:
+		# SoundHandler.play_sound("dong.wav")
+		selected = true
+		music.stop()
+		Globals.control_banner.deactivate()
+		select_song()
+
+func kat_pressed(_id, side):
+	if state == State.SONG_SELECT:
+		move_cursor(side)
+	elif state == State.DIFF_SELECT:
+		song_select_move_cursor(side)
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -315,15 +347,8 @@ func _process(delta: float) -> void:
 	# entry_transition = minf(1.0, entry_transition)
 	
 	if not can_choose: 
-		visual_taiko.active = false
 		return
 	
-	visual_taiko.active = true
-	if state == State.SONG_TO_DIFF or state == State.DIFF_TO_SONG:
-		visual_taiko.active = false
-	
-	# visual_taiko.global_position.x = move_toward(visual_taiko.global_position.x, visual_taiko_position.x, delta*32)
-	# visual_taiko.global_position.y = move_toward(visual_taiko.global_position.y, visual_taiko_position.y, delta*64)
 	ss_cursor_offset_y = move_toward(ss_cursor_offset_y, 0, delta*24)
 	
 	if music.playing or state > State.SONG_SELECT or (songs[selected_index].box and timer.is_stopped()): 
@@ -339,10 +364,8 @@ func _process(delta: float) -> void:
 		# smoothed_selected_index = move_toward(smoothed_selected_index, selected_index, delta*8)
 	
 	if selected: 
-		visual_taiko.active = false
 		return
 	if box_out: 
-		visual_taiko.active = false
 		var speed: float = 6 if not songs[selected_index].box else 16
 		box_transition -= delta*speed
 		if box_transition <= 0:
@@ -350,42 +373,8 @@ func _process(delta: float) -> void:
 			box_out = false
 			_box_done.emit()
 		return
-	
-	if state == State.SONG_SELECT:
-		if Input.is_action_just_pressed("kat_left"):
-			move_cursor(-1)
-		elif Input.is_action_just_pressed("kat_right"):
-			move_cursor(1)
-	elif state == State.DIFF_SELECT:
-		if Input.is_action_just_pressed("kat_left"):
-			song_select_move_cursor(-1)
-		elif Input.is_action_just_pressed("kat_right"):
-			song_select_move_cursor(1)
-	
-	# First to last
-	if last_selected_index == 0 and (selected_index == songs.size() - 1):
-		smoothed_selected_index = songs.size()
-	# Last to first
-	if selected_index == 0 and (last_selected_index == songs.size() - 1):
-		smoothed_selected_index = -1
 		
 	last_selected_index = selected_index
-
-	if Input.is_action_just_pressed("don_left") or Input.is_action_just_pressed("don_right"):
-		if songs[selected_index].box:
-			box_select()
-			return
-		if state == State.SONG_SELECT:
-			# SoundHandler.play_sound("dong.wav")
-			song_select_to_diff_select()
-		elif state == State.DIFF_SELECT and song_select_cursor == 0 and box_transition >= 1.0:
-			SoundHandler.play_sound("cancel.wav")
-			diff_select_to_song_select()
-		elif state == State.DIFF_SELECT and box_transition >= 1.0:
-			# SoundHandler.play_sound("dong.wav")
-			selected = true
-			music.stop()
-			select_song()
 
 func ease_out_back(x: float):
 	const c1 := 1.70158
@@ -398,7 +387,7 @@ func _draw() -> void:
 	
 	var x: float = 0
 	var bwidth: float = minf(target_box_size, lerpf(target_prev_box_size, target_box_size, box_transition))
-	x = (get_window().size.x / 2.0) - (bwidth / 2.0) - ((box_width + padding) * smoothed_selected_index) - ((5 - selected_index) * (box_width + padding))
+	x = (get_viewport_rect().size.x / 2.0) - (bwidth / 2.0) - ((box_width + padding) * smoothed_selected_index) - ((5 - selected_index) * (box_width + padding))
 	
 	var trans: float = box_transition
 	draw_set_transform(Vector2.RIGHT * x)
@@ -438,6 +427,8 @@ func _draw() -> void:
 		draw_style_box(box, Rect2(Vector2.ZERO, bsize + (23*Vector2.ONE)))
 		if i == selected_index:
 			draw_style_box(box_selected, Rect2(Vector2.ZERO, bsize))
+		else:
+			draw_style_box(box_highlight, Rect2(Vector2.ZERO, bsize))
 		
 		if state > State.SONG_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
 			trans = 1.0
@@ -539,7 +530,7 @@ func _draw() -> void:
 				t_ofs = 1.0
 			y = lerpf(24, 0, minf(1.0, maxf(0.0, box_transition - t_ofs)))
 		var height: float = 0 if not song.title_texture else song.title_texture.get_height()
-		var x_ofs: float = 36 + (bsize.x - box_width)
+		var x_ofs: float = 48 + (bsize.x - box_width)
 		if song.box and i == selected_index:
 			x_ofs -= lerp(0, 28, minf(1.0, box_transition))
 		var outline_color: Color = Color.BLACK
@@ -551,11 +542,10 @@ func _draw() -> void:
 			outline_color = Color.BLACK
 		if song.title_texture:
 			song.title_texture.outline_color = outline_color
-			# song.title_texture.scale.y = font_v_scale
-		draw_texture(song.title_texture, Vector2((x + box_ofs) + x_ofs, y))
+			draw_texture(song.title_texture, Vector2((x + box_ofs) + x_ofs - (song.title_texture.get_width() / 2), y))
 		
 		# Boxes may have descriptions
-		if song.box and i == selected_index:
+		if song.box and i == selected_index and song.title_texture:
 			x_ofs -= song.title_texture.get_width() + 14
 			for j in len(song.box_description):
 				var ccolor: Color = Color.WHITE
@@ -567,7 +557,7 @@ func _draw() -> void:
 		
 		# Subtitle if applicable
 		var subtitle: String = song.subtitle.lstrip("--")
-		if subtitle.is_empty() or i != selected_index:
+		if subtitle.is_empty() or i != selected_index or not song.subtitle_texture:
 			x += padding + bsize.x
 			continue
 		x_ofs -= song.title_texture.get_width() + 16
@@ -578,7 +568,7 @@ func _draw() -> void:
 		subtitle_color.a = minf(1, trans)
 		# song.subtitle_texture.scale.y = font_v_scale
 		# draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
-		draw_texture(song.subtitle_texture, Vector2((x + box_ofs) + x_ofs, y), subtitle_color)
+		draw_texture(song.subtitle_texture, Vector2((x + box_ofs) + x_ofs - (song.subtitle_texture.get_width() / 2), y), subtitle_color)
 		#draw_string_outline(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 18, outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		#draw_string(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, subtitle_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		x += padding + bsize.x

@@ -1,0 +1,126 @@
+[gd_scene format=3 uid="uid://cyepo8im7k6cb"]
+
+[ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="1_ftekv"]
+[ext_resource type="Script" uid="uid://cx2jxwdyy0w5c" path="res://scripts/obj/control_banner.gd" id="1_q6wok"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_q6wok"]
+[ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="4_e6b80"]
+[ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="5_i1xel"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x0ag5"]
+atlas = ExtResource("5_i1xel")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ikbbs"]
+atlas = ExtResource("5_i1xel")
+region = Rect2(0, 0, 256, 256)
+
+[node name="ControlBanner" type="ColorRect" unique_id=2002845654]
+z_index = 999
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_q6wok")
+
+[node name="Player1" type="ColorRect" parent="." unique_id=1795114330]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.056
+anchor_right = 0.49600002
+anchor_bottom = 1.0
+offset_top = -0.064003944
+offset_right = -0.16003418
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.49019608, 0.16078432, 0.15686275, 1)
+
+[node name="TaikoP1" parent="Player1" unique_id=436386889 instance=ExtResource("1_ftekv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 224.0
+offset_top = -38.656006
+offset_right = 416.0
+offset_bottom = 153.344
+
+[node name="ControlLabelP1" type="Label" parent="Player1" unique_id=514659839]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("2_q6wok")
+theme_override_font_sizes/font_size = 32
+text = "Hit P1 Taiko to Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" parent="Player1" unique_id=308592822 instance=ExtResource("4_e6b80")]
+layout_mode = 0
+offset_top = 113.343994
+offset_right = 256.0
+offset_bottom = 369.344
+texture = SubResource("AtlasTexture_x0ag5")
+
+[node name="Player2" type="ColorRect" parent="." unique_id=1811507957]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.504
+anchor_top = 0.056
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.16000366
+offset_top = -0.06400013
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.16862746, 0.32156864, 0.3764706, 1)
+
+[node name="TaikoP2" parent="Player2" unique_id=1265553936 instance=ExtResource("1_ftekv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 52.0
+offset_top = -30.656006
+offset_right = 244.0
+offset_bottom = 161.344
+
+[node name="ControlLabelP2" type="Label" parent="Player2" unique_id=1039028224]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("2_q6wok")
+theme_override_font_sizes/font_size = 32
+text = "Hit P2 Taiko to Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" parent="Player2" unique_id=962245499 instance=ExtResource("4_e6b80")]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -256.0
+offset_top = 113.343994
+offset_right = 0.0
+offset_bottom = 369.344
+grow_horizontal = 0
+texture = SubResource("AtlasTexture_ikbbs")
+flip_h = true

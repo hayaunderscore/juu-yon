@@ -34,7 +34,7 @@ var speed_multiplier: Vector2 = Vector2.ONE
 var lane_width: Vector2
 
 func _ready() -> void:
-	lane_width = get_window().size - Vector2i(global_position.floor())
+	lane_width = get_viewport_rect().size - global_position.floor()
 	bar_line_size = bar_line.get_size()
 
 # Thanks to IID/IepIweidieng from the TJADB discord!
@@ -107,6 +107,6 @@ func _draw() -> void:
 					draw_texture_rect(graph, Rect2(Vector2.ZERO, graph_size), false)
 
 func _process(delta: float) -> void:
-	lane_width = get_window().size - Vector2i(global_position.floor())
+	lane_width = get_viewport_rect().size - global_position.floor()
 	lane_texture.size.x = lane_width.x + global_position.x
 	queue_redraw()

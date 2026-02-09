@@ -33,7 +33,7 @@ func _draw() -> void:
 	# print("hi")
 	if last_value != value:
 		last_value = value
-		print("reset scales")
+		# print("reset scales")
 		if last_len != length and last_len < length and scaling_individual:
 			for i in range(0, length - last_len):
 				letters_scale.push_front(null)
@@ -41,11 +41,11 @@ func _draw() -> void:
 			for j in range(0, length - scaling_ignore):
 				letters_scale[j] = Vector2.ONE + scaling_add
 			last_len = length
-			print("haha reset")
+			# print("haha reset")
 		elif not scaling_individual:
 			for j in range(0, length):
 				letters_scale[j] = Vector2.ONE + scaling_add
-			print("haha reset not indiv")
+			# print("haha reset not indiv")
 	var width: float = length * font_size.x
 	width += glyph_offset * (length - 1)
 	var pos: Vector2 = Vector2(0.0, size.y - font_size.y)

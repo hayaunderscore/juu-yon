@@ -5,17 +5,16 @@
 [ext_resource type="Texture2D" uid="uid://dhm3sgkuis5y3" path="res://assets/entry/curtain.png" id="2_u4kja"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="3_25ert"]
 [ext_resource type="Texture2D" uid="uid://cijkd1du6h6fa" path="res://assets/songselect/bg.png" id="3_a075a"]
-[ext_resource type="Texture2D" uid="uid://c0646iv5ugswm" path="res://assets/entry/hole.png" id="3_syqqh"]
 [ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="4_mi5g8"]
-[ext_resource type="Texture2D" uid="uid://dwkmkqv8lk4dv" path="res://assets/entry/hole_bottom.png" id="5_a075a"]
+[ext_resource type="Texture2D" uid="uid://cbij4pljpebjo" path="res://assets/entry/hole.svg" id="5_1vsll"]
 [ext_resource type="SpriteFrames" uid="uid://bt0qubgkbthyc" path="res://assets/entry/entry_fan_p1.tres" id="6_frbhy"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="7_syqqh"]
 [ext_resource type="Texture2D" uid="uid://bi7nkf1o7uoic" path="res://assets/entry/p1_banner.png" id="9_eaxmw"]
+[ext_resource type="Texture2D" uid="uid://bri744ujen0v8" path="res://assets/entry/hole_bottom.svg" id="9_hoe4v"]
 [ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="9_npjjd"]
-[ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="10_frbhy"]
 [ext_resource type="AudioStream" uid="uid://do7um7dhugxta" path="res://assets/snd/entry/voice_player_entry.wav" id="12_a075a"]
 [ext_resource type="PackedScene" uid="uid://bg6jjlqnir6j0" path="res://scenes/objects/bumpin_panel.tscn" id="15_bfx6h"]
-[ext_resource type="Texture2D" uid="uid://cpo5uc7htwuml" path="res://assets/game/notes/kat.png" id="16_1vsll"]
+[ext_resource type="Texture2D" uid="uid://bcmncdk73g0hb" path="res://assets/entry/kat.svg" id="16_1vsll"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eaxmw"]
 
@@ -533,7 +532,7 @@ layout_mode = 0
 offset_top = 384.0
 offset_right = 480.0
 offset_bottom = 660.0
-texture = ExtResource("3_syqqh")
+texture = ExtResource("5_1vsll")
 
 [node name="Fan" type="AnimatedSprite2D" parent="BigDons/Player1" unique_id=1714402911]
 visible = false
@@ -562,10 +561,9 @@ texture = SubResource("AtlasTexture_mi5g8")
 
 [node name="HoleBottom" type="TextureRect" parent="BigDons/Player1" unique_id=803144163]
 layout_mode = 0
-offset_top = 72.0
 offset_right = 480.0
 offset_bottom = 276.0
-texture = ExtResource("5_a075a")
+texture = ExtResource("9_hoe4v")
 
 [node name="Banner" type="TextureRect" parent="BigDons/Player1" unique_id=1182704698]
 layout_mode = 0
@@ -581,7 +579,7 @@ offset_left = 480.0
 offset_top = 384.0
 offset_right = 960.0
 offset_bottom = 660.0
-texture = ExtResource("3_syqqh")
+texture = ExtResource("5_1vsll")
 
 [node name="Fan" type="AnimatedSprite2D" parent="BigDons/Player2" unique_id=950327381]
 visible = false
@@ -610,10 +608,9 @@ flip_h = true
 
 [node name="HoleBottom" type="TextureRect" parent="BigDons/Player2" unique_id=306306008]
 layout_mode = 0
-offset_top = 72.0
 offset_right = 480.0
 offset_bottom = 276.0
-texture = ExtResource("5_a075a")
+texture = ExtResource("9_hoe4v")
 
 [node name="Banner" type="TextureRect" parent="BigDons/Player2" unique_id=1939001708]
 layout_mode = 0
@@ -647,96 +644,6 @@ first_outline_size = 28
 second_outline_size = 42
 metadata/_custom_type_script = "uid://bx3a6gprpnff0"
 
-[node name="ControlBanner" type="ColorRect" parent="." unique_id=1433032761]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -120.0
-grow_horizontal = 2
-grow_vertical = 0
-color = Color(0, 0, 0, 1)
-
-[node name="Player1" type="ColorRect" parent="ControlBanner" unique_id=658503061]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.056
-anchor_right = 0.49600002
-anchor_bottom = 1.0
-offset_top = -0.064003944
-offset_right = -0.16003418
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.49019608, 0.16078432, 0.15686275, 1)
-
-[node name="TaikoP1" parent="ControlBanner/Player1" unique_id=436386889 instance=ExtResource("10_frbhy")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 224.0
-offset_top = -38.656006
-offset_right = 416.0
-offset_bottom = 153.344
-
-[node name="ControlLabelP1" type="Label" parent="ControlBanner/Player1" unique_id=1091021461]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/outline_size = 18
-theme_override_fonts/font = ExtResource("3_25ert")
-theme_override_font_sizes/font_size = 32
-text = "Hit P1 Taiko to Start"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Player2" type="ColorRect" parent="ControlBanner" unique_id=699599950]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.504
-anchor_top = 0.056
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.16000366
-offset_top = -0.06400013
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.16862746, 0.32156864, 0.3764706, 1)
-
-[node name="TaikoP2" parent="ControlBanner/Player2" unique_id=1385810792 instance=ExtResource("10_frbhy")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 52.0
-offset_top = -30.656006
-offset_right = 244.0
-offset_bottom = 161.344
-
-[node name="ControlLabelP2" type="Label" parent="ControlBanner/Player2" unique_id=1087352628]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/outline_size = 18
-theme_override_fonts/font = ExtResource("3_25ert")
-theme_override_font_sizes/font_size = 32
-text = "Hit P2 Taiko to Start"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Player1Anim" type="AnimationPlayer" parent="." unique_id=511577530]
 libraries/ = SubResource("AnimationLibrary_eaxmw")
 
@@ -748,7 +655,6 @@ one_shot = true
 
 [node name="Voice" type="AudioStreamPlayer" parent="." unique_id=622764686]
 stream = ExtResource("12_a075a")
-volume_db = 5.81
 bus = &"Sound"
 
 [node name="BumperP1" type="Control" parent="." unique_id=431660677]

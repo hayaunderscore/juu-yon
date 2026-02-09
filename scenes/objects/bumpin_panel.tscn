@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cp1bxm8kwoa6k" path="res://scripts/scenes/entry/bumpin_panel.gd" id="1_36w4m"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_2lnqr"]
-[ext_resource type="Texture2D" uid="uid://dvdlb0niy4pjj" path="res://assets/game/notes/don.png" id="3_fqa84"]
+[ext_resource type="Texture2D" uid="uid://dca4p70usu60s" path="res://assets/entry/don.svg" id="3_36w4m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlh76"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -16,7 +16,7 @@ corner_radius_top_right = 36
 corner_radius_bottom_right = 36
 corner_radius_bottom_left = 36
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mis08"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_36w4m"]
 bg_color = Color(0.972549, 0.28235295, 0.15686275, 1)
 border_width_left = 6
 border_width_top = 6
@@ -71,12 +71,12 @@ anchors_preset = -1
 anchor_right = 0.4
 anchor_bottom = 0.21100001
 offset_bottom = 24.079987
+pivot_offset = Vector2(192, 88)
 theme_override_styles/panel = SubResource("StyleBoxFlat_dlh76")
 script = ExtResource("1_36w4m")
 color = Color(0.972549, 0.28235295, 0.15686275, 1)
 text = "Hit P1 Taiko
 to Start"
-metadata/_edit_group_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1761987343]
 layout_mode = 1
@@ -92,7 +92,7 @@ theme_override_constants/margin_bottom = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=310646645]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_mis08")
+theme_override_styles/panel = SubResource("StyleBoxFlat_36w4m")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer" unique_id=1284478500]
 layout_mode = 2
@@ -114,12 +114,11 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -72.0
-offset_top = -72.0
-offset_right = 24.0
-offset_bottom = 24.0
+offset_top = -80.0
+offset_right = 72.0
+offset_bottom = 64.0
 grow_horizontal = 2
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("3_fqa84")
+texture = ExtResource("3_36w4m")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2052237697]
 libraries/ = SubResource("AnimationLibrary_004xe")

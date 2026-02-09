@@ -4,6 +4,7 @@ class_name MainScene
 var tja: TJA
 var chart: TJAChartInfo
 var current_note_list: Array[Dictionary]
+var roll: bool = false
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -55,15 +56,24 @@ func handle_play_events():
 		if time >= elapsed: continue
 		match type:
 			TJAChartInfo.CommandType.GOGOSTART:
-				if gogo_tween: gogo_tween.stop()
-				gogo_tween = get_tree().create_tween()
+				if gogo_tween: gogo_tween.kill()
+				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
 			TJAChartInfo.CommandType.GOGOEND:
-				if gogo_tween: gogo_tween.stop()
-				gogo_tween = get_tree().create_tween()
+				if gogo_tween: gogo_tween.kill()
+				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
 
-func _process(delta: float) -> void:
+var roll_cnt: int = 0
+func auto_roll():
+	if not roll: return
+	if roll_cnt % 4 == 0:
+		taiko.taiko_input(0, 1 if auto_don_side else 0)
+		auto_don_side = !auto_don_side
+		roll_cnt = 0
+	roll_cnt += 1
+
+func _physics_process(delta: float) -> void:
 	if not tja: return
 	if not chart: return
 	
@@ -90,12 +100,14 @@ func _process(delta: float) -> void:
 	note_drawer.draw_list = chart.draw_data
 	note_drawer.bemani_scroll = chart.flags & (TJAChartInfo.ChartFlags.BMSCROLL | TJAChartInfo.ChartFlags.HBSCROLL)
 	
-	var window: Window = get_window()
-	%SongBorder.size.x = window.size.x
+	%SongBorder.size.x = get_viewport_rect().size.x
 	
 	handle_play_events()
 	
 	if current_note_list.size() <= 0: return
+	
+	auto_roll()
+	
 	while current_note_list.size() > 0 and current_note_list[-1]["time"] < elapsed:
 		var note: Dictionary = current_note_list.pop_back()
 		if not note.has("time"): continue
@@ -123,7 +135,16 @@ func _process(delta: float) -> void:
 				for side in range(2):
 					taiko.taiko_input(1, side)
 		# if current_note_list.size() <= 0: break
+		if type == 5 or type == 6 or type == 7:
+			roll = true
+			roll_cnt = 0
+		if type == 8: 
+			roll = false
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", tja.charts[0].draw_data.find_key(note)))
 
 func _on_timer_timeout() -> void:
 	audio.play()
+
+func _on_music_finished() -> void:
+	# TODO results screen
+	TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true)

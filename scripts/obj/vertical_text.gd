@@ -68,7 +68,7 @@ var lowercase_kana: PackedStringArray = [
 	"ぁ", "ア", "ぃ", "イ", "ぅ", "ウ", "ぇ", "エ", "ぉ", "オ",
 	"ゃ", "ャ", "ゅ", "ュ", "ょ", "ョ", "っ", "ッ", "ゎ", "ヮ",
 	"ヶ", "ヵ", "ㇰ", "ㇱ", "ㇲ", "ㇳ", "ㇴ", "ㇵ", "ㇶ", "ㇷ", "ㇸ",
-	"ㇹ", "ㇺ", "ㇻ", "ㇼ", "ㇽ", "ㇾ", "ㇿ"
+	"ㇹ", "ㇺ", "ㇻ", "ㇼ", "ㇽ", "ㇾ", "ㇿ", "ィ"
 ]
 
 static var group_sequence_cache: Dictionary[String, Array]
@@ -121,7 +121,10 @@ func _init() -> void:
 	if font == null:
 		font = ThemeDB.fallback_font
 
+var _size_update_called: bool = false
+
 func _update_size():
+	_size_update_called = false
 	_text_size = Vector2.ZERO
 	
 	_group_sequence = group_horizontal_sequences(text)
@@ -143,17 +146,20 @@ func _update_size():
 			_text_size.y += get_char_height(content) * scale.y
 
 func _update_texture():
-	_update_size()
-	emit_changed()
+	if not _size_update_called:
+		_size_update_called = true
+		_update_size.call_deferred()
+		emit_changed.call_deferred()
 
 func _get_width() -> int:
-	return int(_text_size.x + (padding.x * 2))
+	return int(int(_text_size.x + (padding.x * 2)) / scale.x)
 
 func _get_height() -> int:
-	return int(_text_size.y + (padding.y * 2))
+	return int(int(_text_size.y + (padding.y * 2)) / scale.y)
 
 func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color, _transpose: bool = false, outline: bool = false) -> void:
 	if _group_sequence.is_empty() or _text_size.y <= 0: return
+	if modulate.a <= 0: return
 	
 	var width: int = get_width()
 	var color: Color = outline_color if outline else font_color
@@ -186,17 +192,19 @@ func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color
 			var effective_width: float = char_size.x
 			var char_x: float = width / 2.0
 			var char_y_ofs: float = 0.0
+			var sc: Vector2 = scale
 			if content in rotate_chars:
+				sc = sc.rotated(deg_to_rad(-90))
 				effective_width = char_size.y
-				char_x += 0.1 * font_size
-				char_y_ofs += 0.1 * font_size
+				char_x -= 0.1 * font_size * sc.x
+				char_y_ofs += 0.1 * font_size * sc.x
 			if content in side_punctuation:
 				char_x += font_size / 3.0
 			
 			# Here, we manually set the transform lmao
 			# Unfortunately this is the ONLY way to set the rotation of something. Too bad!
 			var rot: float = deg_to_rad(90.0) if content in rotate_chars else 0.0
-			var transform: Transform2D = Transform2D(rot, scale, 0.0, rect.position + Vector2(char_x, cur_char_y + char_y_ofs - floori(char_y / 2.0)))
+			var transform: Transform2D = Transform2D(rot, sc, 0.0, rect.position + Vector2(char_x, cur_char_y + char_y_ofs - floori(char_y / 2.0)))
 			RenderingServer.canvas_item_add_set_transform(to_canvas_item, transform)
 			
 			char_x = -floori(effective_width / 2.0)

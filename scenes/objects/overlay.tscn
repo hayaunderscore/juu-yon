@@ -5,6 +5,7 @@
 [node name="Overlay" type="CanvasLayer" unique_id=1626285678]
 
 [node name="Control" type="Control" parent="." unique_id=239214378]
+z_index = 999
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

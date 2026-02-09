@@ -204,7 +204,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		var line: String = file.get_line().strip_edges()
 		# Empty?
 		if line.is_empty() or line.begins_with("//"): continue
-		line = comment_regex.sub(line+"\n", "").strip_escapes()
+		line = comment_regex.sub(line+"\n", "", true).strip_escapes().strip_edges()
 		
 		var add_bpm_change: Callable = func(added_time: float, added_bpm: float, current_chart: TJAChartInfo):
 			if current_chart.bpm_log.size() > 0:
@@ -330,11 +330,11 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		var lpos: int = file.get_position()
 		# Continue in next line until we hit a measure terminator
 		if not line.ends_with(",") and not line.begins_with("#") and not cont_measure:
-			notes_in_measure += line.trim_suffix(",").length()
-			# print("continue to next line...")
+			notes_in_measure += line.strip_edges().trim_suffix(",").length()
 			cont_measure = true
-			while not nline.ends_with(","):
+			while not nline.ends_with(",") and file.get_position() < file.get_length():
 				nline = file.get_line().strip_edges()
+				nline = comment_regex.sub(nline+"\n", "", true).strip_edges().strip_escapes()
 				if not nline.begins_with("#"):
 					notes_in_measure += nline.trim_suffix(",").length()
 			# print("done! seek back to... ", lpos, " from ", file.get_position())
@@ -374,7 +374,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOEND})
 					# #BARLINEON and #BARLINEOFF
 					"barlineon":
-						barlines = false
+						barlines = true
 					"barlineoff":
 						barlines = false
 					# #BPMCHANGE <float-value>
@@ -439,8 +439,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.NORMAL]
-						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.NORMAL]
+						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.NORMAL])
+						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.NORMAL])
 					"e":
 						if not currently_branching:
 							print("Invalid #E (No branch found for this path!)")
@@ -449,8 +449,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.EXPERT]
-						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.EXPERT]
+						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.EXPERT])
+						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.EXPERT])
 					"m":
 						if not currently_branching:
 							print("Invalid #M (No branch found for this path!)")
@@ -459,8 +459,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.MASTER]
-						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.MASTER]
+						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.MASTER])
+						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.MASTER])
 					
 				continue
 			# Notes
@@ -504,5 +504,6 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		if line.ends_with(",") or (line.begins_with("#") and not cont_measure):
 			notes_in_measure = 0
 	
+	print("We are done!")
 	file.close()
 	return tja

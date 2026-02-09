@@ -5,209 +5,26 @@
 [ext_resource type="Script" uid="uid://caji8nwd755xg" path="res://scripts/scenes/song_select/columns.gd" id="2_f7aea"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_fi1wv"]
 [ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="5_vakh2"]
-[ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="6_insur"]
 [ext_resource type="Texture2D" uid="uid://rqccl8a5tcbi" path="res://assets/songselect/back.png" id="9_a50jo"]
-[ext_resource type="Texture2D" uid="uid://cqa2b7hx02ile" path="res://assets/game/chara/default/combo.png" id="9_iw0ol"]
-[ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="9_vakh2"]
 
 [sub_resource type="Animation" id="Animation_insur"]
 resource_name = "DonMove"
 length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ControlBanner/DonChan:region_rect")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(0, 1),
-"update": 0,
-"values": [Rect2(256, 0, 256, 256), Rect2(0, 0, 256, 256)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ControlBanner/DonChan:texture")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("9_vakh2")]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("ControlBanner/DonChan:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(112, 16)]
-}
 
 [sub_resource type="Animation" id="Animation_46p8o"]
 resource_name = "DonSelect"
 length = 0.51
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ControlBanner/DonChan:region_rect")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.51),
-"transitions": PackedFloat32Array(0, 0),
-"update": 0,
-"values": [Rect2(0, 0, 320, 320), Rect2(0, 0, 256, 256)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ControlBanner/DonChan:texture")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.51),
-"transitions": PackedFloat32Array(1, 0),
-"update": 1,
-"values": [ExtResource("9_iw0ol"), ExtResource("9_vakh2")]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("ControlBanner/DonChan:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.51),
-"transitions": PackedFloat32Array(0.5, 2, 1, 0),
-"update": 0,
-"values": [Vector2(112, 16), Vector2(112, -88), Vector2(112, 16), Vector2(112, 16)]
-}
 
 [sub_resource type="Animation" id="Animation_a50jo"]
 resource_name = "DonStart\\"
 length = 0.7
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ControlBanner/DonChan:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.033333335, 0.4, 0.7),
-"transitions": PackedFloat32Array(0.5, 0.5, 2, 1),
-"update": 0,
-"values": [Vector2(112, 256), Vector2(112, 256), Vector2(112, -88), Vector2(112, 16)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ControlBanner/DonChan:texture")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.033333335),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [ExtResource("9_iw0ol"), ExtResource("9_iw0ol")]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("ControlBanner/DonChan:region_rect")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.033333335),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Rect2(0, 0, 320, 320), Rect2(0, 0, 320, 320)]
-}
 
 [sub_resource type="Animation" id="Animation_cbght"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ControlBanner/DonChan:region_rect")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Rect2(0, 0, 256, 256)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ControlBanner/DonChan:texture")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("9_vakh2")]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("ControlBanner/DonChan:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(112, 16)]
-}
 
 [sub_resource type="Animation" id="Animation_e0kqf"]
 resource_name = "SongTransition"
 length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ControlBanner/DonChan:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [ExtResource("9_iw0ol"), ExtResource("9_vakh2"), ExtResource("9_iw0ol")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ControlBanner/DonChan:region_rect")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
-"transitions": PackedFloat32Array(0, 0, 0),
-"update": 0,
-"values": [Rect2(0, 0, 320, 320), Rect2(0, 0, 256, 256), Rect2(0, 0, 320, 320)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("ControlBanner/DonChan:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.16666667, 0.3, 0.6, 1),
-"transitions": PackedFloat32Array(0.40612617, 2, 1, 1, 1),
-"update": 0,
-"values": [Vector2(112, 16), Vector2(208, -160), Vector2(208, -64), Vector2(208, -64), Vector2(208, -696)]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_iw0ol"]
 _data = {
@@ -246,14 +63,12 @@ theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 16
 
-[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "visual_taiko", "background", "header_text", "genre_text", "anim")]
+[node name="SongSelectColumns" type="Control" parent="MarginContainer" unique_id=1466306270 node_paths=PackedStringArray("timer", "music", "voice", "background", "header_text", "genre_text", "anim")]
 layout_mode = 2
 script = ExtResource("2_f7aea")
-padding = 48.0
 timer = NodePath("../../Timer")
 music = NodePath("../../Music")
 voice = NodePath("../../Voice")
-visual_taiko = NodePath("../../ControlBanner/Player1/TaikoP1")
 background = NodePath("../../Parallax2D/Back")
 header_text = NodePath("../../BannerTop/TaikoText")
 genre_text = NodePath("../../BannerTop/TaikoText2")
@@ -290,9 +105,9 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -240.0
-offset_top = 40.0
+offset_top = 32.0
 offset_right = -32.0
-offset_bottom = 80.0
+offset_bottom = 72.0
 grow_horizontal = 0
 script = ExtResource("5_vakh2")
 font = ExtResource("2_fi1wv")
@@ -300,62 +115,10 @@ text = "Song Select"
 alignment = 2
 first_outline_color = Color(0.99215686, 0.3529412, 0.078431375, 1)
 second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
-text_size = 42
-first_outline_size = 28
-second_outline_size = 42
+text_size = 32
+first_outline_size = 24
+second_outline_size = 36
 metadata/_custom_type_script = "uid://bx3a6gprpnff0"
-
-[node name="ControlBanner" type="ColorRect" parent="." unique_id=293924262]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -120.0
-grow_horizontal = 2
-grow_vertical = 0
-color = Color(0, 0, 0, 1)
-
-[node name="Player1" type="ColorRect" parent="ControlBanner" unique_id=1921690801]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.056
-anchor_right = 0.49600002
-anchor_bottom = 1.0
-offset_top = -0.064003944
-offset_right = -0.16003418
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.49019608, 0.16078432, 0.15686275, 1)
-
-[node name="TaikoP1" parent="ControlBanner/Player1" unique_id=436386889 instance=ExtResource("6_insur")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 224.0
-offset_top = -38.656006
-offset_right = 416.0
-offset_bottom = 153.344
-
-[node name="DonChan" type="Sprite2D" parent="ControlBanner" unique_id=1416548436]
-position = Vector2(112, 16)
-texture = ExtResource("9_vakh2")
-region_enabled = true
-region_rect = Rect2(0, 0, 256, 256)
-
-[node name="Player2" type="ColorRect" parent="ControlBanner" unique_id=43995911]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.504
-anchor_top = 0.056
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.16000366
-offset_top = -0.06400013
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.16862746, 0.32156864, 0.3764706, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1659751729]
 libraries/ = SubResource("AnimationLibrary_iw0ol")

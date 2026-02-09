@@ -76,7 +76,7 @@ func read_metadata_box(line: String, tja: TJAMeta):
 		"backcolor":
 			var clr: Color = Color.from_string(header_value, Color.WHITE)
 			# Color correction- since the box is quite dark!
-			clr.r *= 1.3; clr.g *= 1.3; clr.b *= 1.3;
+			# clr.r *= 1.3; clr.g *= 1.3; clr.b *= 1.3;
 			tja.box_back_color = clr
 		"forecolor":
 			tja.box_fore_color = Color.from_string(header_value, Color.WHITE)
@@ -142,13 +142,20 @@ func set_style_box():
 		var fbox = _style_box_cache[1].duplicate() as StyleBoxFlat
 		index_box = fbox
 		var clr: Color = box_back_color
-		clr.r /= 1.3; clr.g /= 1.3; clr.b /= 1.3;
 		fbox.bg_color = clr
 	elif from_box:
 		style_box = from_box.style_box
 		index_box = from_box.index_box
 
 static var text_texture_cache: Dictionary[String, VerticalText2D]
+
+var _updated_text_scale: bool = false
+func update_text_scale():
+	_updated_text_scale = false
+	if title_texture:
+		title_texture.scale.y = minf(1.0, 424.0 / title_texture.get_height())
+	if subtitle_texture:
+		subtitle_texture.scale.y = minf(1.0, 376.0 / subtitle_texture.get_height())
 
 func set_text():
 	var t: String = title_localized.get("ja", title)
@@ -159,10 +166,13 @@ func set_text():
 		title_texture.font = font
 		title_texture.font_size = 32
 		title_texture.outline_size = 20
-		title_texture.scale.y = minf(1.0, 424.0 / title_texture.get_height())
+		title_texture.scale.y = 1.0
+		title_texture._update_size()
 		text_texture_cache.set("tjametatitle_" + t, title_texture)
 	else:
 		title_texture = text_texture_cache["tjametatitle_" + t]
+		title_texture.scale.y = 1.0
+		title_texture._update_size()
 	t = subtitle.lstrip("--").lstrip("++")
 	if not subtitle.is_empty() and not text_texture_cache.has("tjametatitle_" + t):
 		if not subtitle_texture:
@@ -171,10 +181,13 @@ func set_text():
 		subtitle_texture.font_size = 28
 		subtitle_texture.outline_size = 18
 		subtitle_texture.font = font
-		subtitle_texture.scale.y = minf(1.0, 376.0 / subtitle_texture.get_height())
+		subtitle_texture.scale.y = 1.0
+		subtitle_texture._update_size()
 		text_texture_cache.set("tjametatitle_" + t, subtitle_texture)
 	elif text_texture_cache.has("tjametatitle_" + t):
 		subtitle_texture = text_texture_cache["tjametatitle_" + t]
+		subtitle_texture.scale.y = 1.0
+		subtitle_texture._update_size()
 	if box:
 		for i in len(box_description):
 			if box_description_texture.size() <= i:
@@ -194,6 +207,9 @@ func set_text():
 			tex.font_color = Color.BLACK
 			box_description_texture[i] = tex
 			text_texture_cache.set("tjametatitle_" + t, tex)
+	if not _updated_text_scale:
+		_updated_text_scale = true
+		update_text_scale.call_deferred()
 
 static func load_from_file(npath: String) -> TJAMeta:
 	var tja: TJAMeta = TJAMeta.new()
@@ -229,7 +245,6 @@ static func load_from_file(npath: String) -> TJAMeta:
 		if should_read_metadata and line:
 			if tja.box:
 				tja.read_metadata_box(line, tja)
-				print("Hi")
 			else:
 				tja.read_metadata(line, tja, current_chart_index)
 	
