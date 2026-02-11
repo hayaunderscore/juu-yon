@@ -48,21 +48,27 @@ var _latency: float = AudioServer.get_output_latency()
 
 var gogo_tween: Tween
 
+var command_log_offset: int = 0
+
 func handle_play_events():
-	for command in chart.command_log:
+	for i in range(command_log_offset, chart.command_log.size()):
+		var command: Dictionary = chart.command_log[i]
 		if not command.has("time"): continue
 		var type: TJAChartInfo.CommandType = command.get("com") as TJAChartInfo.CommandType
 		var time: float = command.get("time")
 		if time >= elapsed: continue
+		command_log_offset += 1
 		match type:
 			TJAChartInfo.CommandType.GOGOSTART:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
+				%Chara.state = %Chara.State.GOGO
 			TJAChartInfo.CommandType.GOGOEND:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
+				%Chara.state = %Chara.State.IDLE
 
 var roll_cnt: int = 0
 func auto_roll():
@@ -90,8 +96,8 @@ func _physics_process(delta: float) -> void:
 	beat = calculate_beat_from_ms(elapsed, chart.bpm_log)
 	var min: float = floor(elapsed / 60.0)
 	var sec: float = fmod(elapsed, 60.0)
-	$TimeLeft.text = "%02d:%02d" % [min, sec]
-	$Beat.text = "%.2f" % [beat]
+	%TimeLeft.text = "%02d:%02d" % [min, sec]
+	%Beat.text = "%.2f" % [beat]
 	# $Label.text = "Current time: %.3f\nCurrent beat: %.3f" % [elapsed, beat]
 	
 	note_drawer.bar_list = chart.barline_data
@@ -100,6 +106,7 @@ func _physics_process(delta: float) -> void:
 	note_drawer.draw_list = chart.draw_data
 	note_drawer.bemani_scroll = chart.flags & (TJAChartInfo.ChartFlags.BMSCROLL | TJAChartInfo.ChartFlags.HBSCROLL)
 	
+	%Chara.beat = beat
 	%SongBorder.size.x = get_viewport_rect().size.x
 	
 	handle_play_events()

@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://b4ghiedy6q5i"]
 
 [ext_resource type="Script" uid="uid://ceb4j17lee54m" path="res://scripts/scenes/main.gd" id="1_o5qli"]
-[ext_resource type="FontFile" uid="uid://brdppdgm2mx56" path="res://assets/fonts/DomCasualD.ttf" id="2_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
+[ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="3_jkv2x"]
 [ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
+[ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="4_jbj1t"]
 [ext_resource type="Texture2D" uid="uid://dy1pcpkiy7qeo" path="res://assets/game/taiko/taiko.svg" id="5_trceg"]
 [ext_resource type="Texture2D" uid="uid://bghl26fhmb1sp" path="res://assets/game/taiko/kat.svg" id="7_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://dsccsct76o452" path="res://assets/game/taiko/don.svg" id="8_trceg"]
@@ -13,6 +14,10 @@
 [ext_resource type="Texture2D" uid="uid://d1oi5rdfqby8" path="res://assets/game/lane/judge.png" id="11_trceg"]
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
+atlas = ExtResource("4_jbj1t")
+region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="Gradient" id="Gradient_trceg"]
 interpolation_mode = 2
@@ -50,33 +55,27 @@ metadata/_edit_use_anchors_ = true
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=2006869510]
 bus = &"Music"
 
-[node name="TimeLeft" type="Label" parent="." unique_id=1345153710]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 144.0
-offset_right = 264.0
-offset_bottom = 186.0
-theme_override_constants/outline_size = 8
-theme_override_fonts/font = ExtResource("2_eb6dy")
-theme_override_font_sizes/font_size = 32
-text = "fuck"
-
-[node name="Beat" type="Label" parent="." unique_id=1276363920]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 104.0
-offset_right = 264.0
-offset_bottom = 146.0
-theme_override_constants/outline_size = 8
-theme_override_fonts/font = ExtResource("2_eb6dy")
-theme_override_font_sizes/font_size = 32
-text = "fuck"
+[node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
+unique_name_in_owner = true
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.042000003
+anchor_top = -0.133
+anchor_right = 0.358
+anchor_bottom = 0.4
+offset_left = 0.3200035
+offset_top = -0.23999786
+offset_right = -127.68002
+offset_bottom = -128.0
+scale = Vector2(1.5, 1.5)
+texture = SubResource("AtlasTexture_a8y0u")
 
 [node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
 layout_mode = 0
-offset_top = 168.0
+offset_top = 152.0
 offset_right = 192.0
-offset_bottom = 360.0
+offset_bottom = 344.0
 texture = ExtResource("3_85g3d")
 metadata/_edit_group_ = true
 
@@ -217,6 +216,28 @@ texture = ExtResource("11_trceg")
 position = Vector2(48, 48)
 script = ExtResource("11_ya4ey")
 lane_texture = NodePath("../..")
+
+[node name="TimeLeft" type="Label" parent="TaikoArea" unique_id=1345153710]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 192.0
+offset_right = 264.0
+offset_bottom = 234.0
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 16
+text = "fuck"
+
+[node name="Beat" type="Label" parent="TaikoArea" unique_id=1276363920]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 176.0
+offset_right = 64.0
+offset_bottom = 193.0
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 16
+text = "fuck"
 
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 3.0

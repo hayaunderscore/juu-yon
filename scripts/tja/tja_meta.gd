@@ -13,6 +13,8 @@ static var _style_box_cache: Array[StyleBox] = [
 @export var title_localized: Dictionary[String, String]
 ## The subtitle of this chart.
 @export var subtitle: String
+## The localized subtitle of this chart, e.g. TITLEJA:title refers to JA: title
+@export var subtitle_localized: Dictionary[String, String]
 ## The creator of this chart.
 @export var maker: String
 ## The music starting point when previewing this chart from the song select.
@@ -120,9 +122,13 @@ func read_metadata(line: String, tja: TJAMeta, chart_index: int):
 			if header_name == "course":
 				tja.chart_metadata[chart_index]["course_enum"] = get_level(header_value)
 		_:
-			if header_name.contains("title"):
+			if header_name.begins_with("title"):
 				var locale: String = header_name.replace("title", "")
 				tja.title_localized.set(locale, header_value)
+				return
+			if header_name.begins_with("subtitle"):
+				var locale: String = header_name.replace("subtitle", "")
+				tja.subtitle_localized.set(locale, header_value)
 				return
 			# print("Unknown header! (%s: %s)" % [header_name, header_value])
 
@@ -147,7 +153,7 @@ func set_style_box():
 		style_box = from_box.style_box
 		index_box = from_box.index_box
 
-static var text_texture_cache: Dictionary[String, VerticalText2D]
+static var text_texture_cache: Dictionary[String, Dictionary]
 
 var _updated_text_scale: bool = false
 func update_text_scale():
@@ -158,36 +164,32 @@ func update_text_scale():
 		subtitle_texture.scale.y = minf(1.0, 376.0 / subtitle_texture.get_height())
 
 func set_text():
+	var tja_hash: String = (title+subtitle+file_name).sha256_text()
+	if text_texture_cache.has(tja_hash):
+		var cache: Dictionary = text_texture_cache[tja_hash]
+		title_texture = cache["title"]
+		subtitle_texture = cache["subtitle"]
+		box_description_texture = cache["box_description"]
+		return
+	
 	var t: String = title_localized.get("ja", title)
-	if not text_texture_cache.has("tjametatitle_" + t):
-		if not title_texture:
-			title_texture = VerticalText2D.new()
-		title_texture.text = t
-		title_texture.font = font
-		title_texture.font_size = 32
-		title_texture.outline_size = 20
-		title_texture.scale.y = 1.0
-		title_texture._update_size()
-		text_texture_cache.set("tjametatitle_" + t, title_texture)
-	else:
-		title_texture = text_texture_cache["tjametatitle_" + t]
-		title_texture.scale.y = 1.0
-		title_texture._update_size()
-	t = subtitle
-	if not subtitle.is_empty() and not text_texture_cache.has("tjametatitle_" + t):
-		if not subtitle_texture:
-			subtitle_texture = VerticalText2D.new()
-		subtitle_texture.text = t.lstrip("--").lstrip("++")
-		subtitle_texture.font_size = 28
-		subtitle_texture.outline_size = 18
-		subtitle_texture.font = font
-		subtitle_texture.scale.y = 1.0
-		subtitle_texture._update_size()
-		text_texture_cache.set("tjametatitle_" + t, subtitle_texture)
-	elif text_texture_cache.has("tjametatitle_" + t):
-		subtitle_texture = text_texture_cache["tjametatitle_" + t]
-		subtitle_texture.scale.y = 1.0
-		subtitle_texture._update_size()
+	if not title_texture:
+		title_texture = VerticalText2D.new()
+	title_texture.text = t
+	title_texture.font = font
+	title_texture.font_size = 32
+	title_texture.outline_size = 20
+	title_texture.scale.y = 1.0
+	title_texture._update_size()
+	t = subtitle_localized.get("ja", subtitle)
+	if not subtitle_texture:
+		subtitle_texture = VerticalText2D.new()
+	subtitle_texture.text = t.lstrip("--").lstrip("++")
+	subtitle_texture.font_size = 24
+	subtitle_texture.outline_size = 16
+	subtitle_texture.font = font
+	subtitle_texture.scale.y = 1.0
+	subtitle_texture._update_size()
 	if box:
 		for i in len(box_description):
 			if box_description_texture.size() <= i:
@@ -195,9 +197,6 @@ func set_text():
 			var tex: VerticalText2D = box_description_texture[i]
 			var txt: String = box_description[i]
 			if txt.is_empty(): continue
-			if text_texture_cache.has("tjametatitle_" + txt):
-				box_description_texture[i] = text_texture_cache["tjametatitle_" + txt]
-				continue
 			if not tex:
 				box_description_texture[i] = VerticalText2D.new()
 				tex = box_description_texture[i]
@@ -206,10 +205,16 @@ func set_text():
 			tex.font = font
 			tex.font_color = Color.BLACK
 			box_description_texture[i] = tex
-			text_texture_cache.set("tjametatitle_" + t, tex)
 	if not _updated_text_scale:
 		_updated_text_scale = true
 		update_text_scale.call_deferred()
+	
+	# Cache these so we dont have to load them again! I think
+	text_texture_cache.set(tja_hash, {
+		"title": title_texture,
+		"subtitle": subtitle_texture,
+		"box_description": box_description_texture
+	})
 
 static func load_from_file(npath: String) -> TJAMeta:
 	var tja: TJAMeta = TJAMeta.new()

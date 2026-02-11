@@ -392,7 +392,7 @@ func _draw() -> void:
 	var trans: float = box_transition
 	draw_set_transform(Vector2.RIGHT * x)
 	var min_size: int = selected_index - 5
-	var max_size: int = selected_index + 5
+	var max_size: int = selected_index + 6
 	for i in range(min_size, max_size):
 		var wrapped_i: int = wrapi(i, 0, songs.size())
 		var song: TJAMeta = songs[wrapped_i]
@@ -562,7 +562,7 @@ func _draw() -> void:
 					x_ofs -= 32
 		
 		# Subtitle if applicable
-		var subtitle: String = song.subtitle.lstrip("--")
+		var subtitle: String = song.subtitle_localized.get("ja", song.subtitle).lstrip("--")
 		if subtitle.is_empty() or i != selected_index or not song.subtitle_texture:
 			x += padding + bsize.x
 			continue

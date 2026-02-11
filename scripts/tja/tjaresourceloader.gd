@@ -63,9 +63,13 @@ func read_metadata(line: String, tja: TJA):
 		"course", "level", "balloon", "scoremode", "scoreinit", "scorediff":
 			tja.chart_meta[header_name.to_lower()] = header_value
 		_:
-			if header_name.contains("title"):
+			if header_name.begins_with("title"):
 				var locale: String = header_name.replace("title", "")
 				tja.title_localized.set(locale, header_value)
+				return
+			if header_name.begins_with("subtitle"):
+				var locale: String = header_name.replace("subtitle", "")
+				tja.subtitle_localized.set(locale, header_value)
 				return
 			print("Unknown header! (%s: %s)" % [header_name, header_value])
 

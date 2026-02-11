@@ -14,6 +14,8 @@ class_name TJA
 @export var title_localized: Dictionary[String, String]
 ## The subtitle of this chart.
 @export var subtitle: String
+## The localized subtitle of this chart, e.g. TITLEJA:title refers to JA: title
+@export var subtitle_localized: Dictionary[String, String]
 ## The creator of this chart.
 @export var maker: String
 ## The music starting point when previewing this chart from the song select.
