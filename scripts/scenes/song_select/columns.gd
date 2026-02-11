@@ -287,7 +287,7 @@ func diff_select_to_song_select():
 	box_out = true
 	await _box_done
 	state = State.SONG_SELECT
-	box_transition = 1.0
+	box_transition = 1.5
 	target_box_size = box_open_size
 	target_prev_box_size = box_width
 	stupid_fucking_alpha_hack_i_will_remove_someday = false
@@ -470,17 +470,20 @@ func _draw() -> void:
 			if state >= State.DIFF_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
 				diff_x += (bsize.x - box_open_size) / 2.0
 			const diff_height: float = 372
+			var diff_trans: float = trans
+			if state == State.SONG_SELECT:
+				diff_trans = trans - 0.5
 			for k in range(song.chart_metadata.size()):
 				var chart: Dictionary = song.chart_metadata[k]
 				# if not chart: continue
 				draw_set_transform(offset_x.call(diff_x))
-				(box_difficulty as StyleBoxFlat).bg_color.a = minf(1, trans)
+				(box_difficulty as StyleBoxFlat).bg_color.a = minf(1, diff_trans)
 				draw_style_box(box_difficulty, Rect2(Vector2(0, 64), Vector2(24*2, diff_height)))
 				
 				# Difficulty icon
 				var diff: int = chart.get("course_enum", -1)
 				var star_star_clr: Color = Color.WHITE
-				star_star_clr.a = minf(1, trans)
+				star_star_clr.a = minf(1, diff_trans)
 				
 				if difficulty_icons.has(diff):
 					var icon: Texture2D = difficulty_icons[diff]
@@ -505,7 +508,7 @@ func _draw() -> void:
 						max_stars = 15
 				var star_y: float = diff_height + 64 - 24 - 9
 				var star_clr: Color = Color.from_string("#E77627", Color.WHITE)
-				star_clr.a = minf(1, trans)
+				star_clr.a = minf(1, diff_trans)
 				var level: int = chart.get("level", "0").to_int()
 				for j in range(maxi(max_stars, chart.get("level", "0").to_int())):
 					if j <= max_stars:
@@ -517,7 +520,7 @@ func _draw() -> void:
 				# Funny text
 				var diff_name: String = (TJAChartInfo.CourseType.find_key(chart.get("course_enum", -1))).to_pascal_case()
 				var clr: Color = Color.BLACK
-				clr.a = minf(1, trans)
+				clr.a = minf(1, diff_trans)
 				draw_string(font, Vector2(24, 78), diff_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, clr, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 				
 				diff_x += diff_padding + 24*2
@@ -550,9 +553,12 @@ func _draw() -> void:
 			for j in len(song.box_description):
 				var ccolor: Color = Color.WHITE
 				ccolor.a = minf(1, trans)
+				if state == State.SONG_SELECT:
+					ccolor.a = minf(1, trans - 1)
 				# draw_set_transform(Vector2((x + box_ofs) + x_ofs, y), 0.0, Vector2(1.0, font_v_scale))
 				if song.box_description_texture[j]:
-					draw_texture(song.box_description_texture[j], Vector2((x + box_ofs) + x_ofs, y), ccolor)
+					var w: int = song.box_description_texture[j].get_width()
+					draw_texture(song.box_description_texture[j], Vector2((x + box_ofs) + x_ofs - w / 2, y), ccolor)
 					x_ofs -= 32
 		
 		# Subtitle if applicable

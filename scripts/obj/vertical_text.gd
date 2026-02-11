@@ -196,8 +196,9 @@ func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color
 			if content in rotate_chars:
 				sc = sc.rotated(deg_to_rad(-90))
 				effective_width = char_size.y
-				char_x -= 0.1 * font_size * sc.x
-				char_y_ofs += 0.1 * font_size * sc.x
+				char_x -= 0.1 * char_size.y * sc.x
+				char_y_ofs += 0.1 * char_size.y * sc.x
+				# print(char_size.y)
 			if content in side_punctuation:
 				char_x += font_size / 3.0
 			

@@ -153,7 +153,7 @@ var _updated_text_scale: bool = false
 func update_text_scale():
 	_updated_text_scale = false
 	if title_texture:
-		title_texture.scale.y = minf(1.0, 424.0 / title_texture.get_height())
+		title_texture.scale.y = minf(1.0, 416.0 / title_texture.get_height())
 	if subtitle_texture:
 		subtitle_texture.scale.y = minf(1.0, 376.0 / subtitle_texture.get_height())
 
@@ -173,11 +173,11 @@ func set_text():
 		title_texture = text_texture_cache["tjametatitle_" + t]
 		title_texture.scale.y = 1.0
 		title_texture._update_size()
-	t = subtitle.lstrip("--").lstrip("++")
+	t = subtitle
 	if not subtitle.is_empty() and not text_texture_cache.has("tjametatitle_" + t):
 		if not subtitle_texture:
 			subtitle_texture = VerticalText2D.new()
-		subtitle_texture.text = t
+		subtitle_texture.text = t.lstrip("--").lstrip("++")
 		subtitle_texture.font_size = 28
 		subtitle_texture.outline_size = 18
 		subtitle_texture.font = font
