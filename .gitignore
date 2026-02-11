@@ -1,0 +1,12 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Songs should NOT be added!
+songs/
+
+# Config as well
+config.cfg
+
+# Export folder should also not be included
+export/
