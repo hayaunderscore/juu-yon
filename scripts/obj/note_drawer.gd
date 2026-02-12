@@ -24,6 +24,7 @@ var roll_body: Texture2D = preload("res://assets/game/notes/roll_body.png")
 var roll_body_big: Texture2D = preload("res://assets/game/notes/roll_body_big.png")
 var roll_tail: Texture2D = preload("res://assets/game/notes/roll_tail.png")
 var roll_tail_big: Texture2D = preload("res://assets/game/notes/roll_tail_big.png")
+var balloon_tail: Texture2D = preload("res://assets/game/notes/balloon_tail.png")
 var bar_line: Texture2D = preload("res://assets/game/notes/bar.tres")
 var bar_line_size: Vector2
 
@@ -73,7 +74,7 @@ func _draw() -> void:
 		var col: Color = Color.WHITE
 		if type != 8:
 			if pos.x > lane_width.x + 96: continue
-			if pos.x < - global_position.x - 96: continue
+			if pos.x < - global_position.x - 96 and type != 7: continue
 		if type < notes.size() and (notes[type] or type == 8):
 			match type:
 				8: # Roll end, these are handled differently
@@ -102,9 +103,16 @@ func _draw() -> void:
 				_:
 					var graph: Texture2D = notes[type]
 					var graph_size: Vector2 = graph.get_size()
-					if type == 7: pos = pos.max(Vector2.ZERO)
+					var roll_time: float =  note.get("roll_time", 0)
+					if type == 7 and roll_time < time: pos = pos.max(Vector2.ZERO)
 					draw_set_transform(pos - graph_size / 2)
 					draw_texture_rect(graph, Rect2(Vector2.ZERO, graph_size), false)
+					if type == 7:
+						pos.x += graph_size.x
+						graph = balloon_tail
+						graph_size = graph.get_size()
+						draw_set_transform(pos - graph_size / 2)
+						draw_texture_rect(graph, Rect2(Vector2.ZERO, graph_size), false)
 
 func _process(delta: float) -> void:
 	lane_width = get_viewport_rect().size - global_position.floor()

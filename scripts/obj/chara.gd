@@ -12,6 +12,8 @@ enum State {
 @export var state: State = State.IDLE_STILL:
 	set(v): 
 		var changed: bool = false
+		if gogo and v == State.IDLE:
+			v = State.GOGO
 		if v != state:
 			frame = 0; _last_interval = 0; _current_interval = 0;
 			changed = true
@@ -74,12 +76,25 @@ func _update_texture():
 
 var _current_interval: int = 0
 var _last_interval: int = 0
+var _combo_tween: Tween
 
 var beat: float = 0
+var bpm: float = 120
+var gogo: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
+
+func do_combo_animation():
+	if gogo: return
+	state = State.COMBO
+	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
+	var cur_y: float = position.y
+	_combo_tween = create_tween()
+	_combo_tween.tween_property(self, "position:y", position.y - 24, (30 / bpm)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.tween_property(self, "position:y", cur_y, (30 / bpm)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.tween_property(self, "state", State.IDLE, 0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -102,7 +117,7 @@ func _physics_process(delta: float) -> void:
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
-		frame += 1
+		frame = (_current_interval % max_frames)
 	
 	$Label.text = "State: %s" % [State.find_key(state)]
 	$Label2.text = "Frame: %d" % [frame]

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b4ghiedy6q5i"]
 
 [ext_resource type="Script" uid="uid://ceb4j17lee54m" path="res://scripts/scenes/main.gd" id="1_o5qli"]
+[ext_resource type="Texture2D" uid="uid://clgowj1d22mk5" path="res://assets/game/top_bg/bg01.png" id="2_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="3_jkv2x"]
 [ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
@@ -54,6 +55,18 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=2006869510]
 bus = &"Music"
+
+[node name="Parallax2D" type="Parallax2D" parent="." unique_id=1398433241]
+z_index = -50
+repeat_size = Vector2(384, 0)
+autoscroll = Vector2(-48, 0)
+repeat_times = 5
+
+[node name="Back" type="Sprite2D" parent="Parallax2D" unique_id=1969097396]
+unique_name_in_owner = true
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_jkv2x")
+centered = false
 
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true

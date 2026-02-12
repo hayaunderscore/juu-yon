@@ -9,6 +9,7 @@ var roll: bool = false
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
 @onready var note_drawer: TaikoNoteDrawer = $TaikoArea/Lane/Judge/NoteDrawer
+@onready var top_back: Sprite2D = %Back
 
 func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 	var current_beat: float = 0.0
@@ -29,6 +30,18 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 func _ready() -> void:
 	pass
 
+# TODO 2P
+var bg_path: String = "res://assets/game/top_bg/"
+func pick_random_bg():
+	var dir: DirAccess = DirAccess.open(bg_path)
+	var paths: PackedStringArray = dir.get_files()
+	var filtered: PackedStringArray
+	for path in paths:
+		if path.get_extension() == "png":
+			filtered.push_back(path)
+	var picked: String = filtered[randi_range(0, filtered.size() - 1)]
+	top_back.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path + picked))
+
 func load_tja(new_tja: TJAMeta, diff: int):
 	tja = new_tja.create_tja_from_meta()
 	chart = tja.charts[diff]
@@ -37,9 +50,12 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	%SongTitle.text = tja.title_localized.get("ja", tja.title)
 	Globals.song_name = %SongTitle.text
 	audio.volume_linear = tja.song_volume / 100.0
+	%Chara.bpm = tja.start_bpm
+	pick_random_bg()
 
 var elapsed: float = 0.0
 var beat: float = 0.0
+var bpm: float = 120.0
 
 var auto_don_side: bool = false
 var auto_kat_side: bool = false
@@ -63,12 +79,20 @@ func handle_play_events():
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
-				%Chara.state = %Chara.State.GOGO
+				%Chara.gogo = true
+				var state = %Chara.state
+				if state != %Chara.State.COMBO:
+					%Chara.state = %Chara.State.GOGO
 			TJAChartInfo.CommandType.GOGOEND:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
-				%Chara.state = %Chara.State.IDLE
+				%Chara.gogo = false
+				var state = %Chara.state
+				if state != %Chara.State.COMBO:
+					%Chara.state = %Chara.State.IDLE
+			TJAChartInfo.CommandType.BPMCHANGE:
+				%Chara.bpm = command.get("val1")
 
 var roll_cnt: int = 0
 func auto_roll():
@@ -128,26 +152,37 @@ func _physics_process(delta: float) -> void:
 			1:
 				taiko.taiko_input(0, 1 if auto_don_side else 0)
 				taiko.combo += 1
+				if taiko.combo % 10 == 0:
+					%Chara.do_combo_animation()
 				auto_don_side = !auto_don_side
 			2:
 				taiko.taiko_input(1, 1 if auto_kat_side else 0)
 				taiko.combo += 1
+				if taiko.combo % 10 == 0:
+					%Chara.do_combo_animation()
 				auto_kat_side = !auto_kat_side
 			3:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(0, side)
+				if taiko.combo % 10 == 0:
+					%Chara.do_combo_animation()
 			4:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(1, side)
+				if taiko.combo % 10 == 0:
+					%Chara.do_combo_animation()
 		# if current_note_list.size() <= 0: break
 		if type == 5 or type == 6 or type == 7:
 			roll = true
 			roll_cnt = 0
 		if type == 8: 
 			roll = false
-		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", tja.charts[0].draw_data.find_key(note)))
+			if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
+				var rolln: Dictionary = note["roll_note"]
+				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 
 func _on_timer_timeout() -> void:
 	audio.play()

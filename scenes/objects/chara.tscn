@@ -16,7 +16,8 @@ texture = SubResource("AtlasTexture_167qt")
 script = ExtResource("1_6t3on")
 state = 1
 idle_texture = ExtResource("1_elhpt")
-idle_frames = 2
+idle_frames = 8
+idle_speed = 0.25
 combo_texture = ExtResource("3_167qt")
 gogo_texture = ExtResource("4_fskk0")
 gogo_frames = 16
@@ -24,6 +25,7 @@ gogo_speed = 0.5
 metadata/_custom_type_script = "uid://em0hp0g40r3u"
 
 [node name="Label" type="Label" parent="." unique_id=1407299343]
+visible = false
 layout_mode = 0
 offset_left = 224.0
 offset_top = 72.0
@@ -31,6 +33,7 @@ offset_right = 264.0
 offset_bottom = 95.0
 
 [node name="Label2" type="Label" parent="." unique_id=2016856572]
+visible = false
 layout_mode = 0
 offset_left = 224.0
 offset_top = 96.0
@@ -38,6 +41,7 @@ offset_right = 264.0
 offset_bottom = 119.0
 
 [node name="Label3" type="Label" parent="." unique_id=1311008782]
+visible = false
 layout_mode = 0
 offset_left = 224.0
 offset_top = 120.0
