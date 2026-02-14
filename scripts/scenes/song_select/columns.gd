@@ -158,7 +158,7 @@ func select_song():
 	Globals.control_banner.deactivate_side()
 	play_voice_line("start_song_1p")
 	var song: TJAMeta = songs[selected_index]
-	await get_tree().create_timer(0.7).timeout
+	await get_tree().create_timer(1.3).timeout
 	SongLoadHandler.select_song(song, selected_diff)
 
 var selected: bool = false

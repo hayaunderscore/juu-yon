@@ -4,6 +4,8 @@ Cross platform Gen-2 based TJA player and Taiko simulator powered by Godot.
 
 ![In-game](preview/preview-gameplay.png)
 
+![Main Menu](preview/preview-title.png)
+
 ![Song Select](preview/preview-songselect.png)
 
 # Features

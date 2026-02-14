@@ -166,7 +166,8 @@ func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color
 	color *= modulate
 	var cur_char_y: float = 0
 	
-	rect.position += Vector2(padding)
+	# rect.position += Vector2(padding / 2.0)
+	rect.position.y += padding.y
 	
 	for group in _group_sequence:
 		var group_type: String = group[0]

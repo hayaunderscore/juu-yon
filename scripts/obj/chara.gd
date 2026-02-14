@@ -7,6 +7,7 @@ enum State {
 	IDLE,
 	COMBO,
 	GOGO,
+	MISC,
 }
 
 @export var state: State = State.IDLE_STILL:
@@ -38,6 +39,9 @@ func _update_texture():
 		State.GOGO:
 			atlas.atlas = gogo_texture
 			atlas.region = Rect2(0, 0, gogo_texture.get_width() / gogo_frames, gogo_texture.get_height())
+		State.MISC:
+			atlas.atlas = misc_texture
+			atlas.region = Rect2(0, 0, misc_texture.get_width() / misc_frames, misc_texture.get_height())
 	texture = atlas
 	var max_frames: int = 0
 	match state:
@@ -49,6 +53,8 @@ func _update_texture():
 			max_frames = combo_frames
 		State.GOGO:
 			max_frames = gogo_frames
+		State.MISC:
+			max_frames = misc_frames
 	var f = wrapi(frame, 0, max_frames)
 	var tex_width: int = atlas.atlas.get_width()
 	atlas.region.position.x = f * (tex_width / max_frames)
@@ -74,6 +80,12 @@ func _update_texture():
 	set(v): gogo_frames = v; _update_texture()
 @export var gogo_speed: float = 1.0
 
+@export_group("Miscellaneous Frames", "misc_")
+@export var misc_texture: Texture2D:
+	set(v): misc_texture = v; _update_texture()
+@export var misc_frames: int = 1:
+	set(v): misc_frames = v; _update_texture()
+
 var _current_interval: int = 0
 var _last_interval: int = 0
 var _combo_tween: Tween
@@ -86,7 +98,7 @@ var gogo: bool = false
 func _ready() -> void:
 	pass # Replace with function body.
 
-func do_combo_animation():
+func do_combo_animation(return_to_idle: bool = true):
 	if gogo: return
 	state = State.COMBO
 	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
@@ -94,7 +106,7 @@ func do_combo_animation():
 	_combo_tween = create_tween()
 	_combo_tween.tween_property(self, "position:y", position.y - 24, (30 / bpm)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	_combo_tween.tween_property(self, "position:y", cur_y, (30 / bpm)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-	_combo_tween.tween_property(self, "state", State.IDLE, 0)
+	if return_to_idle: _combo_tween.tween_property(self, "state", State.IDLE, 0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -117,8 +129,9 @@ func _physics_process(delta: float) -> void:
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
-		frame = (_current_interval % max_frames)
+		if state != State.MISC and state != State.IDLE_STILL:
+			frame = (_current_interval % max_frames)
 	
-	$Label.text = "State: %s" % [State.find_key(state)]
-	$Label2.text = "Frame: %d" % [frame]
-	$Label3.text = "Interval: %02d, Last: %02d" % [_current_interval, _last_interval] 
+	# $Label.text = "State: %s" % [State.find_key(state)]
+	# $Label2.text = "Frame: %d" % [frame]
+	# $Label3.text = "Interval: %02d, Last: %02d" % [_current_interval, _last_interval] 

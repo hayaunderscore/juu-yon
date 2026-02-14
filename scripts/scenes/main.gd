@@ -28,7 +28,7 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	pick_random_bg()
 
 # TODO 2P
 var bg_path: String = "res://assets/game/top_bg/"
@@ -42,6 +42,14 @@ func pick_random_bg():
 	var picked: String = filtered[randi_range(0, filtered.size() - 1)]
 	top_back.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path + picked))
 
+var difficulty_icons: Dictionary[int, Texture2D] = {
+	TJAChartInfo.CourseType.EASY: preload("uid://by46t0vy31w7s"),
+	TJAChartInfo.CourseType.NORMAL: preload("uid://buhdff8rjkb82"),
+	TJAChartInfo.CourseType.HARD: preload("uid://p0pvanwm7qh1"),
+	TJAChartInfo.CourseType.ONI: preload("uid://d04eby56jesxn"),
+	TJAChartInfo.CourseType.EDIT: preload("uid://drsb8jnq80p1"),
+}
+
 func load_tja(new_tja: TJAMeta, diff: int):
 	tja = new_tja.create_tja_from_meta()
 	chart = tja.charts[diff]
@@ -51,7 +59,10 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	Globals.song_name = %SongTitle.text
 	audio.volume_linear = tja.song_volume / 100.0
 	%Chara.bpm = tja.start_bpm
-	pick_random_bg()
+	$Symbol.texture = difficulty_icons[chart.course]
+	$Symbol/SymbolHighlight.texture = difficulty_icons[chart.course]
+	$Symbol/SymbolHighlightGood.texture = difficulty_icons[chart.course]
+	$Timer.start()
 
 var elapsed: float = 0.0
 var beat: float = 0.0
@@ -98,7 +109,7 @@ var roll_cnt: int = 0
 func auto_roll():
 	if not roll: return
 	if roll_cnt % 4 == 0:
-		taiko.taiko_input(0, 1 if auto_don_side else 0)
+		taiko.taiko_input(0, 1 if auto_don_side else 0, 100, false)
 		auto_don_side = !auto_don_side
 		roll_cnt = 0
 	roll_cnt += 1

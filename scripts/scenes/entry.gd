@@ -24,7 +24,7 @@ func _exit_tree() -> void:
 func _on_timer_timeout() -> void:
 	global_anim.play("MoveCurtain")
 	await global_anim.animation_finished
-	get_tree().change_scene_to_file("uid://b8jopawilsvnu")
+	get_tree().change_scene_to_file("uid://dyvmwrm570eh6")
 
 func _on_control_banner_player_entry(id: Variant) -> void:
 	Globals.control_banner.deactivate_side.call_deferred()

@@ -4,23 +4,29 @@
 [ext_resource type="AudioStream" uid="uid://ld4puhi508db" path="res://assets/mus/entry.ogg" id="1_u4kja"]
 [ext_resource type="Texture2D" uid="uid://dhm3sgkuis5y3" path="res://assets/entry/curtain.png" id="2_u4kja"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="3_25ert"]
-[ext_resource type="Texture2D" uid="uid://cijkd1du6h6fa" path="res://assets/songselect/bg.png" id="3_a075a"]
+[ext_resource type="PackedScene" uid="uid://cbj2uvndsng4r" path="res://scenes/backgrounds/menu_bg.tscn" id="3_hxrcx"]
 [ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="4_mi5g8"]
 [ext_resource type="Texture2D" uid="uid://cbij4pljpebjo" path="res://assets/entry/hole.svg" id="5_1vsll"]
 [ext_resource type="SpriteFrames" uid="uid://bt0qubgkbthyc" path="res://assets/entry/entry_fan_p1.tres" id="6_frbhy"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="7_syqqh"]
 [ext_resource type="Texture2D" uid="uid://bi7nkf1o7uoic" path="res://assets/entry/p1_banner.png" id="9_eaxmw"]
 [ext_resource type="Texture2D" uid="uid://bri744ujen0v8" path="res://assets/entry/hole_bottom.svg" id="9_hoe4v"]
+[ext_resource type="Script" uid="uid://em0hp0g40r3u" path="res://scripts/obj/chara.gd" id="9_hxrcx"]
 [ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="9_npjjd"]
+[ext_resource type="Texture2D" uid="uid://cqa2b7hx02ile" path="res://assets/game/chara/default/combo.png" id="10_0e7yf"]
+[ext_resource type="Texture2D" uid="uid://dxqu1tov2m4al" path="res://assets/game/chara/default/gogo.png" id="11_lo8s7"]
 [ext_resource type="AudioStream" uid="uid://do7um7dhugxta" path="res://assets/snd/entry/voice_player_entry.wav" id="12_a075a"]
+[ext_resource type="Texture2D" uid="uid://jx0i5qbewuxl" path="res://assets/game/chara/default/misc.png" id="12_tobsv"]
 [ext_resource type="PackedScene" uid="uid://bg6jjlqnir6j0" path="res://scenes/objects/bumpin_panel.tscn" id="15_bfx6h"]
 [ext_resource type="Texture2D" uid="uid://bcmncdk73g0hb" path="res://assets/entry/kat.svg" id="16_1vsll"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_eaxmw"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_hxrcx"]
+atlas = ExtResource("7_syqqh")
+region = Rect2(0, 0, 384, 384)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mi5g8"]
 atlas = ExtResource("7_syqqh")
-region = Rect2(0, 0, 256, 256)
+region = Rect2(0, 0, 384, 384)
 
 [sub_resource type="Animation" id="Animation_eaxmw"]
 resource_name = "Confirm"
@@ -96,6 +102,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(248, -240), Vector2(248, -240), Vector2(248.00002, 520)]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BigDons/Player1/Taiko/Chara:state")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 4]
+}
 
 [sub_resource type="Animation" id="Animation_npjjd"]
 resource_name = "Enter"
@@ -134,7 +152,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0.25, 0.6, 0.8),
 "transitions": PackedFloat32Array(0.5, 2, 1),
 "update": 0,
-"values": [Vector2(-24, -248), Vector2(-24, -272), Vector2(-24, -248)]
+"values": [Vector2(-24, -248), Vector2(-24, -304), Vector2(-24, -248)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -171,6 +189,30 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(0.5, 2, 1),
 "update": 0,
 "values": [Vector2(248, -240), Vector2(248, -288), Vector2(248, -240)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BigDons/Player1/Taiko/Chara:state")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 4, 0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BigDons/Player1/Taiko/Chara:frame")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_a075a"]
@@ -258,6 +300,30 @@ tracks/6/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(248, -240)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BigDons/Player1/Taiko/Chara:state")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("BigDons/Player1/Taiko/Chara:frame")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_eaxmw"]
@@ -352,7 +418,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": ["Player Entry", "Song Select"]
+"values": ["Player Entry", "Main Menu"]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -364,7 +430,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(0, 1),
 "update": 0,
-"values": [Color(0.972549, 0.28235295, 0.15686275, 1), Color(0.99215686, 0.3529412, 0.078431375, 1)]
+"values": [Color(0.972549, 0.28235295, 0.15686275, 1), Color(1, 0.15294118, 0.21568628, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_bfx6h"]
@@ -486,19 +552,9 @@ stream = ExtResource("1_u4kja")
 autoplay = true
 bus = &"Music"
 
-[node name="Background" type="TextureRect" parent="." unique_id=707491871]
-z_index = -5
-material = SubResource("ShaderMaterial_eaxmw")
+[node name="Control" parent="." unique_id=1483832001 instance=ExtResource("3_hxrcx")]
+z_index = -2
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(480, 360)
-texture = ExtResource("3_a075a")
-expand_mode = 3
-stretch_mode = 6
 
 [node name="Curtain" type="Sprite2D" parent="." unique_id=404059248]
 z_index = -2
@@ -523,7 +579,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 40.0
-offset_bottom = 39.999756
+offset_bottom = 40.000244
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -546,18 +602,25 @@ layout_mode = 0
 offset_left = 80.0
 offset_top = 496.0
 offset_right = 405.0
-offset_bottom = 869.00073
+offset_bottom = 869.00085
 texture = ExtResource("4_mi5g8")
 metadata/_edit_group_ = true
 
-[node name="Chara" type="TextureRect" parent="BigDons/Player1/Taiko" unique_id=1717131247]
+[node name="Chara" type="TextureRect" parent="BigDons/Player1/Taiko" unique_id=123176742]
 layout_mode = 0
 offset_left = -24.0
 offset_top = -248.0
-offset_right = 232.0
-offset_bottom = 8.0
-scale = Vector2(1.5, 1.5)
-texture = SubResource("AtlasTexture_mi5g8")
+offset_right = 360.0
+offset_bottom = 136.0
+texture = SubResource("AtlasTexture_hxrcx")
+script = ExtResource("9_hxrcx")
+idle_texture = ExtResource("7_syqqh")
+idle_frames = 8
+combo_texture = ExtResource("10_0e7yf")
+gogo_texture = ExtResource("11_lo8s7")
+gogo_frames = 16
+misc_texture = ExtResource("12_tobsv")
+metadata/_custom_type_script = "uid://em0hp0g40r3u"
 
 [node name="HoleBottom" type="TextureRect" parent="BigDons/Player1" unique_id=803144163]
 layout_mode = 0
@@ -570,7 +633,7 @@ layout_mode = 0
 offset_left = 88.0
 offset_top = 216.0
 offset_right = 382.0
-offset_bottom = 336.0007
+offset_bottom = 336.0006
 texture = ExtResource("9_eaxmw")
 
 [node name="Player2" type="TextureRect" parent="BigDons" unique_id=1451118920]
@@ -602,7 +665,6 @@ offset_left = -24.0
 offset_top = -248.0
 offset_right = 232.0
 offset_bottom = 8.0
-scale = Vector2(1.5, 1.5)
 texture = SubResource("AtlasTexture_mi5g8")
 flip_h = true
 

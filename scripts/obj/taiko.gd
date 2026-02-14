@@ -7,6 +7,8 @@ class_name TaikoDrum
 ]
 @export var don_light_up: TextureRect
 @export var kat_light_up: TextureRect
+@export var difficulity_light_up: Sprite2D
+@export var difficulity_light_up_good: Sprite2D
 @onready var note_sounds: Array[String] = [
 	"dong.wav", "ka.wav"
 ]
@@ -36,14 +38,19 @@ var combo: int = 0:
 func _process(delta: float) -> void:
 	don_light_up.modulate.a = move_toward(don_light_up.modulate.a, 0, delta*5)
 	kat_light_up.modulate.a = move_toward(kat_light_up.modulate.a, 0, delta*5)
+	difficulity_light_up.modulate.a = move_toward(difficulity_light_up.modulate.a, 0, delta*5)
+	difficulity_light_up_good.modulate.a = move_toward(difficulity_light_up_good.modulate.a, 0, delta*5)
 
-func taiko_input(note: int, side: int, should_combo: bool = true, volume: int = 100):
+func taiko_input(note: int, side: int, should_combo: bool = true, volume: int = 100, good: bool = true):
 	var tween: Tween = last_tweens[note][side]
 	if tween: tween.stop()
 	SoundHandler.play_sound(note_sounds[note], volume / 100.0)
 	var tex: TextureRect = light_up[note][side]
 	tex.modulate.a = 1.0
 	(don_light_up if note == 0 else kat_light_up).modulate.a = 1.0
+	var l: Sprite2D = difficulity_light_up
+	if good: l = difficulity_light_up_good
+	l.modulate.a = 1.0
 	last_tweens[note][side] = get_tree().create_tween()
 	tween = last_tweens[note][side]
 	tween.set_parallel(true)

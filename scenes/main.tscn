@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ceb4j17lee54m" path="res://scripts/scenes/main.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://clgowj1d22mk5" path="res://assets/game/top_bg/bg01.png" id="2_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
+[ext_resource type="Texture2D" uid="uid://d04eby56jesxn" path="res://assets/game/symbol/oni.png" id="3_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="3_jkv2x"]
 [ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="4_jbj1t"]
@@ -16,9 +17,9 @@
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
 atlas = ExtResource("4_jbj1t")
-region = Rect2(0, 0, 256, 256)
+region = Rect2(0, 0, 384, 384)
 
 [sub_resource type="Gradient" id="Gradient_trceg"]
 interpolation_mode = 2
@@ -68,6 +69,29 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("2_jkv2x")
 centered = false
 
+[node name="Symbol" type="Sprite2D" parent="." unique_id=34383098]
+z_index = -1
+position = Vector2(128, -96)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("3_jbj1t")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 256, 256)
+
+[node name="SymbolHighlight" type="Sprite2D" parent="Symbol" unique_id=604006708]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("3_jbj1t")
+centered = false
+region_enabled = true
+region_rect = Rect2(256, 0, 256, 256)
+
+[node name="SymbolHighlightGood" type="Sprite2D" parent="Symbol" unique_id=123054636]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("3_jbj1t")
+centered = false
+region_enabled = true
+region_rect = Rect2(512, 0, 256, 256)
+
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
@@ -77,29 +101,30 @@ anchor_left = -0.042000003
 anchor_top = -0.133
 anchor_right = 0.358
 anchor_bottom = 0.4
-offset_left = 0.3200035
-offset_top = -0.23999786
-offset_right = -127.68002
-offset_bottom = -128.0
-scale = Vector2(1.5, 1.5)
-texture = SubResource("AtlasTexture_a8y0u")
+offset_left = -15.6799965
+offset_top = -4.239998
+offset_right = -15.680023
+offset_bottom = -4.0
+texture = SubResource("AtlasTexture_jkv2x")
 
 [node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
 layout_mode = 0
-offset_top = 152.0
-offset_right = 192.0
-offset_bottom = 344.0
+offset_left = -16.0
+offset_top = 156.0
+offset_right = 176.0
+offset_bottom = 348.0
 texture = ExtResource("3_85g3d")
-metadata/_edit_group_ = true
 
 [node name="SongBorder" type="ColorRect" parent="TaikoArea" unique_id=393156074]
 unique_name_in_owner = true
 z_index = -1
 layout_mode = 1
+offset_left = 16.0
 offset_top = 176.0
-offset_right = 960.0
+offset_right = 976.0
 offset_bottom = 216.0
 color = Color(0, 0, 0, 1)
+metadata/_edit_group_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="TaikoArea/SongBorder" unique_id=356770363]
 layout_mode = 1
@@ -110,7 +135,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 32
+theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 6
 
 [node name="SongTitle" type="Label" parent="TaikoArea/SongBorder/MarginContainer" unique_id=620570811]
@@ -121,7 +146,25 @@ theme_override_font_sizes/font_size = 28
 text = "fuck"
 horizontal_alignment = 2
 
-[node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up")]
+[node name="VBoxContainer" type="VBoxContainer" parent="TaikoArea/SongBorder/MarginContainer" unique_id=1265497362]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TimeLeft" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=139333196]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 16
+text = "fuck"
+
+[node name="Beat" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=1875648584]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 16
+text = "fuck"
+
+[node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up", "difficulity_light_up", "difficulity_light_up_good")]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -129,6 +172,8 @@ texture = ExtResource("5_trceg")
 script = ExtResource("4_85g3d")
 don_light_up = NodePath("../Lane/DonGradient")
 kat_light_up = NodePath("../Lane/KatGradient")
+difficulity_light_up = NodePath("../../Symbol/SymbolHighlight")
+difficulity_light_up_good = NodePath("../../Symbol/SymbolHighlightGood")
 
 [node name="Kat_0" type="TextureRect" parent="TaikoArea/Taiko" unique_id=313047216]
 modulate = Color(1, 1, 1, 0)
@@ -183,7 +228,7 @@ z_index = -1
 layout_mode = 0
 offset_left = 178.0
 offset_top = 18.0
-offset_right = 960.0
+offset_right = 976.0
 offset_bottom = 177.0
 texture = ExtResource("10_a8y0u")
 expand_mode = 1
@@ -219,43 +264,21 @@ texture = SubResource("GradientTexture2D_ya4ey")
 
 [node name="Judge" type="TextureRect" parent="TaikoArea/Lane" unique_id=330562658]
 layout_mode = 0
-offset_left = 11.0
+offset_left = 14.0
 offset_top = 14.0
-offset_right = 107.0
+offset_right = 110.0
 offset_bottom = 110.0
 texture = ExtResource("11_trceg")
+metadata/_edit_group_ = true
 
 [node name="NoteDrawer" type="Node2D" parent="TaikoArea/Lane/Judge" unique_id=999984305 node_paths=PackedStringArray("lane_texture")]
 position = Vector2(48, 48)
 script = ExtResource("11_ya4ey")
 lane_texture = NodePath("../..")
 
-[node name="TimeLeft" type="Label" parent="TaikoArea" unique_id=1345153710]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_top = 192.0
-offset_right = 264.0
-offset_bottom = 234.0
-theme_override_fonts/font = ExtResource("13_trceg")
-theme_override_font_sizes/font_size = 16
-text = "fuck"
-
-[node name="Beat" type="Label" parent="TaikoArea" unique_id=1276363920]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_top = 176.0
-offset_right = 64.0
-offset_bottom = 193.0
-theme_override_fonts/font = ExtResource("13_trceg")
-theme_override_font_sizes/font_size = 16
-text = "fuck"
-
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
-wait_time = 3.0
+wait_time = 1.5
 one_shot = true
-autostart = true
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

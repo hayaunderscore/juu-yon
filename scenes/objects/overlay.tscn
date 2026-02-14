@@ -3,6 +3,7 @@
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="1_7w7hb"]
 
 [node name="Overlay" type="CanvasLayer" unique_id=1626285678]
+layer = 1000
 
 [node name="Control" type="Control" parent="." unique_id=239214378]
 z_index = 999

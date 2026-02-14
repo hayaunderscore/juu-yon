@@ -1,0 +1,417 @@
+[gd_scene format=3 uid="uid://dyvmwrm570eh6"]
+
+[ext_resource type="AudioStream" uid="uid://cyshjrbw5fesj" path="res://assets/mus/mode_select.ogg" id="1_ekxnf"]
+[ext_resource type="Script" uid="uid://drkw8aicv6f7g" path="res://scripts/scenes/main_menu.gd" id="1_tbmy8"]
+[ext_resource type="PackedScene" uid="uid://cbj2uvndsng4r" path="res://scenes/backgrounds/menu_bg.tscn" id="2_bqqt6"]
+[ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="3_wu84c"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="4_8ln24"]
+[ext_resource type="Texture2D" uid="uid://coggfx70byrns" path="res://assets/songselect/bar.png" id="5_oa1go"]
+[ext_resource type="Script" uid="uid://dqyl0g1a5jxrj" path="res://scripts/obj/vertical_text.gd" id="7_jk1qb"]
+[ext_resource type="Texture2D" uid="uid://di8gmhj22ewlp" path="res://assets/songselect/bar_highlight.png" id="7_tbmy8"]
+[ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="9_lgwnu"]
+[ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="10_flqon"]
+[ext_resource type="Texture2D" uid="uid://jx0i5qbewuxl" path="res://assets/game/chara/default/misc.png" id="11_rcqid"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5dd4i"]
+texture = ExtResource("5_oa1go")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 42.0
+texture_margin_bottom = 41.0
+modulate_color = Color(0.8911145, 0.37412393, 0.17542791, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lgwnu"]
+texture = ExtResource("7_tbmy8")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+expand_margin_left = 18.0
+expand_margin_top = 17.0
+expand_margin_right = 19.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="Texture2D" id="Texture2D_lgwnu"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("7_jk1qb")
+text = "演奏ゲーム"
+font = ExtResource("4_8ln24")
+font_size = 32
+outline_size = 18
+outline_color = Color(0.6156863, 0.14509805, 0.011764706, 1)
+padding = Vector2i(16, 12)
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgwnu"]
+bg_color = Color(1, 1, 1, 1)
+expand_margin_left = 18.0
+expand_margin_top = 17.0
+expand_margin_right = 19.0
+expand_margin_bottom = 17.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1go"]
+texture = ExtResource("5_oa1go")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 42.0
+texture_margin_bottom = 41.0
+modulate_color = Color(0.5294118, 0.88235295, 0.88235295, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_flqon"]
+texture = ExtResource("7_tbmy8")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+expand_margin_left = 18.0
+expand_margin_top = 17.0
+expand_margin_right = 19.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="Texture2D" id="Texture2D_tbmy8"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("7_jk1qb")
+text = "ゲーム設定"
+font = ExtResource("4_8ln24")
+font_size = 32
+outline_size = 18
+outline_color = Color(0.009647905, 0.54906696, 0.5762288, 1)
+padding = Vector2i(16, 12)
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jk1qb"]
+texture = ExtResource("5_oa1go")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 42.0
+texture_margin_bottom = 41.0
+modulate_color = Color(0.90588236, 0.6784314, 0.77254903, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rcqid"]
+texture = ExtResource("7_tbmy8")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+expand_margin_left = 18.0
+expand_margin_top = 17.0
+expand_margin_right = 19.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="Texture2D" id="Texture2D_5dd4i"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("7_jk1qb")
+text = "脱出ゲーム"
+font = ExtResource("4_8ln24")
+font_size = 32
+outline_size = 18
+outline_color = Color(0.51908237, 0.1994845, 0.24980545, 1)
+padding = Vector2i(16, 12)
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flqon"]
+atlas = ExtResource("11_rcqid")
+region = Rect2(0, 0, 384, 384)
+
+[sub_resource type="Animation" id="Animation_7b55j"]
+resource_name = "Enter"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TaikoCharaP1:state")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(0, 0, 1),
+"update": 1,
+"values": [4, 0, 1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TaikoP1:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(0.5, 1, 0.5, 2, 1),
+"update": 0,
+"values": [Vector2(24, 640), Vector2(24, 384), Vector2(24, 384), Vector2(24, 416), Vector2(24, 400)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TaikoCharaP1:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(2, 0.5, 2, 1),
+"update": 0,
+"values": [Vector2(0, -384), Vector2(0, 144), Vector2(0, 160), Vector2(0, 144)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("TaikoCharaP1:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(0, 1, 1),
+"update": 1,
+"values": [0, 7, 0]
+}
+
+[sub_resource type="Animation" id="Animation_5pajh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TaikoCharaP1:state")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TaikoP1:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(24, 640)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TaikoCharaP1:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -384)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("TaikoCharaP1:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_j7ex8"]
+_data = {
+&"Enter": SubResource("Animation_7b55j"),
+&"RESET": SubResource("Animation_5pajh")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flqon"]
+bg_color = Color(0.8901961, 0.37254903, 0.1764706, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_rcqid"]
+font = ExtResource("4_8ln24")
+font_size = 20
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Control" type="Control" unique_id=614042127]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tbmy8")
+
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=420934409]
+stream = ExtResource("1_ekxnf")
+autoplay = true
+
+[node name="Control" parent="." unique_id=1483832001 instance=ExtResource("2_bqqt6")]
+layout_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1657518573]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -232.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=383992220]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
+
+[node name="MenuItems" type="HBoxContainer" parent="HBoxContainer/MarginContainer" unique_id=584852267]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 2
+
+[node name="SongSelect" type="PanelContainer" parent="HBoxContainer/MarginContainer/MenuItems" unique_id=88581166]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_5dd4i")
+
+[node name="Panel" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect" unique_id=831209657]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_lgwnu")
+
+[node name="Text" type="TextureRect" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect" unique_id=1821845037]
+layout_mode = 2
+texture = SubResource("Texture2D_lgwnu")
+
+[node name="Highlight" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect" unique_id=264149816]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
+
+[node name="SongSelect2" type="PanelContainer" parent="HBoxContainer/MarginContainer/MenuItems" unique_id=429878432]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_oa1go")
+
+[node name="Panel" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect2" unique_id=1855098478]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_flqon")
+
+[node name="Text" type="TextureRect" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect2" unique_id=1874450965]
+layout_mode = 2
+texture = SubResource("Texture2D_tbmy8")
+
+[node name="Highlight" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect2" unique_id=284991560]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
+
+[node name="SongSelect3" type="PanelContainer" parent="HBoxContainer/MarginContainer/MenuItems" unique_id=1430623162]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_jk1qb")
+
+[node name="Panel" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect3" unique_id=63757219]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_rcqid")
+
+[node name="Text" type="TextureRect" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect3" unique_id=665013438]
+layout_mode = 2
+texture = SubResource("Texture2D_5dd4i")
+
+[node name="Highlight" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect3" unique_id=2017467420]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
+
+[node name="P1Anims" type="Control" parent="." unique_id=1629656377]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TaikoP1" type="TextureRect" parent="P1Anims" unique_id=1435413706]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 640.0
+offset_right = 349.0
+offset_bottom = 1013.00006
+texture = ExtResource("9_lgwnu")
+
+[node name="TaikoCharaP1" parent="P1Anims" unique_id=308592822 instance=ExtResource("10_flqon")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = -384.0
+offset_bottom = 0.0
+texture = SubResource("AtlasTexture_flqon")
+state = 4
+
+[node name="P1AnimPlayer" type="AnimationPlayer" parent="P1Anims" unique_id=2021040004]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_j7ex8")
+
+[node name="BannerTop" type="ColorRect" parent="." unique_id=959165453]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.056
+offset_bottom = -0.31999207
+color = Color(0.10747974, 0.10747973, 0.107479684, 1)
+
+[node name="TaikoText" type="Control" parent="BannerTop" unique_id=2052533754]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 240.0
+offset_bottom = 80.0
+script = ExtResource("3_wu84c")
+font = ExtResource("4_8ln24")
+text = "Main Menu"
+first_outline_color = Color(1, 0.15294118, 0.21568628, 1)
+second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
+text_size = 42
+first_outline_size = 28
+second_outline_size = 42
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1064431242]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41700003
+anchor_top = 0.711
+anchor_right = 0.96700007
+anchor_bottom = 0.822
+offset_left = -0.32003784
+offset_top = 0.07998657
+offset_right = -0.32006836
+offset_bottom = 0.15997314
+scale = Vector2(1, 1e-05)
+
+[node name="Description" type="PanelContainer" parent="VBoxContainer" unique_id=1383121090]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Description" unique_id=592364535]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer/Description/MarginContainer" unique_id=1030254946]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select the song and start a game!"
+label_settings = SubResource("LabelSettings_rcqid")
+horizontal_alignment = 1
