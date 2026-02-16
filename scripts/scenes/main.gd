@@ -50,9 +50,25 @@ var difficulty_icons: Dictionary[int, Texture2D] = {
 	TJAChartInfo.CourseType.EDIT: preload("uid://drsb8jnq80p1"),
 }
 
+func merge_branches_prelim(chart: TJAChartInfo):
+	if not (chart.flags & TJAChartInfo.ChartFlags.BRANCHFUL): return
+	# Append master notes FOR NOW
+	# TODO actual REAL branching
+	chart.notes.append_array(chart.branch_notes[TJAChartInfo.BranchType.MASTER])
+	chart.barline_data.append_array(chart.branch_barlines[TJAChartInfo.BranchType.MASTER])
+	# Redo draw data
+	var sorted: Array[Dictionary] = chart.notes.duplicate(true)
+	for i in range(0, sorted.size()):
+		chart.notes[i]["cached_index"] = i
+		chart.draw_data[i] = sorted[i]
+	var s: Array = Globals.merge_sort(chart.notes, func(a, b): a["time"] < b["time"])
+	chart.notes.assign(s)
+
 func load_tja(new_tja: TJAMeta, diff: int):
 	tja = new_tja.create_tja_from_meta()
 	chart = tja.charts[diff]
+	# TODO
+	# merge_branches_prelim(chart)
 	current_note_list = chart.notes
 	audio.stream = tja.wave
 	%SongTitle.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
@@ -194,6 +210,7 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 	# Create note path for this note type
 	var note: PathFollow2D = note_follow.instantiate()
 	var spr: Sprite2D = note.get_child(0)
+	var anim: AnimationPlayer = note.get_node("AnimationPlayer")
 	spr.texture = TaikoNoteDrawer.notes[type]
 	note_curve.add_child(note)
 	# Create judge effect
@@ -205,11 +222,11 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 		tween.set_parallel(true)
 		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		tween.set_parallel(false)
-	tween.tween_callback(note.queue_free).set_delay(0.3)
+	tween.tween_callback(anim.play.bind("Hit"))
 	if balloon:
 		tween.set_parallel(true)
-		tween.tween_property(%BalloonRainbow, "position:x", balloon_tex.atlas.get_width(), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
-		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(%BalloonRainbow, "position:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 		tween.set_parallel(false)
 
 func _process(delta: float) -> void:

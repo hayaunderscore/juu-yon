@@ -49,6 +49,7 @@ script = ExtResource("1_insur")
 
 [node name="Voice" type="AudioStreamPlayer" parent="." unique_id=1700448202]
 stream = ExtResource("2_a50jo")
+volume_db = 4.067
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=2119744865]
 layout_mode = 1

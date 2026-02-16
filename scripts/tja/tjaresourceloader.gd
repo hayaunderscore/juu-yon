@@ -199,8 +199,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 	var branch_start_meter: float = 0.0
 	var branch_start_scroll: Vector2 = Vector2.ZERO
 	var currently_branching: bool = false
-	var current_note_data: Array[Dictionary]
-	var current_barline_data: Array[Dictionary]
+	var current_note_data: Array
+	var current_barline_data: Array
 	var current_balloon_data: PackedFloat64Array = PackedFloat64Array()
 	
 	while file.get_position() < file.get_length():
@@ -300,6 +300,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
 			for note in chart.barline_data:
 				note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
+			for i in range(chart.branch_notes.size()):
+				var note_data: Array = chart.branch_notes[i]
+				for note in note_data:
+					note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
+				var barline_data: Array = chart.branch_barlines[i]
+				for note in barline_data:
+					note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
 			# Sort all notes by time
 			var sorted: Array[Dictionary] = chart.notes.duplicate(true)
 			for i in range(0, sorted.size()):
@@ -315,10 +322,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 			chart.notes = chart.notes.filter(func(a): return not a.has("dummy"))
 			var s: Array = merge_sort(chart.notes, func(a, b): a["time"] < b["time"])
 			chart.notes.assign(s)
-			for note_data in chart.branch_notes:
+			for i in range(chart.branch_notes.size()):
+				var note_data: Array = chart.branch_notes[i]
 				note_data = note_data.filter(func(a): return not a.has("dummy"))
 				note_data = merge_sort(note_data, func(a, b): a["time"] < b["time"])
+				chart.branch_notes[i] = note_data
 			chart.flags = flags
+			flags = 0
 			tja.charts.push_back(chart)
 		
 		if line.is_empty(): continue
@@ -424,6 +434,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						branch_start_time = time
 						currently_branching = true
 						
+						flags |= TJAChartInfo.ChartFlags.BRANCHFUL
+						
 						var cond: int = TJAChartInfo.BranchCondition.get(comargs[0], "r")
 						var expert_req: int = comargs[1].to_int()
 						var master_req: int = comargs[2].to_int()
@@ -443,8 +455,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.NORMAL])
-						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.NORMAL])
+						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.NORMAL]
+						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.NORMAL]
 					"e":
 						if not currently_branching:
 							print("Invalid #E (No branch found for this path!)")
@@ -453,8 +465,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.EXPERT])
-						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.EXPERT])
+						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.EXPERT]
+						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.EXPERT]
 					"m":
 						if not currently_branching:
 							print("Invalid #M (No branch found for this path!)")
@@ -463,8 +475,14 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
-						current_note_data.assign(chart.branch_notes[TJAChartInfo.BranchType.MASTER])
-						current_barline_data.assign(chart.branch_barlines[TJAChartInfo.BranchType.MASTER])
+						# TODO Branches.
+						# Branches are easily the hardest part of making a simulator
+						# And even more so with how I set up the notes and draw data
+						# For now, force everything to master branch
+						#current_note_data = chart.branch_notes[TJAChartInfo.BranchType.MASTER]
+						#current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.MASTER]
+						current_note_data = chart.notes
+						current_barline_data = chart.barline_data
 					
 				continue
 			# Notes

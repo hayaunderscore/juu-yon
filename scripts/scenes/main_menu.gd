@@ -37,7 +37,10 @@ func _ready() -> void:
 			item_text_colors.push_back(item_text.back().outline_color)
 			item.global_position.y = 720
 	%P1AnimPlayer.play("Enter")
+	SoundHandler.play_sound("title/title_enter.wav")
+	
 	await get_tree().process_frame
+	
 	for item in items.get_children():
 		if item is PanelContainer:
 			item.visible = true
@@ -94,6 +97,13 @@ func _physics_process(delta: float) -> void:
 	if do_select_transition:
 		select_transition += delta
 
+const selected_voices: PackedStringArray = [
+	"title/song_select.wav",
+	"title/my_room.wav",
+	"title/options.wav",
+	""
+]
+
 func _on_control_banner_don_pressed(id: Variant) -> void:
 	if not Globals.players_entered[id]: return
 	Globals.control_banner.deactivate()
@@ -105,8 +115,11 @@ func _on_control_banner_don_pressed(id: Variant) -> void:
 	tween.tween_property(description_container, "scale:y", 0.0, 0.1)
 	tween.tween_property(item, "global_position:x", get_viewport_rect().size.x / 2.0 - 51, 0.3)
 	tween.set_parallel(false)
-	tween.tween_callback(choose_callback).set_delay(1.7)
+	tween.tween_callback(choose_callback).set_delay(2.0)
 	%TaikoCharaP1.do_combo_animation(64, false)
+	if not selected_voices[selected].is_empty():
+		SoundHandler.play_sound(selected_voices[selected])
+	if selected == 3: get_tree().quit()
 
 func choose_callback():
 	var tween: Tween = create_tween()
@@ -116,7 +129,6 @@ func choose_callback():
 			TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true, Color("e35f2d"), true)
 		1: pass
 		2: pass
-		3: get_tree().quit()
 
 func kat_pressed(_id, side):
 	selected = wrapi(selected + side, 0, items.get_child_count())

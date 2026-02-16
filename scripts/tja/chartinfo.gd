@@ -25,6 +25,7 @@ enum ChartFlags {
 	NONE,
 	BMSCROLL = (1 << 0),
 	HBSCROLL = (1 << 1),
+	BRANCHFUL = (1 << 2),
 }
 
 enum NoteType {

@@ -23,3 +23,33 @@ func _process(_delta: float) -> void:
 
 func log(category: String, msg: String):
 	print_rich("[color=green][b]%s[/b][color=white]: %s" % [category, msg])
+
+func merge_sort(cards: Array, fun: Callable) -> Array:
+	if cards.size() <= 1:
+		return cards
+	var mid: int = floori(cards.size() / 2.0)
+	var left: Array = merge_sort(cards.slice(0, mid), fun)
+	var right: Array = merge_sort(cards.slice(mid, cards.size()), fun)
+	return merge(left, right, fun)
+
+func merge(left: Array, right: Array, fun: Callable) -> Array:
+	var result: Array = []
+	var i: int = 0
+	var j: int = 0
+	while i < left.size() and j < right.size():
+		if fun.call(left[i], right[j]):
+			result.append(left[i])
+			i += 1
+		else:
+			result.append(right[j])
+			j += 1
+
+	while i < left.size():
+		result.append(left[i])
+		i += 1
+
+	while j < right.size():
+		result.append(right[j])
+		j += 1
+
+	return result

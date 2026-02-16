@@ -252,7 +252,7 @@ func box_select():
 		smoothed_selected_index = idx
 		box_prev_positions.remove_at(box_prev_positions.size() - 1)
 	
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(0.7).timeout
 	
 	can_choose = true
 	Globals.control_banner.activate_side()
@@ -279,7 +279,7 @@ func diff_select_to_song_select():
 	Globals.control_banner.deactivate()
 	Globals.control_banner.deactivate_side()
 	state = State.DIFF_TO_SONG
-	box_transition = 1.0
+	box_transition = 2.0
 	target_prev_box_size = box_open_size
 	target_box_size = box_diff_select_size
 	stupid_fucking_alpha_hack_i_will_remove_someday = true
@@ -413,6 +413,8 @@ func _draw() -> void:
 			var t_ofs: float = 0.0
 			if state == State.DIFF_SELECT:
 				t_ofs = 1.0
+			if stupid_fucking_alpha_hack_i_will_remove_someday:
+				t_ofs = 1.0
 			bsize.y = lerpf(472, 472 + 32, minf(1.0, maxf(0.0, box_transition - t_ofs)))
 			# print(bsize.y)
 			right.y = 472 - bsize.y
@@ -463,20 +465,27 @@ func _draw() -> void:
 		if i == selected_index and not song.box:
 			var base_padding: float = 24
 			if state >= State.DIFF_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
-				base_padding = lerpf(24, 96, minf(1.0, box_transition))
+				base_padding = lerp(24, 64, maxf(0.0, minf(1.0, box_transition)))
 			var diff_width: float = (24*2 + base_padding) * song.chart_metadata.size()
 			var diff_padding: float = (288 / diff_width) * base_padding
 			var diff_x: float = x + diff_padding*2
 			if state >= State.DIFF_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
 				diff_x += (bsize.x - box_open_size) / 2.0
-			const diff_height: float = 372
+				# diff_x += lerp(0, 64, minf(1.0, box_transition))
+			var diff_height: float = 372
+			if state >= State.DIFF_SELECT:
+				var transp: float = box_transition - 1.0
+				diff_height += lerp(0, 32, maxf(0.0, minf(1.0, transp)))
+			var diff_y_ofs: float = 0
 			var diff_trans: float = trans
 			if state == State.SONG_SELECT:
 				diff_trans = trans - 0.5
 			for k in range(song.chart_metadata.size()):
 				var chart: Dictionary = song.chart_metadata[k]
 				# if not chart: continue
-				draw_set_transform(offset_x.call(diff_x))
+				var p: Vector2 = offset_x.call(diff_x)
+				p.y += diff_y_ofs
+				draw_set_transform(p)
 				(box_difficulty as StyleBoxFlat).bg_color.a = minf(1, diff_trans)
 				draw_style_box(box_difficulty, Rect2(Vector2(0, 64), Vector2(24*2, diff_height)))
 				
@@ -505,7 +514,7 @@ func _draw() -> void:
 					TJAChartInfo.CourseType.ONI:
 						max_stars = 10
 					TJAChartInfo.CourseType.EDIT:
-						max_stars = 15
+						max_stars = 10
 				var star_y: float = diff_height + 64 - 24 - 9
 				var star_clr: Color = Color.from_string("#E77627", Color.WHITE)
 				star_clr.a = minf(1, diff_trans)
@@ -529,11 +538,13 @@ func _draw() -> void:
 		var y: float = right.y + 24
 		if state >= State.DIFF_SELECT:
 			var t_ofs: float = 0.0
-			if state == State.DIFF_SELECT:
+			if state == State.DIFF_SELECT or stupid_fucking_alpha_hack_i_will_remove_someday:
 				t_ofs = 1.0
 			y = lerpf(24, 0, minf(1.0, maxf(0.0, box_transition - t_ofs)))
 		var height: float = 0 if not song.title_texture else song.title_texture.get_height()
 		var x_ofs: float = 48 + (bsize.x - box_width)
+		if state >= State.DIFF_SELECT:
+			x_ofs -= lerpf(0, 16, minf(1.0, maxf(0.0, box_transition)))
 		if song.box and i == selected_index:
 			x_ofs -= lerp(0, 28, minf(1.0, box_transition))
 		var outline_color: Color = Color.BLACK
