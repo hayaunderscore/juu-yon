@@ -26,6 +26,7 @@ enum State {
 			frame = v;
 			_update_texture()
 
+@warning_ignore_start("integer_division")
 func _update_texture():
 	if idle_texture == null: return
 	var atlas: AtlasTexture = AtlasTexture.new()
@@ -58,6 +59,7 @@ func _update_texture():
 	var f = wrapi(frame, 0, max_frames)
 	var tex_width: int = atlas.atlas.get_width()
 	atlas.region.position.x = f * (tex_width / max_frames)
+@warning_ignore_restore("integer_division")
 
 @export_group("Idle", "idle_")
 @export var idle_texture: Texture2D:
@@ -98,13 +100,13 @@ var gogo: bool = false
 func _ready() -> void:
 	pass # Replace with function body.
 
-func do_combo_animation(return_to_idle: bool = true):
+func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo: return
 	state = State.COMBO
 	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var cur_y: float = position.y
 	_combo_tween = create_tween()
-	_combo_tween.tween_property(self, "position:y", position.y - 24, (30 / bpm)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.tween_property(self, "position:y", position.y - height, (30 / bpm)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	_combo_tween.tween_property(self, "position:y", cur_y, (30 / bpm)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	if return_to_idle: _combo_tween.tween_property(self, "state", State.IDLE, 0)
 

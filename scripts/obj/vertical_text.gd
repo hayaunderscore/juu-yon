@@ -8,6 +8,10 @@ class_name VerticalText2D
 		text = value
 		_update_texture()
 
+@export_storage var tr_text: String:
+	get: return text
+	set(value): text = value
+
 @export_group("Font")
 @export var font: Font:
 	set(value):
@@ -90,7 +94,7 @@ func group_horizontal_sequences(txt: String) -> Array[PackedStringArray]:
 			var sequence: String = ch
 			var j: int = i + 1
 			# Collect consecutive horizontal punctuation
-			while j < text.length() and txt[j] in horizontal_punct:
+			while j < txt.length() and txt[j] in horizontal_punct:
 				sequence += txt[j]
 				j += 1
 			# Only treat as horizontal if 2 or more characters
@@ -127,7 +131,8 @@ func _update_size():
 	_size_update_called = false
 	_text_size = Vector2.ZERO
 	
-	_group_sequence = group_horizontal_sequences(text)
+	var t: String = tr(text)
+	_group_sequence = group_horizontal_sequences(t)
 	
 	for group in _group_sequence:
 		var group_type: String = group[0]

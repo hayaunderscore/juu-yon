@@ -3,7 +3,8 @@ extends Node
 var config: Dictionary = {
 	"game": {
 		"free_play": true,
-		"song_folder": "songs/"
+		"song_folder": "songs/",
+		"language": "ja"
 	},
 	"audio": {
 		"music": 100,
@@ -34,3 +35,5 @@ func _ready() -> void:
 			for key in sec:
 				cfg.set_value(section, key, sec[key])
 		cfg.save(config_path)
+	
+	TranslationServer.set_locale(get_section_key("game", "language"))

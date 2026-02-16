@@ -55,7 +55,7 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	chart = tja.charts[diff]
 	current_note_list = chart.notes
 	audio.stream = tja.wave
-	%SongTitle.text = tja.title_localized.get("ja", tja.title)
+	%SongTitle.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
 	Globals.song_name = %SongTitle.text
 	audio.volume_linear = tja.song_volume / 100.0
 	%Chara.bpm = tja.start_bpm
@@ -89,7 +89,13 @@ func handle_play_events():
 			TJAChartInfo.CommandType.GOGOSTART:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
+				gogo_tween.set_parallel(true)
+				%Soul.scale = Vector2.ONE * 2
+				const yellow: Color = Color(3.77, 3.77, 0.0)
+				%Judge.self_modulate = yellow
+				gogo_tween.tween_property(%Soul, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
+				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 1.0, 0.2)
 				%Chara.gogo = true
 				var state = %Chara.state
 				if state != %Chara.State.COMBO:
@@ -97,7 +103,11 @@ func handle_play_events():
 			TJAChartInfo.CommandType.GOGOEND:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
+				gogo_tween.set_parallel(true)
+				gogo_tween.tween_property(%Soul, "scale", Vector2.ZERO, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
+				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 0.0, 0.2)
+				%Judge.self_modulate = Color.WHITE
 				%Chara.gogo = false
 				var state = %Chara.state
 				if state != %Chara.State.COMBO:
@@ -106,21 +116,105 @@ func handle_play_events():
 				%Chara.bpm = command.get("val1")
 
 var roll_cnt: int = 0
+var current_roll_note: Dictionary
 func auto_roll():
 	if not roll: return
 	if roll_cnt % 4 == 0:
 		taiko.taiko_input(0, 1 if auto_don_side else 0, 100, false)
 		auto_don_side = !auto_don_side
 		roll_cnt = 0
+		if current_roll_note.get("note", 0) == 5:
+			add_note_to_gauge(1, true)
+		elif current_roll_note.get("note", 0) == 6:
+			add_note_to_gauge(3, true)
 	roll_cnt += 1
 
-func _physics_process(delta: float) -> void:
+var add_mat: CanvasItemMaterial = preload("uid://j5mp4mbuaxqe")
+var good_tex_effect: Array[Texture2D] = [
+	preload("uid://c1b0xbse3rx76"),
+	preload("uid://q3fnlvyn3nth"),
+]
+var ok_tex_effect: Array[Texture2D] = [
+	preload("uid://dsv7c1aj7fekv"),
+	preload("uid://dq3jrftb0u4e8"),
+]
+var good_tex_hit: Array[Texture2D] = [
+	preload("uid://cyi07ksfk6xt8"),
+	preload("uid://dcl6rfoch8x21"),
+]
+var ok_tex_hit: Array[Texture2D] = [
+	preload("uid://dbrb5yxudsjmk"),
+	preload("uid://870vju77rh3d"),
+]
+func create_judge_effect(good: bool = true, big: bool = false):
+	var effect_table: Array[Texture2D] = good_tex_effect if good else ok_tex_effect
+	var hit_table: Array[Texture2D] = good_tex_hit if good else ok_tex_hit
+	# Judge effect
+	var base: Sprite2D = Sprite2D.new()
+	var big_base: Sprite2D = null
+	base.texture = good_tex_effect[0]
+	base.material = add_mat
+	base.z_index = 1
+	base.modulate.a = 0.75
+	if big:
+		big_base = Sprite2D.new()
+		big_base.texture = effect_table[1]
+		big_base.material = add_mat
+		big_base.scale = Vector2.ONE * 0.5 # Starts small then scales later- see tween
+		base.add_child(big_base)
+	%LanePivot.add_child(base)
+	# Lane note hit effect
+	var note: Sprite2D = Sprite2D.new()
+	note.texture = hit_table[1 if big else 0]
+	%LanePivot.add_child(note)
+	# Tween both of these together
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
+	tween.tween_property(base, "modulate:a", 0, 0.1).set_delay(0.05)
+	tween.tween_property(note, "modulate:a", 0, 0.3)
+	tween.set_parallel(false)
+	tween.tween_callback(func():
+		base.queue_free()
+		note.queue_free()
+	)
+
+var note_follow: PackedScene = preload("uid://bpksjoo45newj")
+@onready var note_curve: Path2D = $NoteCurvePath
+func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
+	var balloon: bool = false
+	var balloon_tex: AtlasTexture = %BalloonRainbow.texture as AtlasTexture
+	# Reset balloon effects (this means only one rainbow is visible at a time!)
+	if type == 7:
+		balloon = true
+		balloon_tex.region.position.x = 0.0
+		balloon_tex.region.size.x = 1.0
+		%BalloonRainbow.position.x = 0
+		type = 3
+	# Create note path for this note type
+	var note: PathFollow2D = note_follow.instantiate()
+	var spr: Sprite2D = note.get_child(0)
+	spr.texture = TaikoNoteDrawer.notes[type]
+	note_curve.add_child(note)
+	# Create judge effect
+	if not skip_judge: create_judge_effect(good, type == 3 or type == 4)
+	# TODO transition
+	var tween: Tween = create_tween()
+	tween.tween_property(note, "progress_ratio", 1.0, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	if balloon:
+		tween.set_parallel(true)
+		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tween.set_parallel(false)
+	tween.tween_callback(note.queue_free).set_delay(0.3)
+	if balloon:
+		tween.set_parallel(true)
+		tween.tween_property(%BalloonRainbow, "position:x", balloon_tex.atlas.get_width(), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		tween.set_parallel(false)
+
+func _process(delta: float) -> void:
 	if not tja: return
 	if not chart: return
-	
-	if Input.is_action_just_pressed("pause"):
-		audio.stream_paused = !audio.stream_paused
-		if not $Timer.is_stopped(): $Timer.paused = !$Timer.paused
 	
 	elapsed = audio.get_playback_position()
 	if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
@@ -142,7 +236,16 @@ func _physics_process(delta: float) -> void:
 	note_drawer.bemani_scroll = chart.flags & (TJAChartInfo.ChartFlags.BMSCROLL | TJAChartInfo.ChartFlags.HBSCROLL)
 	
 	%Chara.beat = beat
+	%Soul.beat = beat
 	%SongBorder.size.x = get_viewport_rect().size.x
+
+func _physics_process(delta: float) -> void:
+	if not tja: return
+	if not chart: return
+	
+	if Input.is_action_just_pressed("pause"):
+		audio.stream_paused = !audio.stream_paused
+		if not $Timer.is_stopped(): $Timer.paused = !$Timer.paused
 	
 	handle_play_events()
 	
@@ -166,32 +269,40 @@ func _physics_process(delta: float) -> void:
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
 				auto_don_side = !auto_don_side
+				add_note_to_gauge(type)
 			2:
 				taiko.taiko_input(1, 1 if auto_kat_side else 0)
 				taiko.combo += 1
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
 				auto_kat_side = !auto_kat_side
+				add_note_to_gauge(type)
 			3:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(0, side)
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
+				add_note_to_gauge(type)
 			4:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(1, side)
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
+				add_note_to_gauge(type)
 		# if current_note_list.size() <= 0: break
 		if type == 5 or type == 6 or type == 7:
 			roll = true
 			roll_cnt = 0
+			current_roll_note = note
 		if type == 8: 
 			roll = false
 			if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
 				var rolln: Dictionary = note["roll_note"]
+				var roll_type: int = rolln["note"]
+				if roll_type == 7:
+					add_note_to_gauge(7, true)
 				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 

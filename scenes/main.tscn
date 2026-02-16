@@ -16,6 +16,25 @@
 [ext_resource type="Texture2D" uid="uid://d1oi5rdfqby8" path="res://assets/game/lane/judge.png" id="11_trceg"]
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
+[ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
+[ext_resource type="Texture2D" uid="uid://b2m0si0ryknl" path="res://assets/game/soul/gauge_back.png" id="17_dp3eg"]
+[ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
+[ext_resource type="Texture2D" uid="uid://dhw5kkdbuk4rb" path="res://assets/game/soul/gauge_front.png" id="18_0ld40"]
+[ext_resource type="Texture2D" uid="uid://cutyua7ipfdhh" path="res://assets/game/lane/balloon_rainbow_mask.png" id="19_jscy8"]
+[ext_resource type="Texture2D" uid="uid://11angywtt7hc" path="res://assets/game/lane/balloon_rainbow.png" id="20_pm3ni"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jscy8"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_pm3ni"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.2551724, 0.7758621, 1)
+colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y6deb"]
+gradient = SubResource("Gradient_pm3ni")
+width = 960
+height = 176
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
 atlas = ExtResource("4_jbj1t")
@@ -43,6 +62,24 @@ colors = PackedColorArray(9.433627e-06, 0.69255006, 0.99156994, 1, 0, 0, 0, 0)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ya4ey"]
 gradient = SubResource("Gradient_choun")
 
+[sub_resource type="Gradient" id="Gradient_jbj1t"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(1, 0.9166666, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_muem4"]
+gradient = SubResource("Gradient_jbj1t")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jscy8"]
+atlas = ExtResource("20_pm3ni")
+region = Rect2(0, 0, 1, 288)
+
+[sub_resource type="Curve2D" id="Curve2D_dp3eg"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 224, 236, -80.99173, 45.454544, 80.99173, -45.454544, 408, 92, -107.43803, -2.2539425, 107.43803, 2.2539425, 660, 20, 0, 0, 0, 0, 876, 64)
+}
+point_count = 4
+
 [node name="Main" type="Control" unique_id=481630010]
 layout_mode = 3
 anchors_preset = 15
@@ -65,12 +102,21 @@ repeat_times = 5
 
 [node name="Back" type="Sprite2D" parent="Parallax2D" unique_id=1969097396]
 unique_name_in_owner = true
-scale = Vector2(1.5, 1.5)
 texture = ExtResource("2_jkv2x")
 centered = false
 
+[node name="GogoBackGradient" type="TextureRect" parent="." unique_id=1739241799]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = -49
+material = SubResource("CanvasItemMaterial_jscy8")
+layout_mode = 0
+offset_right = 960.0
+offset_bottom = 176.0
+texture = SubResource("GradientTexture2D_y6deb")
+
 [node name="Symbol" type="Sprite2D" parent="." unique_id=34383098]
-z_index = -1
+z_index = -5
 position = Vector2(128, -96)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("3_jbj1t")
@@ -106,6 +152,21 @@ offset_top = -4.239998
 offset_right = -15.680023
 offset_bottom = -4.0
 texture = SubResource("AtlasTexture_jkv2x")
+
+[node name="Gauge" type="TextureRect" parent="." unique_id=1193942000]
+z_index = -2
+layout_mode = 0
+offset_left = 380.0
+offset_top = 16.0
+offset_right = 920.0
+offset_bottom = 112.0
+texture = ExtResource("17_dp3eg")
+
+[node name="Gauge2" type="TextureRect" parent="Gauge" unique_id=1929087278]
+layout_mode = 0
+offset_right = 540.0
+offset_bottom = 96.0
+texture = ExtResource("18_0ld40")
 
 [node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
 layout_mode = 0
@@ -164,7 +225,7 @@ theme_override_fonts/font = ExtResource("13_trceg")
 theme_override_font_sizes/font_size = 16
 text = "fuck"
 
-[node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up", "difficulity_light_up", "difficulity_light_up_good")]
+[node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up", "good_light_up", "difficulity_light_up", "difficulity_light_up_good")]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -172,6 +233,7 @@ texture = ExtResource("5_trceg")
 script = ExtResource("4_85g3d")
 don_light_up = NodePath("../Lane/DonGradient")
 kat_light_up = NodePath("../Lane/KatGradient")
+good_light_up = NodePath("../Lane/GoodGradient")
 difficulity_light_up = NodePath("../../Symbol/SymbolHighlight")
 difficulity_light_up_good = NodePath("../../Symbol/SymbolHighlightGood")
 
@@ -262,23 +324,70 @@ offset_right = 798.0
 offset_bottom = 117.0
 texture = SubResource("GradientTexture2D_ya4ey")
 
+[node name="GoodGradient" type="TextureRect" parent="TaikoArea/Lane" unique_id=864950469]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 798.0
+offset_bottom = 117.0
+texture = SubResource("GradientTexture2D_muem4")
+
 [node name="Judge" type="TextureRect" parent="TaikoArea/Lane" unique_id=330562658]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 14.0
 offset_top = 14.0
 offset_right = 110.0
 offset_bottom = 110.0
 texture = ExtResource("11_trceg")
-metadata/_edit_group_ = true
+
+[node name="Soul" type="Sprite2D" parent="TaikoArea/Lane/Judge" unique_id=1372696894]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.5019608)
+position = Vector2(48, 48)
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("16_gqmmt")
+offset = Vector2(46, -52)
+hframes = 8
+script = ExtResource("17_yc10j")
+metadata/_custom_type_script = "uid://uxy42j8dmd2e"
+
+[node name="LanePivot" type="Marker2D" parent="TaikoArea/Lane/Judge" unique_id=1485790764]
+unique_name_in_owner = true
+position = Vector2(48, 48)
 
 [node name="NoteDrawer" type="Node2D" parent="TaikoArea/Lane/Judge" unique_id=999984305 node_paths=PackedStringArray("lane_texture")]
 position = Vector2(48, 48)
 script = ExtResource("11_ya4ey")
 lane_texture = NodePath("../..")
 
+[node name="TextureRect" type="TextureRect" parent="TaikoArea/Lane/Judge" unique_id=1489041877]
+clip_children = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 0.708
+offset_left = -4.0
+offset_top = -220.0
+offset_right = 716.0
+offset_bottom = 0.03199768
+texture = ExtResource("19_jscy8")
+metadata/_edit_group_ = true
+
+[node name="BalloonRainbow" type="TextureRect" parent="TaikoArea/Lane/Judge/TextureRect" unique_id=1761073871]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 721.0
+offset_bottom = 288.0
+texture = SubResource("AtlasTexture_jscy8")
+stretch_mode = 2
+
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 1.5
 one_shot = true
+
+[node name="NoteCurvePath" type="Path2D" parent="." unique_id=503737797]
+curve = SubResource("Curve2D_dp3eg")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

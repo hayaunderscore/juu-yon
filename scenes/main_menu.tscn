@@ -35,7 +35,8 @@ expand_margin_bottom = 18.0
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("7_jk1qb")
-text = "演奏ゲーム"
+text = "ss_enu"
+tr_text = "ss_enu"
 font = ExtResource("4_8ln24")
 font_size = 32
 outline_size = 18
@@ -50,13 +51,13 @@ expand_margin_top = 17.0
 expand_margin_right = 19.0
 expand_margin_bottom = 17.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1go"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ajci"]
 texture = ExtResource("5_oa1go")
 texture_margin_left = 18.0
 texture_margin_top = 17.0
 texture_margin_right = 42.0
 texture_margin_bottom = 41.0
-modulate_color = Color(0.5294118, 0.88235295, 0.88235295, 1)
+modulate_color = Color(0.72156864, 0.8862745, 0.3529412, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_flqon"]
 texture = ExtResource("7_tbmy8")
@@ -69,11 +70,33 @@ expand_margin_top = 17.0
 expand_margin_right = 19.0
 expand_margin_bottom = 18.0
 
+[sub_resource type="Texture2D" id="Texture2D_7b55j"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("7_jk1qb")
+text = "My Room"
+tr_text = "My Room"
+font = ExtResource("4_8ln24")
+font_size = 32
+outline_size = 18
+outline_color = Color(0.39607844, 0.4509804, 0.14901961, 1)
+padding = Vector2i(16, 12)
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1go"]
+texture = ExtResource("5_oa1go")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 42.0
+texture_margin_bottom = 41.0
+modulate_color = Color(0.5294118, 0.88235295, 0.88235295, 1)
+
 [sub_resource type="Texture2D" id="Texture2D_tbmy8"]
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("7_jk1qb")
-text = "ゲーム設定"
+text = "Options"
+tr_text = "Options"
 font = ExtResource("4_8ln24")
 font_size = 32
 outline_size = 18
@@ -104,7 +127,8 @@ expand_margin_bottom = 18.0
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("7_jk1qb")
-text = "脱出ゲーム"
+text = "Exit"
+tr_text = "Exit"
 font = ExtResource("4_8ln24")
 font_size = 32
 outline_size = 18
@@ -112,7 +136,7 @@ outline_color = Color(0.51908237, 0.1994845, 0.24980545, 1)
 padding = Vector2i(16, 12)
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_flqon"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgwnu"]
 atlas = ExtResource("11_rcqid")
 region = Rect2(0, 0, 384, 384)
 
@@ -236,6 +260,18 @@ corner_radius_top_right = 32
 corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rcqid"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
 [sub_resource type="LabelSettings" id="LabelSettings_rcqid"]
 font = ExtResource("4_8ln24")
 font_size = 20
@@ -274,12 +310,11 @@ metadata/_edit_group_ = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 64
-theme_override_constants/margin_right = 64
+theme_override_constants/margin_right = 32
 
 [node name="MenuItems" type="HBoxContainer" parent="HBoxContainer/MarginContainer" unique_id=584852267]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 32
 alignment = 2
 
 [node name="SongSelect" type="PanelContainer" parent="HBoxContainer/MarginContainer/MenuItems" unique_id=88581166]
@@ -295,6 +330,23 @@ layout_mode = 2
 texture = SubResource("Texture2D_lgwnu")
 
 [node name="Highlight" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect" unique_id=264149816]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
+
+[node name="SongSelect4" type="PanelContainer" parent="HBoxContainer/MarginContainer/MenuItems" unique_id=115219257]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_1ajci")
+
+[node name="Panel" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect4" unique_id=888286276]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_flqon")
+
+[node name="Text" type="TextureRect" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect4" unique_id=1684618188]
+layout_mode = 2
+texture = SubResource("Texture2D_7b55j")
+
+[node name="Highlight" type="Panel" parent="HBoxContainer/MarginContainer/MenuItems/SongSelect4" unique_id=1398402194]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
@@ -351,7 +403,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_top = -384.0
 offset_bottom = 0.0
-texture = SubResource("AtlasTexture_flqon")
+texture = SubResource("AtlasTexture_lgwnu")
 state = 4
 
 [node name="P1AnimPlayer" type="AnimationPlayer" parent="P1Anims" unique_id=2021040004]
@@ -402,16 +454,20 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
 metadata/_edit_group_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Description" unique_id=592364535]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Description" unique_id=1558550212]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rcqid")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Description/PanelContainer" unique_id=1105316080]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="DescriptionLabel" type="Label" parent="VBoxContainer/Description/MarginContainer" unique_id=1030254946]
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer/Description/PanelContainer/MarginContainer" unique_id=55061240]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Select the song and start a game!"
+text = "songselect_desc"
 label_settings = SubResource("LabelSettings_rcqid")
 horizontal_alignment = 1

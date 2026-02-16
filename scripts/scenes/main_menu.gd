@@ -13,9 +13,10 @@ var select_transition: float = 0.0
 var do_select_transition: bool = false
 
 var descriptions: PackedStringArray = [
-	"Select the song and start a game!",
-	"Change game options for optimal play!",
-	"Quits Taiko San Juu-Yon.\nSee ya later!"
+	"songselect_desc",
+	"myroom_desc",
+	"options_desc",
+	"exit_desc"
 ]
 @onready var description_container = $VBoxContainer
 @onready var description_panel = %Description
@@ -76,14 +77,14 @@ func _physics_process(delta: float) -> void:
 			item_text[i].outline_color = item_text_colors[i]
 			highlights[i].modulate.a = 0
 		if do_select_transition and i != selected:
-			item.global_position.y = lerpf(720, prev_y[i], ease_out_back(minf(1.0, 1.0 - minf(1.0, (select_transition * 2) - (i * 0.25)))))
+			item.global_position.y = lerpf(720, prev_y[i], ease_out_back(minf(1.0, 1.0 - minf(1.0, (select_transition * 2.5) - (i * 0.25)))))
 		else:
 			if i == selected:
 				item.global_position.y = lerpf(prev_y[i], target_y, ease_out_back(minf(1.0, selection_time * 3)))
 			else:
 				item.global_position.y = lerpf(item.global_position.y, target_y, delta * 16)
 			if transition:
-				item.global_position.y = lerpf(720, prev_y[i], ease_out_back(minf(1.0, (transition_time * 2) - (i * 0.25))))
+				item.global_position.y = lerpf(720, prev_y[i], ease_out_back(minf(1.0, (transition_time * 2.5) - (i * 0.25))))
 
 	if transition:
 		transition_time += delta
@@ -105,16 +106,17 @@ func _on_control_banner_don_pressed(id: Variant) -> void:
 	tween.tween_property(item, "global_position:x", get_viewport_rect().size.x / 2.0 - 51, 0.3)
 	tween.set_parallel(false)
 	tween.tween_callback(choose_callback).set_delay(1.7)
-	%TaikoCharaP1.do_combo_animation(false)
+	%TaikoCharaP1.do_combo_animation(64, false)
 
 func choose_callback():
 	var tween: Tween = create_tween()
 	tween.tween_property($Music, "volume_linear", 0.0, 0.5)
 	match selected:
 		0:
-			TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true, Color.CRIMSON, true)
+			TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true, Color("e35f2d"), true)
 		1: pass
-		2: get_tree().quit()
+		2: pass
+		3: get_tree().quit()
 
 func kat_pressed(_id, side):
 	selected = wrapi(selected + side, 0, items.get_child_count())
@@ -123,7 +125,7 @@ func kat_pressed(_id, side):
 	description_tween = create_tween()
 	description_tween.tween_property(description_container, "scale:y", 0.0, 0.1)
 	description_tween.tween_callback(func():
-		description_label.text = descriptions[selected]
+		description_label.text = tr(descriptions[selected])
 		var panel: StyleBoxFlat = description_panel.get_theme_stylebox("panel")
 		var item: PanelContainer = items.get_child(selected) as PanelContainer
 		panel.bg_color = (item.get_theme_stylebox("panel") as StyleBoxTexture).modulate_color

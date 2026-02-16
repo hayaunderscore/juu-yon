@@ -51,8 +51,9 @@ func _ready() -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	var length: int = len(text)
-	var string_size: Vector2 = font.get_string_size(text, alignment, -1, text_size, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
+	var t: String = tr(text)
+	var length: int = len(t)
+	var string_size: Vector2 = font.get_string_size(t, alignment, -1, text_size, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
 	var pos: Vector2 = Vector2(0.0, size.y - text_size / 2.0)
 	match alignment:
 		HorizontalAlignment.HORIZONTAL_ALIGNMENT_LEFT:
@@ -62,7 +63,7 @@ func _draw() -> void:
 		HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT:
 			pos.x = size.x - string_size.x
 	
-	draw_string_outline(font, pos, text, alignment, -1, text_size, second_outline_size, second_outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
-	draw_string_outline(font, pos, text, alignment, -1, text_size, first_outline_size, first_outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
-	draw_string(font, pos, text, alignment, -1, text_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
-	draw_string_outline(font, pos, text, alignment, -1, text_size, 3, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
+	draw_string_outline(font, pos, t, alignment, -1, text_size, second_outline_size, second_outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
+	draw_string_outline(font, pos, t, alignment, -1, text_size, first_outline_size, first_outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
+	draw_string(font, pos, t, alignment, -1, text_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
+	draw_string_outline(font, pos, t, alignment, -1, text_size, 2, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)

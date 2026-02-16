@@ -172,7 +172,7 @@ func set_text():
 		box_description_texture = cache["box_description"]
 		return
 	
-	var t: String = title_localized.get("ja", title)
+	var t: String = title_localized.get(TranslationServer.get_locale(), title)
 	if not title_texture:
 		title_texture = VerticalText2D.new()
 	title_texture.text = t
@@ -181,7 +181,7 @@ func set_text():
 	title_texture.outline_size = 20
 	title_texture.scale.y = 1.0
 	title_texture._update_size()
-	t = subtitle_localized.get("ja", subtitle)
+	t = subtitle_localized.get(TranslationServer.get_locale(), subtitle)
 	if not subtitle_texture:
 		subtitle_texture = VerticalText2D.new()
 	subtitle_texture.text = t.lstrip("--").lstrip("++")

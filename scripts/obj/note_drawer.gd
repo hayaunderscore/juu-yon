@@ -8,7 +8,7 @@ var time: float = 0.0
 
 @export var lane_texture: TextureRect
 
-var notes: Array[Texture2D] = [
+const notes: Array[Texture2D] = [
 	null,													# Nothing
 	preload("res://assets/game/notes/don.png"),				# Don
 	preload("res://assets/game/notes/kat.png"),				# Kat

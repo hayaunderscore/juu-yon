@@ -5,8 +5,8 @@ func select_song(tja: TJAMeta, diff: int):
 	var title: Label = TransitionHandler.fade.get_node(^"%Title")
 	var subtitle: Label = TransitionHandler.fade.get_node(^"%Subtitle")
 	var border: Control = TransitionHandler.fade.get_node(^"%Border")
-	title.text = tja.title_localized.get("ja", tja.title)
-	subtitle.text = (tja.subtitle_localized.get("ja", tja.subtitle) as String).replace("--", "")
+	title.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
+	subtitle.text = (tja.subtitle_localized.get(TranslationServer.get_locale(), tja.subtitle) as String).replace("--", "")
 	subtitle.visible = not subtitle.text.is_empty()
 	TransitionHandler.change_scene_to_file("res://scenes/main.tscn", false, clr)
 	await get_tree().scene_changed

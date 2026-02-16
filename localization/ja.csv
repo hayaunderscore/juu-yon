@@ -1,0 +1,32 @@
+key,ja,en
+ss_enu,演奏ゲーム,Song Select
+My Room,私の部屋,My Room
+Options,ゲーム設定,Options
+Exit,ゲーム終了,Exit
+songselect_desc,曲を選んでゲームをスタート！,Select a song and start a game!
+myroom_desc,"見た目を変えて、追加コンテンツをダ
+ウンロードしよう！","Change your look and download
+additional content!"
+options_desc,"最適なプレイのために
+ゲームオプションを変更しよう！",Change game options for optimal play!
+exit_desc,"ジュウヨンを辞める。
+じゃあな！","Quits Juuyon.
+See ya later!"
+Song Select,演奏曲選択,Song Select
+Main Menu,メインメニュー,Main Menu
+Player Entry,プレイヤーエントリー,Player Entry
+taiko_start_p1,P1太鼓を叩いてスタート,Hit P1 Taiko to Start
+taiko_start_p2,P2太鼓を叩いてスタート,Hit P2 Taiko to Start
+taiko_start_p1_panel,"P1太鼓を叩いて
+スタート","Hit P1 Taiko
+to Start"
+taiko_start_p2_panel,"P2太鼓を叩いて
+スタート","Hit P2 Taiko
+to Start"
+Back,とじる,Back
+Easy,かんたん,Easy
+Normal,ふつう,Normal
+Hard,むずかしい,Hard
+Oni,おに,Oni
+Edit,おに,Edit
+Free Play,フリープレイ,FREE PLAY

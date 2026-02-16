@@ -218,7 +218,7 @@ func box_select():
 	
 	var back: TJAMeta = TJAMeta.new()
 	var prev: TJAMeta = box_stack.back() if box_stack.size() > 0 else null
-	back.title = "Back"
+	back.title = tr("Back")
 	back.box_back_color = Color.CHOCOLATE
 	back.box = true
 	back.set_style_box()
@@ -338,7 +338,7 @@ func _process(delta: float) -> void:
 	header_text.first_outline_color.a = 1.0
 	genre_text.first_outline_color = header_text.first_outline_color
 	if song.box and not song.back:
-		genre_text.text = song.title_localized.get("ja", song.title)
+		genre_text.text = song.title_localized.get(TranslationServer.get_locale(), song.title)
 	
 	if entry_retransition:
 		entry_transition -= delta*3
@@ -457,7 +457,7 @@ func _draw() -> void:
 			draw_style_box(song_box_small, Rect2(Vector2(24, 64), Vector2(48, 240)))
 			var bl: Color = Color.BLACK
 			bl.a = clr.a
-			draw_string(font, Vector2(48, 80), "Back", HORIZONTAL_ALIGNMENT_CENTER, -1, 24, bl, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
+			draw_string(font, Vector2(48, 80), tr("Back"), HORIZONTAL_ALIGNMENT_CENTER, -1, 24, bl, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		
 		# Difficulties
 		if i == selected_index and not song.box:
@@ -521,7 +521,7 @@ func _draw() -> void:
 				var diff_name: String = (TJAChartInfo.CourseType.find_key(chart.get("course_enum", -1))).to_pascal_case()
 				var clr: Color = Color.BLACK
 				clr.a = minf(1, diff_trans)
-				draw_string(font, Vector2(24, 78), diff_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, clr, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
+				draw_string(font, Vector2(24, 78), tr(diff_name), HORIZONTAL_ALIGNMENT_LEFT, -1, 24, clr, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 				
 				diff_x += diff_padding + 24*2
 		
@@ -562,7 +562,7 @@ func _draw() -> void:
 					x_ofs -= 32
 		
 		# Subtitle if applicable
-		var subtitle: String = song.subtitle_localized.get("ja", song.subtitle).lstrip("--")
+		var subtitle: String = song.subtitle_localized.get(TranslationServer.get_locale(), song.subtitle).lstrip("--")
 		if subtitle.is_empty() or i != selected_index or not song.subtitle_texture:
 			x += padding + bsize.x
 			continue

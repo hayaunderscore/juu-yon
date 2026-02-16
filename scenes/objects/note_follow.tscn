@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bpksjoo45newj"]
+
+[ext_resource type="Texture2D" uid="uid://dca4p70usu60s" path="res://assets/entry/don.svg" id="1_s4cgk"]
+
+[node name="NoteFollow" type="PathFollow2D" unique_id=779192089]
+rotates = false
+cubic_interp = false
+
+[node name="Note" type="Sprite2D" parent="." unique_id=1512461955]
+texture = ExtResource("1_s4cgk")

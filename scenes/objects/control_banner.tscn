@@ -51,7 +51,7 @@ grow_vertical = 2
 theme_override_constants/outline_size = 18
 theme_override_fonts/font = ExtResource("2_q6wok")
 theme_override_font_sizes/font_size = 32
-text = "Hit P1 Taiko to Start"
+text = "taiko_start_p1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -91,6 +91,6 @@ grow_vertical = 2
 theme_override_constants/outline_size = 18
 theme_override_fonts/font = ExtResource("2_q6wok")
 theme_override_font_sizes/font_size = 32
-text = "Hit P2 Taiko to Start"
+text = "taiko_start_p2"
 horizontal_alignment = 1
 vertical_alignment = 1

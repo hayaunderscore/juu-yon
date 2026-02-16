@@ -743,6 +743,7 @@ offset_bottom = 3.0517578e-05
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(196, 84.000015)
+text = "taiko_start_p1_panel"
 
 [node name="BumperP2" type="Control" parent="." unique_id=575731052]
 layout_mode = 1
@@ -770,7 +771,6 @@ grow_vertical = 2
 pivot_offset = Vector2(196, 84.000015)
 note_texture = ExtResource("16_1vsll")
 color = Color(0.4117647, 0.7490196, 0.7529412, 1)
-text = "Hit P2 Taiko
-to Start"
+text = "taiko_start_p2_panel"
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

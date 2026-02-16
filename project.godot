@@ -14,7 +14,10 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Taiko San Juu-Yon"
+config/name="Juuyon"
+config/name_localized={
+"ja": "太鼓さん十四"
+}
 run/main_scene="uid://vxy0gpt3o0c8"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
@@ -23,6 +26,7 @@ config/icon="res://icon.svg"
 
 buses/default_bus_layout="uid://86cuj0230l44"
 driver/driver="ALSA"
+driver/output_latency=3
 
 [autoload]
 
@@ -38,6 +42,10 @@ window/size/viewport_width=960
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/vsync/vsync_mode=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/csvedit/plugin.cfg")
 
 [input]
 
@@ -86,6 +94,10 @@ kat_right_p2={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":73,"key_label":0,"unicode":105,"location":0,"echo":false,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/ja.en.translation", "res://localization/ja.ja.translation")
 
 [rendering]
 
