@@ -194,32 +194,37 @@ func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color
 		else:
 			var char_y: float = get_char_height(content) * scale.y
 			cur_char_y += char_y
-			var char_size: Vector2 = font.get_string_size(content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO) * scale
+			var char_size: Vector2 = font.get_char_size(ord(content), font_size) * scale
 			var effective_width: float = char_size.x
 			var char_x: float = width / 2.0
 			var char_y_ofs: float = 0.0
 			var sc: Vector2 = scale
 			if content in rotate_chars:
 				sc = sc.rotated(deg_to_rad(-90))
-				# effective_width = char_size.y
-				#char_x -= 0.1 * char_size.y * sc.x
-				#char_y_ofs += 0.1 * char_size.y * sc.x
-				# print(char_size.y)
+				# effective_width = font_size
+				#effective_width = char_size.y
+				char_x -= 0.1 * char_size.y * sc.x
+				char_y_ofs += 0.1 * char_size.y * sc.x
+				#print(char_size.y)
 			if content in side_punctuation:
 				char_x += font_size / 3.0
 			
 			# Here, we manually set the transform lmao
 			# Unfortunately this is the ONLY way to set the rotation of something. Too bad!
 			var rot: float = deg_to_rad(90.0) if content in rotate_chars else 0.0
-			var transform: Transform2D = Transform2D(rot, sc, 0.0, rect.position + Vector2(char_x, cur_char_y + char_y_ofs - floori(char_y / 2.0)))
+			var transform: Transform2D = Transform2D(rot, sc, 0.0, rect.position + Vector2(char_x, cur_char_y + char_y_ofs - (char_y / 2.0)))
 			RenderingServer.canvas_item_add_set_transform(to_canvas_item, transform)
 			
-			char_x = -floori(effective_width / 2.0)
+			# RenderingServer.canvas_item_add_circle(to_canvas_item, Vector2(0, 0), 8, Color.WHITE)
+			
+			char_x = -(effective_width / 2.0)
 			
 			if outline:
-				font.draw_string_outline(to_canvas_item, Vector2(char_x, floori(char_y / 2.0)), content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL, 2.0)
+				font.draw_char_outline(to_canvas_item, Vector2(char_x, char_y / 2.0), ord(content), font_size, outline_size, color, 2.0)
+				# font.draw_string_outline(to_canvas_item, Vector2(char_x, char_y / 2.0), content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL, 2.0)
 			else:
-				font.draw_string(to_canvas_item, Vector2(char_x, floori(char_y / 2.0)), content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL, 2.0)
+				font.draw_char(to_canvas_item, Vector2(char_x, char_y / 2.0), ord(content), font_size, color, 2.0)
+				# font.draw_string(to_canvas_item, Vector2(char_x, char_y / 2.0), content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL, 2.0)
 			
 			# Reset transform afterwards
 			RenderingServer.canvas_item_add_set_transform(to_canvas_item, Transform2D())
