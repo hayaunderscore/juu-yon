@@ -1,21 +1,31 @@
 [gd_scene format=3 uid="uid://dia02rykt3sc"]
 
 [ext_resource type="Script" uid="uid://em0hp0g40r3u" path="res://scripts/obj/chara.gd" id="1_6t3on"]
+[ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="1_dvech"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="1_elhpt"]
 [ext_resource type="Texture2D" uid="uid://cqa2b7hx02ile" path="res://assets/game/chara/default/combo.png" id="3_167qt"]
 [ext_resource type="Texture2D" uid="uid://dxqu1tov2m4al" path="res://assets/game/chara/default/gogo.png" id="4_fskk0"]
 [ext_resource type="Texture2D" uid="uid://jx0i5qbewuxl" path="res://assets/game/chara/default/misc.png" id="5_fskk0"]
+[ext_resource type="Texture2D" uid="uid://cyg3g2n4iq4hc" path="res://assets/game/chara/default/spin.png" id="6_tokrm"]
+[ext_resource type="Texture2D" uid="uid://b07nf41ylog4b" path="res://assets/game/chara/default/clear.png" id="7_m0b5q"]
+[ext_resource type="Texture2D" uid="uid://bat2rty5rnacv" path="res://assets/game/chara/default/fail.png" id="8_otn75"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dvech"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tokrm"]
+shader = ExtResource("1_dvech")
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/mixture = 0.0
+shader_parameter/alpha = 1.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0b5q"]
 atlas = ExtResource("1_elhpt")
 region = Rect2(0, 0, 384, 384)
 
 [node name="TextureRect" type="TextureRect" unique_id=308592822]
+material = SubResource("ShaderMaterial_tokrm")
 offset_right = 384.0
 offset_bottom = 384.0
-texture = SubResource("AtlasTexture_dvech")
+texture = SubResource("AtlasTexture_m0b5q")
 script = ExtResource("1_6t3on")
-state = 1
 idle_texture = ExtResource("1_elhpt")
 idle_frames = 8
 idle_speed = 0.25
@@ -23,6 +33,12 @@ combo_texture = ExtResource("3_167qt")
 gogo_texture = ExtResource("4_fskk0")
 gogo_frames = 16
 gogo_speed = 0.5
+spin_texture = ExtResource("6_tokrm")
+spin_frames = 8
+clear_texture = ExtResource("7_m0b5q")
+clear_frames = 2
+fail_texture = ExtResource("8_otn75")
+fail_frames = 2
 misc_texture = ExtResource("5_fskk0")
 metadata/_custom_type_script = "uid://em0hp0g40r3u"
 

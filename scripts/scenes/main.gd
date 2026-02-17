@@ -78,6 +78,8 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	$Symbol.texture = difficulty_icons[chart.course]
 	$Symbol/SymbolHighlight.texture = difficulty_icons[chart.course]
 	$Symbol/SymbolHighlightGood.texture = difficulty_icons[chart.course]
+	%Gauge.difficulty = chart.course
+	%Gauge.total_notes = current_note_list.filter(func(a): return a["note"] < 5 and a["note"] > 0).size()
 	$Timer.start()
 
 var elapsed: float = 0.0
@@ -111,7 +113,10 @@ func handle_play_events():
 				%Judge.self_modulate = yellow
 				gogo_tween.tween_property(%Soul, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
-				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 1.0, 0.2)
+				gogo_tween.tween_method(func(val):
+					var mat: ShaderMaterial = %GogoBackGradient.material as ShaderMaterial
+					mat.set_shader_parameter("alpha", val)
+				, 0.0, 1.0, 0.2)
 				%Chara.gogo = true
 				var state = %Chara.state
 				if state != %Chara.State.COMBO:
@@ -122,7 +127,10 @@ func handle_play_events():
 				gogo_tween.set_parallel(true)
 				gogo_tween.tween_property(%Soul, "scale", Vector2.ZERO, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
-				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 0.0, 0.2)
+				gogo_tween.tween_method(func(val):
+					var mat: ShaderMaterial = %GogoBackGradient.material as ShaderMaterial
+					mat.set_shader_parameter("alpha", val)
+				, 1.0, 0.0, 0.2)
 				%Judge.self_modulate = Color.WHITE
 				%Chara.gogo = false
 				var state = %Chara.state
@@ -196,16 +204,20 @@ func create_judge_effect(good: bool = true, big: bool = false):
 	)
 
 var note_follow: PackedScene = preload("uid://bpksjoo45newj")
+var note_rainbow: PackedScene = preload("uid://mfmyctup3c1t")
 @onready var note_curve: Path2D = $NoteCurvePath
 func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 	var balloon: bool = false
-	var balloon_tex: AtlasTexture = %BalloonRainbow.texture as AtlasTexture
-	# Reset balloon effects (this means only one rainbow is visible at a time!)
+	var balloon_tex: AtlasTexture
+	var rainbow: TextureRect
+	# Add rainbow effects
 	if type == 7:
 		balloon = true
+		rainbow = note_rainbow.instantiate()
+		%BalloonPivot.add_child(rainbow)
+		balloon_tex = rainbow.texture as AtlasTexture
 		balloon_tex.region.position.x = 0.0
 		balloon_tex.region.size.x = 1.0
-		%BalloonRainbow.position.x = 0
 		type = 3
 	# Create note path for this note type
 	var note: PathFollow2D = note_follow.instantiate()
@@ -217,16 +229,16 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 	if not skip_judge: create_judge_effect(good, type == 3 or type == 4)
 	# TODO transition
 	var tween: Tween = create_tween()
-	tween.tween_property(note, "progress_ratio", 1.0, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(note, "progress_ratio", 1.0, 0.3)
 	if balloon:
 		tween.set_parallel(true)
-		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.3)
 		tween.set_parallel(false)
 	tween.tween_callback(anim.play.bind("Hit"))
 	if balloon:
 		tween.set_parallel(true)
-		tween.tween_property(%BalloonRainbow, "position:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
-		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(rainbow, "position:x", balloon_tex.atlas.get_width(), 0.3)
+		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.3)
 		tween.set_parallel(false)
 
 func _process(delta: float) -> void:
@@ -287,6 +299,7 @@ func _physics_process(delta: float) -> void:
 					%Chara.do_combo_animation()
 				auto_don_side = !auto_don_side
 				add_note_to_gauge(type)
+				%Gauge.add_good()
 			2:
 				taiko.taiko_input(1, 1 if auto_kat_side else 0)
 				taiko.combo += 1
@@ -294,6 +307,7 @@ func _physics_process(delta: float) -> void:
 					%Chara.do_combo_animation()
 				auto_kat_side = !auto_kat_side
 				add_note_to_gauge(type)
+				%Gauge.add_good()
 			3:
 				taiko.combo += 1
 				for side in range(2):
@@ -301,6 +315,7 @@ func _physics_process(delta: float) -> void:
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
 				add_note_to_gauge(type)
+				%Gauge.add_good()
 			4:
 				taiko.combo += 1
 				for side in range(2):
@@ -308,6 +323,7 @@ func _physics_process(delta: float) -> void:
 				if taiko.combo % 10 == 0:
 					%Chara.do_combo_animation()
 				add_note_to_gauge(type)
+				%Gauge.add_good()
 		# if current_note_list.size() <= 0: break
 		if type == 5 or type == 6 or type == 7:
 			roll = true
@@ -329,3 +345,18 @@ func _on_timer_timeout() -> void:
 func _on_music_finished() -> void:
 	# TODO results screen
 	TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true)
+
+func _on_gauge_filled_soul() -> void:
+	%Chara.clear = true
+
+func _on_gauge_unfilled_soul() -> void:
+	%Chara.clear = false
+
+func _on_gauge_rainbow_soul() -> void:
+	%Chara.state = %Chara.State.SPIN
+	var mat: ShaderMaterial = %Chara.material
+	mat.set_shader_parameter("mixture", 0.5)
+
+func _on_gauge_unrainbow_soul() -> void:
+	var mat: ShaderMaterial = %Chara.material
+	mat.set_shader_parameter("mixture", 0.0)

@@ -5,10 +5,12 @@
 [ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
 [ext_resource type="Texture2D" uid="uid://d04eby56jesxn" path="res://assets/game/symbol/oni.png" id="3_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="3_jkv2x"]
+[ext_resource type="Shader" uid="uid://bajdnn60tdkb6" path="res://assets/shaders/blend.gdshader" id="3_pm3ni"]
 [ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="4_jbj1t"]
 [ext_resource type="Texture2D" uid="uid://dy1pcpkiy7qeo" path="res://assets/game/taiko/taiko.svg" id="5_trceg"]
 [ext_resource type="Texture2D" uid="uid://bghl26fhmb1sp" path="res://assets/game/taiko/kat.svg" id="7_a8y0u"]
+[ext_resource type="PackedScene" uid="uid://pg0rynw05l0g" path="res://scenes/objects/gauge.tscn" id="7_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://dsccsct76o452" path="res://assets/game/taiko/don.svg" id="8_trceg"]
 [ext_resource type="Texture2D" uid="uid://b1w8cy2l6dj4f" path="res://assets/game/lane/lane.png" id="10_a8y0u"]
 [ext_resource type="Script" uid="uid://c6ihd62tvky4e" path="res://scripts/obj/taiko_number.gd" id="10_jkv2x"]
@@ -17,26 +19,23 @@
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
-[ext_resource type="Texture2D" uid="uid://b2m0si0ryknl" path="res://assets/game/soul/gauge_back.png" id="17_dp3eg"]
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
-[ext_resource type="Texture2D" uid="uid://dhw5kkdbuk4rb" path="res://assets/game/soul/gauge_front.png" id="18_0ld40"]
-[ext_resource type="Texture2D" uid="uid://cutyua7ipfdhh" path="res://assets/game/lane/balloon_rainbow_mask.png" id="19_jscy8"]
-[ext_resource type="Texture2D" uid="uid://11angywtt7hc" path="res://assets/game/lane/balloon_rainbow.png" id="20_pm3ni"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jscy8"]
-blend_mode = 1
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y6deb"]
+shader = ExtResource("3_pm3ni")
+shader_parameter/alpha = 0.0
 
 [sub_resource type="Gradient" id="Gradient_pm3ni"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0.2551724, 0.7758621, 1)
-colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 0, 0, 0, 1)
+offsets = PackedFloat32Array(0.29457363, 0.68217057, 1)
+colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_y6deb"]
 gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqmmt"]
 atlas = ExtResource("4_jbj1t")
 region = Rect2(0, 0, 384, 384)
 
@@ -70,15 +69,11 @@ colors = PackedColorArray(1, 0.9166666, 0, 1, 0, 0, 0, 0)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_muem4"]
 gradient = SubResource("Gradient_jbj1t")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jscy8"]
-atlas = ExtResource("20_pm3ni")
-region = Rect2(0, 0, 1, 288)
-
 [sub_resource type="Curve2D" id="Curve2D_dp3eg"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 224, 236, -80.99173, 45.454544, 80.99173, -45.454544, 408, 92, -107.43803, -2.2539425, 107.43803, 2.2539425, 660, 20, 0, 0, 0, 0, 876, 64)
+"points": PackedVector2Array(0, 0, 0, 0, 224, 236, -66.438576, 52.157387, 66.438576, -52.157387, 332, 128, -70.1641, 16.143953, 70.1641, -16.143953, 548, 32, -44.70633, -2.483685, 44.70633, 2.483685, 724, 20, 0, 0, 0, 0, 876, 56)
 }
-point_count = 4
+point_count = 5
 
 [node name="Main" type="Control" unique_id=481630010]
 layout_mode = 3
@@ -107,9 +102,8 @@ centered = false
 
 [node name="GogoBackGradient" type="TextureRect" parent="." unique_id=1739241799]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0)
 z_index = -49
-material = SubResource("CanvasItemMaterial_jscy8")
+material = SubResource("ShaderMaterial_y6deb")
 layout_mode = 0
 offset_right = 960.0
 offset_bottom = 176.0
@@ -151,22 +145,16 @@ offset_left = -15.6799965
 offset_top = -4.239998
 offset_right = -15.680023
 offset_bottom = -4.0
-texture = SubResource("AtlasTexture_jkv2x")
+texture = SubResource("AtlasTexture_gqmmt")
+state = 1
 
-[node name="Gauge" type="TextureRect" parent="." unique_id=1193942000]
-z_index = -2
+[node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 380.0
-offset_top = 16.0
+offset_top = 12.0
 offset_right = 920.0
-offset_bottom = 112.0
-texture = ExtResource("17_dp3eg")
-
-[node name="Gauge2" type="TextureRect" parent="Gauge" unique_id=1929087278]
-layout_mode = 0
-offset_right = 540.0
-offset_bottom = 96.0
-texture = ExtResource("18_0ld40")
+offset_bottom = 108.0
 
 [node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
 layout_mode = 0
@@ -183,7 +171,7 @@ layout_mode = 1
 offset_left = 16.0
 offset_top = 176.0
 offset_right = 976.0
-offset_bottom = 216.0
+offset_bottom = 228.0
 color = Color(0, 0, 0, 1)
 metadata/_edit_group_ = true
 
@@ -203,13 +191,14 @@ theme_override_constants/margin_bottom = 6
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("13_trceg")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 30
 text = "fuck"
 horizontal_alignment = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TaikoArea/SongBorder/MarginContainer" unique_id=1265497362]
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 1
 
 [node name="TimeLeft" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=139333196]
 unique_name_in_owner = true
@@ -362,25 +351,16 @@ position = Vector2(48, 48)
 script = ExtResource("11_ya4ey")
 lane_texture = NodePath("../..")
 
-[node name="TextureRect" type="TextureRect" parent="TaikoArea/Lane/Judge" unique_id=1489041877]
-clip_children = 1
+[node name="BalloonPivot" type="TextureRect" parent="TaikoArea/Lane/Judge" unique_id=1489041877]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 0.708
 offset_left = -4.0
-offset_top = -220.0
+offset_top = -224.0
 offset_right = 716.0
-offset_bottom = 0.03199768
-texture = ExtResource("19_jscy8")
+offset_bottom = -3.9680023
 metadata/_edit_group_ = true
-
-[node name="BalloonRainbow" type="TextureRect" parent="TaikoArea/Lane/Judge/TextureRect" unique_id=1761073871]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 721.0
-offset_bottom = 288.0
-texture = SubResource("AtlasTexture_jscy8")
-stretch_mode = 2
 
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 1.5
@@ -390,4 +370,8 @@ one_shot = true
 curve = SubResource("Curve2D_dp3eg")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
+[connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]
+[connection signal="rainbow_soul" from="Gauge" to="." method="_on_gauge_rainbow_soul"]
+[connection signal="unfilled_soul" from="Gauge" to="." method="_on_gauge_unfilled_soul"]
+[connection signal="unrainbow_soul" from="Gauge" to="." method="_on_gauge_unrainbow_soul"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

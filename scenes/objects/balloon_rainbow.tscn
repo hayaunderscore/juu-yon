@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://mfmyctup3c1t"]
+
+[ext_resource type="Texture2D" uid="uid://vqekcack4s1u" path="res://assets/game/lane/balloon_rainbow_new.png" id="1_u0qle"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jscy8"]
+atlas = ExtResource("1_u0qle")
+region = Rect2(0, 0, 1, 288)
+
+[node name="BalloonRainbow" type="TextureRect" unique_id=771870170]
+offset_right = 721.0
+offset_bottom = 288.0
+texture = SubResource("AtlasTexture_jscy8")
+stretch_mode = 2

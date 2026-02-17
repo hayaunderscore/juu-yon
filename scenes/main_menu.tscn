@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://di8gmhj22ewlp" path="res://assets/songselect/bar_highlight.png" id="7_tbmy8"]
 [ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="9_lgwnu"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="10_flqon"]
-[ext_resource type="Texture2D" uid="uid://jx0i5qbewuxl" path="res://assets/game/chara/default/misc.png" id="11_rcqid"]
+[ext_resource type="Texture2D" uid="uid://cyg3g2n4iq4hc" path="res://assets/game/chara/default/spin.png" id="10_lgwnu"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5dd4i"]
 texture = ExtResource("5_oa1go")
@@ -137,7 +137,7 @@ padding = Vector2i(16, 12)
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgwnu"]
-atlas = ExtResource("11_rcqid")
+atlas = ExtResource("10_lgwnu")
 region = Rect2(0, 0, 384, 384)
 
 [sub_resource type="Animation" id="Animation_7b55j"]
@@ -152,7 +152,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.4, 0.8),
 "transitions": PackedFloat32Array(0, 0, 1),
 "update": 1,
-"values": [4, 0, 1]
+"values": [7, 0, 1]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -396,7 +396,7 @@ layout_mode = 0
 offset_left = 24.0
 offset_top = 640.0
 offset_right = 349.0
-offset_bottom = 1013.00006
+offset_bottom = 1013.00024
 texture = ExtResource("9_lgwnu")
 
 [node name="TaikoCharaP1" parent="P1Anims" unique_id=308592822 instance=ExtResource("10_flqon")]

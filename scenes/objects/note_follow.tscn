@@ -21,10 +21,10 @@ tracks/0/path = NodePath("SoulAnim:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(0.61557204, 1),
+"times": PackedFloat32Array(0, 0.033333335, 0.23333333),
+"transitions": PackedFloat32Array(0.61557204, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 0, 1), Color(1, 0.38431373, 0, 1)]
+"values": [Color(1, 1, 0, 1), Color(1, 1, 0, 1), Color(1, 0.38431373, 0, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -34,9 +34,9 @@ tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(0.5, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.0, 3.141592653589793]
+"values": [0.0, 1.5707963267948966]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -57,7 +57,7 @@ tracks/3/path = NodePath("Note:material:shader_parameter/color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.3),
+"times": PackedFloat32Array(0, 0.23333333),
 "transitions": PackedFloat32Array(2, 1),
 "update": 0,
 "values": [Color(1, 1, 0, 1), Color(1, 1, 1, 1)]

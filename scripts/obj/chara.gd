@@ -7,6 +7,9 @@ enum State {
 	IDLE,
 	COMBO,
 	GOGO,
+	SPIN,
+	CLEAR,
+	FAIL,
 	MISC,
 }
 
@@ -15,6 +18,10 @@ enum State {
 		var changed: bool = false
 		if gogo and v == State.IDLE:
 			v = State.GOGO
+		if clear and v == State.IDLE:
+			v = State.CLEAR
+		if idiot and v == State.IDLE:
+			v = State.FAIL
 		if v != state:
 			frame = 0; _last_interval = 0; _current_interval = 0;
 			changed = true
@@ -29,33 +36,17 @@ enum State {
 @warning_ignore_start("integer_division")
 func _update_texture():
 	if idle_texture == null: return
-	var atlas: AtlasTexture = AtlasTexture.new()
-	match state:
-		State.IDLE_STILL, State.IDLE:
-			atlas.atlas = idle_texture
-			atlas.region = Rect2(0, 0, idle_texture.get_width() / idle_frames, idle_texture.get_height())
-		State.COMBO:
-			atlas.atlas = combo_texture
-			atlas.region = Rect2(0, 0, combo_texture.get_width() / combo_frames, combo_texture.get_height())
-		State.GOGO:
-			atlas.atlas = gogo_texture
-			atlas.region = Rect2(0, 0, gogo_texture.get_width() / gogo_frames, gogo_texture.get_height())
-		State.MISC:
-			atlas.atlas = misc_texture
-			atlas.region = Rect2(0, 0, misc_texture.get_width() / misc_frames, misc_texture.get_height())
+	var atlas: AtlasTexture
+	# We do NOT need a new texture if we already have an atlas texture!
+	if texture: atlas = texture
+	else: atlas = AtlasTexture.new()
+	var state_key: String = (State.find_key(state) as String).to_lower()
+	if state_key == "idle_still": state_key = "idle"
+	var tex: Texture2D = get(state_key + "_texture")
+	atlas.atlas = tex
+	atlas.region = Rect2(0, 0, tex.get_width() / get(state_key + "_frames"), tex.get_height())
 	texture = atlas
-	var max_frames: int = 0
-	match state:
-		State.IDLE_STILL:
-			max_frames = idle_frames
-		State.IDLE:
-			max_frames = idle_frames
-		State.COMBO:
-			max_frames = combo_frames
-		State.GOGO:
-			max_frames = gogo_frames
-		State.MISC:
-			max_frames = misc_frames
+	var max_frames: int = get(state_key + "_frames")
 	var f = wrapi(frame, 0, max_frames)
 	var tex_width: int = atlas.atlas.get_width()
 	atlas.region.position.x = f * (tex_width / max_frames)
@@ -82,11 +73,33 @@ func _update_texture():
 	set(v): gogo_frames = v; _update_texture()
 @export var gogo_speed: float = 1.0
 
+@export_group("Spin", "spin_")
+@export var spin_texture: Texture2D:
+	set(v): spin_texture = v; _update_texture()
+@export var spin_frames: int = 1:
+	set(v): spin_frames = v; _update_texture()
+@export var spin_speed: float = 1.0
+
+@export_group("Clear", "clear_")
+@export var clear_texture: Texture2D:
+	set(v): clear_texture = v; _update_texture()
+@export var clear_frames: int = 1:
+	set(v): clear_frames = v; _update_texture()
+@export var clear_speed: float = 1.0
+
+@export_group("Fail", "fail_")
+@export var fail_texture: Texture2D:
+	set(v): fail_texture = v; _update_texture()
+@export var fail_frames: int = 1:
+	set(v): fail_frames = v; _update_texture()
+@export var fail_speed: float = 1.0
+
 @export_group("Miscellaneous Frames", "misc_")
 @export var misc_texture: Texture2D:
 	set(v): misc_texture = v; _update_texture()
 @export var misc_frames: int = 1:
 	set(v): misc_frames = v; _update_texture()
+var misc_speed: float = 1.0
 
 var _current_interval: int = 0
 var _last_interval: int = 0
@@ -95,14 +108,24 @@ var _combo_tween: Tween
 var beat: float = 0
 var bpm: float = 120
 var gogo: bool = false
+var clear: bool = false
+var idiot: bool = false
+var rainbow: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 
 func do_combo_animation(height: float = 24, return_to_idle: bool = true):
-	if gogo: return
+	if gogo and state != State.SPIN: return
+	var prev: State = state
 	state = State.COMBO
+	# Use spin frame if our previous state was a spin
+	if prev == State.SPIN:
+		var atlas: AtlasTexture = texture as AtlasTexture
+		atlas.atlas = spin_texture
+		atlas.region = Rect2((spin_frames - 1) * (spin_texture.get_width() / spin_frames), 0, spin_texture.get_width() / spin_frames, spin_texture.get_height())
+		spin_current_frame = 0
 	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var cur_y: float = position.y
 	_combo_tween = create_tween()
@@ -110,29 +133,27 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	_combo_tween.tween_property(self, "position:y", cur_y, (30 / bpm)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	if return_to_idle: _combo_tween.tween_property(self, "state", State.IDLE, 0)
 
+var spin_current_frame: int = 0
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
-	var max_frames: int = 0
-	var speed: float = 1.0
-	match state:
-		State.IDLE_STILL:
-			max_frames = idle_frames
-			speed = 1.0
-		State.IDLE:
-			max_frames = idle_frames
-			speed = idle_speed
-		State.COMBO:
-			max_frames = combo_frames
-			speed = combo_speed
-		State.GOGO:
-			max_frames = gogo_frames
-			speed = gogo_speed
+	var state_key: String = (State.find_key(state) as String).to_lower()
+	if state_key == "idle_still": state_key = "idle"
+	var max_frames: int = get(state_key + "_frames")
+	var speed: float = get(state_key + "_speed")
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
 		if state != State.MISC and state != State.IDLE_STILL:
-			frame = (_current_interval % max_frames)
+			if state != State.SPIN:
+				frame = (_current_interval % max_frames)
+			else:
+				# Compared to other states, we want the full length of the spin state to go
+				frame = spin_current_frame
+				spin_current_frame += 1
+				if spin_current_frame >= spin_frames - 1:
+					do_combo_animation()
 	
 	# $Label.text = "State: %s" % [State.find_key(state)]
 	# $Label2.text = "Frame: %d" % [frame]

@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://pg0rynw05l0g"]
+
+[ext_resource type="Texture2D" uid="uid://b2m0si0ryknl" path="res://assets/game/soul/gauge_back.png" id="1_hhcfd"]
+[ext_resource type="Texture2D" uid="uid://c3ilkowapfb6v" path="res://assets/game/soul/gauge_fill_0.png" id="2_ci52o"]
+[ext_resource type="Texture2D" uid="uid://dhw5kkdbuk4rb" path="res://assets/game/soul/gauge_front.png" id="2_sjka5"]
+[ext_resource type="Script" uid="uid://c3voakdcib81v" path="res://scripts/obj/gauge.gd" id="3_sjka5"]
+[ext_resource type="Texture2D" uid="uid://cdvhuiur1f3qu" path="res://assets/game/soul/gauge_rainbow.png" id="4_e6ioh"]
+[ext_resource type="Texture2D" uid="uid://dr7rk4prxjpk0" path="res://assets/game/soul/soul.png" id="6_ak5ei"]
+[ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="7_fugxl"]
+
+[node name="Gauge" type="TextureRect" unique_id=306012691]
+z_index = -2
+offset_right = 540.0
+offset_bottom = 96.0
+texture = ExtResource("1_hhcfd")
+script = ExtResource("3_sjka5")
+
+[node name="Meter" type="TextureRect" parent="." unique_id=1976003939]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 31.0
+offset_right = -533.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ci52o")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Rainbow" type="Parallax2D" parent="Meter" unique_id=1276510792]
+unique_name_in_owner = true
+visible = false
+repeat_size = Vector2(448, 0)
+autoscroll = Vector2(-256, 0)
+repeat_times = 4
+
+[node name="TextureRect" type="TextureRect" parent="Meter/Rainbow" unique_id=1377995922]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_e6ioh")
+
+[node name="Front" type="TextureRect" parent="." unique_id=259936481]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_sjka5")
+
+[node name="Soul" type="TextureRect" parent="." unique_id=1687054326]
+layout_mode = 0
+offset_left = 456.0
+offset_top = 6.0
+offset_right = 538.0
+offset_bottom = 81.0
+texture = ExtResource("6_ak5ei")
+metadata/_edit_group_ = true
+
+[node name="Fire" type="Sprite2D" parent="Soul" unique_id=970132734]
+show_behind_parent = true
+position = Vector2(42, 39)
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("7_fugxl")
+offset = Vector2(46, -52)
+hframes = 8
