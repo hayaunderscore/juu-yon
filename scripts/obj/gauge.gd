@@ -27,7 +27,7 @@ var difficulty: TJAChartInfo.CourseType
 
 const value_snap: float = 100.0 / 57.0
 const clear_max: float = 100 - value_snap
-const clear_start: float = snappedf(78.6, value_snap) - value_snap
+const clear_start: float = snappedf(78.6, value_snap) - value_snap + (value_snap / 2.0)
 
 # For now, each star is kept with the same exact rate
 const table: Array[Dictionary] = [
