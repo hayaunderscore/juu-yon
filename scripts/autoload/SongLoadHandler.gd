@@ -7,6 +7,12 @@ func select_song(tja: TJAMeta, diff: int):
 	var border: Control = TransitionHandler.fade.get_node(^"%Border")
 	title.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
 	subtitle.text = (tja.subtitle_localized.get(TranslationServer.get_locale(), tja.subtitle) as String).replace("--", "")
+	var title_size: float = title.get_theme_font("font").get_string_size(title.text, title.horizontal_alignment, -1, 32, title.justification_flags, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL).x
+	var subtitle_size: float = subtitle.get_theme_font("font").get_string_size(subtitle.text, subtitle.horizontal_alignment, -1, 24, subtitle.justification_flags, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL).x
+	title.scale.x = 640.0 / title_size
+	subtitle.scale.x = 640.0 / subtitle_size
+	if title.scale.x > 1.0: title.scale.x = 1.0
+	if subtitle.scale.x > 1.0: subtitle.scale.x = 1.0
 	subtitle.visible = not subtitle.text.is_empty()
 	TransitionHandler.change_scene_to_file("res://scenes/main.tscn", false, clr)
 	await get_tree().scene_changed

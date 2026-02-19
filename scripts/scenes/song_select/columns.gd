@@ -234,7 +234,8 @@ func box_select():
 	pref_box = box
 	if box.back:
 		pref_box = prev
-	find_tjas(box.path, true)
+	var task: int = WorkerThreadPool.add_task(find_tjas.bind(box.path, true))
+	WorkerThreadPool.wait_for_task_completion(task)
 	pref_box = null
 	entry_retransition = false
 	entry_transition = 0
