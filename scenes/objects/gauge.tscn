@@ -10,13 +10,17 @@
 
 [node name="Gauge" type="TextureRect" unique_id=306012691]
 z_index = -2
-offset_right = 540.0
-offset_bottom = 96.0
+anchors_preset = -1
+anchor_right = 0.56200004
+anchor_bottom = 0.133
+offset_right = 0.47998047
+offset_bottom = 0.23999786
 texture = ExtResource("1_hhcfd")
 script = ExtResource("3_sjka5")
 
 [node name="Meter" type="TextureRect" parent="." unique_id=1976003939]
 clip_children = 2
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,8 +38,9 @@ stretch_mode = 1
 [node name="Rainbow" type="Parallax2D" parent="Meter" unique_id=1276510792]
 unique_name_in_owner = true
 visible = false
+texture_filter = 2
 repeat_size = Vector2(448, 0)
-autoscroll = Vector2(-256, 0)
+autoscroll = Vector2(-512, 0)
 repeat_times = 4
 
 [node name="TextureRect" type="TextureRect" parent="Meter/Rainbow" unique_id=1377995922]

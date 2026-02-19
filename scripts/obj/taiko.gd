@@ -10,6 +10,7 @@ class_name TaikoDrum
 @export var good_light_up: TextureRect
 @export var difficulity_light_up: Sprite2D
 @export var difficulity_light_up_good: Sprite2D
+@export var combo_callout_min: int = 10
 @onready var note_sounds: Array[String] = [
 	"dong.wav", "ka.wav"
 ]
@@ -35,6 +36,10 @@ var combo: int = 0:
 		combo_numbers.scaling_pivot = Vector2(s.x / 2.0, s.y)
 		combo_numbers.glyph_offset = -12 if combo < 100 else -20
 		# combo_numbers.scale.y = 1.2
+		if combo % combo_callout_min == 0 and combo > 0:
+			combo_callout.emit(combo)
+
+signal combo_callout(combo: int)
 
 func _process(delta: float) -> void:
 	don_light_up.modulate.a = move_toward(don_light_up.modulate.a, 0, delta*5)

@@ -31,6 +31,12 @@ func _ready() -> void:
 	#for file in files:
 		#add_music(file, "res://assets/music/")
 	
+	# Taiko: normal sound effects like don, kat, and geki are all cached immediately
+	var files := ResourceLoader.list_directory("res://assets/snd/")
+	for file in files:
+		if file.get_extension() != "wav": continue
+		cached_sounds.set(file, load("res://assets/snd/" + file))
+	
 	# Sound effects use a polyphonic stream
 	sound_player.stream = AudioStreamPolyphonic.new()
 	sound_player.max_polyphony = 32
@@ -76,12 +82,16 @@ func stop_music():
 func unpause_music():
 	music_player.stream_paused = false
 
+func save_stream(snd: String):
+	var stream: AudioStream = load("res://assets/snd/" + snd)
+	cached_sounds.set(snd, stream)
+
 func play_sound(snd: String, volume: float = 1.0) -> int:
 	if not sound_player.has_stream_playback(): return -1
 	var db: float = linear_to_db(volume)
 	var playback: AudioStreamPlaybackPolyphonic = sound_player.get_stream_playback()
 	if cached_sounds.get(snd):
 		return playback.play_stream(cached_sounds[snd], 0, db, 1.0, AudioServer.PLAYBACK_TYPE_DEFAULT, "Sound")
-	var stream: AudioStream = load("res://assets/snd/" + snd)
-	cached_sounds.set(snd, stream)
+	var task: int = WorkerThreadPool.add_task(save_stream.bind(snd))
+	WorkerThreadPool.wait_for_task_completion(task)
 	return playback.play_stream(cached_sounds[snd], 0, db, 1.0, AudioServer.PLAYBACK_TYPE_DEFAULT, "Sound")

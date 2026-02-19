@@ -118,6 +118,7 @@ func _ready() -> void:
 
 func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return
+	if state == State.SPIN and frame != spin_frames - 1: return
 	var prev: State = state
 	state = State.COMBO
 	# Use spin frame if our previous state was a spin

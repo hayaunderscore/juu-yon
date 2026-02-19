@@ -25,6 +25,7 @@ config/icon="res://icon.svg"
 [audio]
 
 buses/default_bus_layout="uid://86cuj0230l44"
+driver/driver="ALSA"
 driver/output_latency=3
 
 [autoload]

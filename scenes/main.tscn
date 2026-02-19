@@ -1,13 +1,14 @@
 [gd_scene format=3 uid="uid://b4ghiedy6q5i"]
 
 [ext_resource type="Script" uid="uid://ceb4j17lee54m" path="res://scripts/scenes/main.gd" id="1_o5qli"]
-[ext_resource type="Texture2D" uid="uid://clgowj1d22mk5" path="res://assets/game/top_bg/bg01.png" id="2_jkv2x"]
+[ext_resource type="Texture2D" uid="uid://bp0eeaxnsrbys" path="res://assets/game/top_bg/p1/0.png" id="2_jscy8"]
 [ext_resource type="Texture2D" uid="uid://cyd8x8cx0w4e4" path="res://assets/game/taiko/taiko_bg.png" id="3_85g3d"]
 [ext_resource type="Texture2D" uid="uid://d04eby56jesxn" path="res://assets/game/symbol/oni.png" id="3_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="3_jkv2x"]
-[ext_resource type="Shader" uid="uid://bajdnn60tdkb6" path="res://assets/shaders/blend.gdshader" id="3_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://d0kroh76m3xo6" path="res://assets/game/top_bg/clear/0.png" id="3_y6deb"]
 [ext_resource type="Script" uid="uid://bh0ehdeochrkj" path="res://scripts/obj/taiko.gd" id="4_85g3d"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="4_jbj1t"]
+[ext_resource type="Texture2D" uid="uid://c4y6rgbadaory" path="res://assets/game/top_bg/fail/0.png" id="4_og1vs"]
 [ext_resource type="Texture2D" uid="uid://dy1pcpkiy7qeo" path="res://assets/game/taiko/taiko.svg" id="5_trceg"]
 [ext_resource type="Texture2D" uid="uid://bghl26fhmb1sp" path="res://assets/game/taiko/kat.svg" id="7_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://pg0rynw05l0g" path="res://scenes/objects/gauge.tscn" id="7_gqmmt"]
@@ -20,15 +21,14 @@
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
+[ext_resource type="PackedScene" uid="uid://de7ff4q8ai73x" path="res://scenes/objects/callout_balloon.tscn" id="22_jscy8"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_y6deb"]
-shader = ExtResource("3_pm3ni")
-shader_parameter/alpha = 0.0
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
+blend_mode = 2
 
 [sub_resource type="Gradient" id="Gradient_pm3ni"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0.29457363, 0.68217057, 1)
-colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 1, 1, 1, 1)
+colors = PackedColorArray(0, 0.09019608, 0.59607846, 1, 0, 0.59607846, 0.0627451, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_y6deb"]
 gradient = SubResource("Gradient_pm3ni")
@@ -40,9 +40,8 @@ atlas = ExtResource("4_jbj1t")
 region = Rect2(0, 0, 384, 384)
 
 [sub_resource type="Gradient" id="Gradient_trceg"]
-interpolation_mode = 2
-offsets = PackedFloat32Array(0.14482759, 0.6689655, 1)
-colors = PackedColorArray(0.32941177, 0, 0, 1, 0.83137256, 0.2627451, 0.50980395, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0, 0.63822526, 1)
+colors = PackedColorArray(0.5803922, 0.023529412, 0.023529412, 1, 0.85490197, 0.3019608, 0.5803922, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_a8y0u"]
 gradient = SubResource("Gradient_trceg")
@@ -92,18 +91,32 @@ bus = &"Music"
 [node name="Parallax2D" type="Parallax2D" parent="." unique_id=1398433241]
 z_index = -50
 repeat_size = Vector2(384, 0)
-autoscroll = Vector2(-48, 0)
+autoscroll = Vector2(-64, 0)
 repeat_times = 5
 
 [node name="Back" type="Sprite2D" parent="Parallax2D" unique_id=1969097396]
 unique_name_in_owner = true
-texture = ExtResource("2_jkv2x")
+texture = ExtResource("2_jscy8")
+centered = false
+
+[node name="Clear" type="Sprite2D" parent="Parallax2D/Back" unique_id=1122484509]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+light_mask = 262145
+texture = ExtResource("3_y6deb")
+centered = false
+
+[node name="Fail" type="Sprite2D" parent="Parallax2D/Back" unique_id=953528873]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("4_og1vs")
 centered = false
 
 [node name="GogoBackGradient" type="TextureRect" parent="." unique_id=1739241799]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 z_index = -49
-material = SubResource("ShaderMaterial_y6deb")
+material = SubResource("CanvasItemMaterial_yc10j")
 layout_mode = 0
 offset_right = 960.0
 offset_bottom = 176.0
@@ -151,6 +164,9 @@ state = 1
 [node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
 unique_name_in_owner = true
 layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 380.0
 offset_top = 12.0
 offset_right = 920.0
@@ -369,9 +385,17 @@ one_shot = true
 [node name="NoteCurvePath" type="Path2D" parent="." unique_id=503737797]
 curve = SubResource("Curve2D_dp3eg")
 
+[node name="CalloutBalloon" parent="." unique_id=1452877808 instance=ExtResource("22_jscy8")]
+layout_mode = 0
+offset_left = 200.0
+offset_top = -48.0
+offset_right = 584.0
+offset_bottom = 336.0
+
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]
 [connection signal="rainbow_soul" from="Gauge" to="." method="_on_gauge_rainbow_soul"]
 [connection signal="unfilled_soul" from="Gauge" to="." method="_on_gauge_unfilled_soul"]
 [connection signal="unrainbow_soul" from="Gauge" to="." method="_on_gauge_unrainbow_soul"]
+[connection signal="combo_callout" from="TaikoArea/Taiko" to="." method="_on_taiko_combo_callout"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

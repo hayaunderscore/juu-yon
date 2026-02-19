@@ -19,12 +19,15 @@ var difficulty: TJAChartInfo.CourseType
 	set(v):
 		if value == v: return
 		if is_instance_valid(meter):
-			var s: float = snappedf(v, 1.78)
+			var s: float = snappedf(v, value_snap)
+			var w: float = meter.texture.get_width()
 			if v >= 100: s = 100
-			meter.size.x = lerpf(0, 448, minf(1.0, s / 100.0))
+			meter.size.x = minf(lerpf(0, w, minf(1.0, s / 100.0)), w)
 		value = v
 
-const clear_start: float = 78.6
+const value_snap: float = 100.0 / 57.0
+const clear_max: float = 100 - value_snap
+const clear_start: float = snappedf(78.6, value_snap) - value_snap
 
 # For now, each star is kept with the same exact rate
 const table: Array[Dictionary] = [
@@ -56,14 +59,14 @@ func _update_signals(prev: float):
 		filled_soul.emit()
 	if prev >= clear_start and value < clear_start:
 		unfilled_soul.emit()
-	if prev < 100.0 and value >= 100.0:
+	if prev < clear_max and value >= clear_max:
 		rainbow_soul.emit()
 		if fire_tween: fire_tween.kill()
 		fire_tween = create_tween()
 		fire_tween.tween_property(fire, "scale", Vector2.ONE * 1.4, 0.05)
 		fire_tween.tween_property(fire, "scale", Vector2.ONE * 1.0, 0.3).set_ease(Tween.EASE_OUT)
 		rainbow_parallax.show()
-	if prev >= 100.0 and value < 100.0:
+	if prev >= clear_max and value < clear_max:
 		unrainbow_soul.emit()
 		if fire_tween: fire_tween.kill()
 		fire_tween = create_tween()

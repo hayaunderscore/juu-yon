@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://vqekcack4s1u" path="res://assets/game/lane/balloon_rainbow_new.png" id="1_u0qle"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jscy8"]
+resource_local_to_scene = true
 atlas = ExtResource("1_u0qle")
 region = Rect2(0, 0, 1, 288)
 

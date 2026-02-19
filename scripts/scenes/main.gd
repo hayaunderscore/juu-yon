@@ -10,6 +10,8 @@ var roll: bool = false
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
 @onready var note_drawer: TaikoNoteDrawer = $TaikoArea/Lane/Judge/NoteDrawer
 @onready var top_back: Sprite2D = %Back
+@onready var top_back_clear: Sprite2D = %Clear
+@onready var top_back_fail: Sprite2D = %Fail
 
 func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 	var current_beat: float = 0.0
@@ -31,7 +33,7 @@ func _ready() -> void:
 	pick_random_bg()
 
 # TODO 2P
-var bg_path: String = "res://assets/game/top_bg/"
+var bg_path: String = "res://assets/game/top_bg/p1/"
 func pick_random_bg():
 	var dir: DirAccess = DirAccess.open(bg_path)
 	var paths: PackedStringArray = dir.get_files()
@@ -41,6 +43,10 @@ func pick_random_bg():
 			filtered.push_back(path)
 	var picked: String = filtered[randi_range(0, filtered.size() - 1)]
 	top_back.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path + picked))
+	if FileAccess.file_exists(bg_path.replace("p1", "clear") + picked):
+		top_back_clear.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path.replace("p1", "clear") + picked))
+	if FileAccess.file_exists(bg_path.replace("p1", "fail") + picked):
+		top_back_fail.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path.replace("p1", "fail") + picked))
 
 var difficulty_icons: Dictionary[int, Texture2D] = {
 	TJAChartInfo.CourseType.EASY: preload("uid://by46t0vy31w7s"),
@@ -113,10 +119,7 @@ func handle_play_events():
 				%Judge.self_modulate = yellow
 				gogo_tween.tween_property(%Soul, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 1.0, 0.1)
-				gogo_tween.tween_method(func(val):
-					var mat: ShaderMaterial = %GogoBackGradient.material as ShaderMaterial
-					mat.set_shader_parameter("alpha", val)
-				, 0.0, 1.0, 0.2)
+				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 1.0, 0.2)
 				%Chara.gogo = true
 				var state = %Chara.state
 				if state != %Chara.State.COMBO:
@@ -127,10 +130,7 @@ func handle_play_events():
 				gogo_tween.set_parallel(true)
 				gogo_tween.tween_property(%Soul, "scale", Vector2.ZERO, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 				gogo_tween.tween_property(%GogoGradient, "scale:y", 0.0, 0.1)
-				gogo_tween.tween_method(func(val):
-					var mat: ShaderMaterial = %GogoBackGradient.material as ShaderMaterial
-					mat.set_shader_parameter("alpha", val)
-				, 1.0, 0.0, 0.2)
+				gogo_tween.tween_property(%GogoBackGradient, "modulate:a", 0.0, 0.2)
 				%Judge.self_modulate = Color.WHITE
 				%Chara.gogo = false
 				var state = %Chara.state
@@ -240,10 +240,18 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 		tween.tween_property(rainbow, "position:x", balloon_tex.atlas.get_width(), 0.3)
 		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.3)
 		tween.set_parallel(false)
+		tween.tween_callback(rainbow.queue_free)
+
+func update_top_back(delta: float):
+	var target_clear: float = 0.0
+	if %Chara.clear: target_clear = 1.0
+	top_back_clear.modulate.a = move_toward(top_back_clear.modulate.a, target_clear, delta * 8)
 
 func _process(delta: float) -> void:
 	if not tja: return
 	if not chart: return
+	
+	update_top_back(delta)
 	
 	elapsed = audio.get_playback_position()
 	if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
@@ -335,6 +343,7 @@ func _physics_process(delta: float) -> void:
 				var rolln: Dictionary = note["roll_note"]
 				var roll_type: int = rolln["note"]
 				if roll_type == 7:
+					# SoundHandler.play_sound("geki.wav")
 					add_note_to_gauge(7, true)
 				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
@@ -360,3 +369,6 @@ func _on_gauge_rainbow_soul() -> void:
 func _on_gauge_unrainbow_soul() -> void:
 	var mat: ShaderMaterial = %Chara.material
 	mat.set_shader_parameter("mixture", 0.0)
+
+func _on_taiko_combo_callout(combo: int) -> void:
+	$CalloutBalloon.show_combo(combo)

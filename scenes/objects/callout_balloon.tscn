@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://de7ff4q8ai73x"]
+
+[ext_resource type="Texture2D" uid="uid://by65xph317nvx" path="res://assets/game/combo/balloon/callout_balloon.png" id="1_0wjpq"]
+[ext_resource type="Script" uid="uid://cqu4ibuh7edv" path="res://scripts/obj/callout_balloon.gd" id="2_4n2jk"]
+[ext_resource type="Script" uid="uid://c6ihd62tvky4e" path="res://scripts/obj/taiko_number.gd" id="3_jh0me"]
+[ext_resource type="Texture2D" uid="uid://8lgmnirxx6c2" path="res://assets/game/combo/balloon/callout_num.png" id="4_of5aq"]
+
+[sub_resource type="Animation" id="Animation_nu62q"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_o6qbs"]
+resource_name = "default"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.56666666, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.23333338),
+"transitions": PackedFloat32Array(2, 0.5, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gxrj1"]
+_data = {
+&"RESET": SubResource("Animation_nu62q"),
+&"default": SubResource("Animation_o6qbs")
+}
+
+[node name="CalloutBalloon" type="TextureRect" unique_id=1452877808]
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(192, 192)
+texture = ExtResource("1_0wjpq")
+script = ExtResource("2_4n2jk")
+
+[node name="Control" type="Control" parent="." unique_id=385368204]
+anchors_preset = 0
+offset_left = 188.0
+offset_top = 164.0
+offset_right = 248.0
+offset_bottom = 224.0
+pivot_offset = Vector2(60, 0)
+
+[node name="TaikoNumber" type="Control" parent="Control" unique_id=60861465]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 60.0
+offset_bottom = 60.0
+script = ExtResource("3_jh0me")
+font = ExtResource("4_of5aq")
+font_size = Vector2i(60, 60)
+alignment = 2
+glyph_offset = -12.0
+letters_scale = Array[Vector2]([Vector2(1, 1)])
+metadata/_custom_type_script = "uid://c6ihd62tvky4e"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1771870823]
+libraries/ = SubResource("AnimationLibrary_gxrj1")
