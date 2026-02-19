@@ -11,8 +11,12 @@ func _ready() -> void:
 
 func show_combo(combo: int):
 	number.value = combo
-	if str(combo).length() > 2:
-		number_pivot.scale.x = 3.0 / str(combo).length()
+	if str(combo).length() > 3:
+		number_pivot.scale.x = (3.0 / str(combo).length()) * 1.1
+		number.glyph_offset = (((str(combo).length()*12)) / 36.0) * -12
+	else:
+		number_pivot.scale.x = 1.0
+		number.glyph_offset = -12
 	anim.stop()
 	anim.play("default")
 	var audio: String = "res://assets/snd/combo/combo_voice_%d_p1.wav" % [combo]
