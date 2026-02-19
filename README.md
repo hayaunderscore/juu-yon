@@ -2,9 +2,7 @@
 
 Cross platform Gen-2 based TJA player and Taiko simulator powered by Godot.
 
-<p align="center" width="100%">
-<video src="preview/preview_gameplay.webm" width="80%"></video>
-</p>
+[In-Game](https://github.com/user-attachments/assets/61d2f902-6d81-47c4-b85b-548961ad4f72)
 
 ![Main Menu](preview/preview-title.png)
 
