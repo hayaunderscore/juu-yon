@@ -118,7 +118,7 @@ func _ready() -> void:
 	Globals.control_banner.kat_pressed.connect(kat_pressed)
 	for bvoice in ResourceLoader.list_directory("res://assets/snd/songselect/"):
 		voice_lines.set(bvoice.replace("voice_", "").get_basename(), load("res://assets/snd/songselect/" + bvoice))
-	find_tjas(Configuration.get_section_key("game", "song_folder"))
+	find_tjas(Configuration.get_section_key("Game", "song_folder"))
 	
 	if songs.size() == 0:
 		OS.alert("No songs found!\nPlease check your song folder.")
@@ -214,7 +214,7 @@ func box_select():
 		
 		if box_stack.size() == 0:
 			# Annoying fix
-			box.path = Configuration.get_section_key("game", "song_folder")
+			box.path = Configuration.get_section_key("Game", "song_folder")
 	
 	var back: TJAMeta = TJAMeta.new()
 	var prev: TJAMeta = box_stack.back() if box_stack.size() > 0 else null
@@ -225,10 +225,10 @@ func box_select():
 	back.set_text()
 	back.back = true
 	back.from_box = prev if box.back else box
-	back.path = prev.path if prev and prev.box else Configuration.get_section_key("game", "song_folder")
+	back.path = prev.path if prev and prev.box else Configuration.get_section_key("Game", "song_folder")
 	
 	songs.clear()
-	if box.path != Configuration.get_section_key("game", "song_folder"):
+	if box.path != Configuration.get_section_key("Game", "song_folder"):
 		songs.push_back(back)
 		
 	pref_box = box

@@ -343,7 +343,7 @@ func _physics_process(delta: float) -> void:
 				var rolln: Dictionary = note["roll_note"]
 				var roll_type: int = rolln["note"]
 				if roll_type == 7:
-					# SoundHandler.play_sound("geki.wav")
+					SoundHandler.play_sound("geki.wav")
 					add_note_to_gauge(7, true)
 				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))

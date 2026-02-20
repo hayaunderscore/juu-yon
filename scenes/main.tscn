@@ -159,6 +159,7 @@ offset_top = -4.239998
 offset_right = -15.680023
 offset_bottom = -4.0
 texture = SubResource("AtlasTexture_gqmmt")
+player_number = null
 state = 1
 
 [node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
@@ -379,7 +380,7 @@ offset_bottom = -3.9680023
 metadata/_edit_group_ = true
 
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
-wait_time = 1.5
+wait_time = 2.0
 one_shot = true
 
 [node name="NoteCurvePath" type="Path2D" parent="." unique_id=503737797]

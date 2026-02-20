@@ -165,18 +165,40 @@ theme_override_constants/margin_bottom = 24
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer" unique_id=360036907]
+[node name="TitleContainer" type="Control" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer" unique_id=1553491830]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+
+[node name="Title" type="Label" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer/TitleContainer" unique_id=360036907]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("2_3k7su")
 theme_override_font_sizes/font_size = 32
+text = "FUCK"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer" unique_id=261088546]
+[node name="SubtitleContainer" type="Control" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer" unique_id=1750075675]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
+
+[node name="Subtitle" type="Label" parent="Border/MarginContainer/HBoxContainer/ColorRect/MarginContainer/VBoxContainer/SubtitleContainer" unique_id=261088546]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("2_3k7su")
 theme_override_font_sizes/font_size = 24
+text = "scbooby doo"
 horizontal_alignment = 1

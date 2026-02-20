@@ -13,6 +13,7 @@ enum State {
 	MISC,
 }
 
+@export var player_number: int = 1
 @export var state: State = State.IDLE_STILL:
 	set(v): 
 		var changed: bool = false
@@ -33,8 +34,11 @@ enum State {
 			frame = v;
 			_update_texture()
 
+var _do_not_update: bool = false
+
 @warning_ignore_start("integer_division")
 func _update_texture():
+	if _do_not_update: return
 	if idle_texture == null: return
 	var atlas: AtlasTexture
 	# We do NOT need a new texture if we already have an atlas texture!
@@ -114,7 +118,48 @@ var rainbow: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	if Engine.is_editor_hint(): return
+	# Get textures based on the selected skin
+	var skin: String = Globals.player_skins[player_number - 1]
+	# Read config file
+	var config: ConfigFile = ConfigFile.new()
+	var base_path: String = ""
+	# Check if its available in the user://charas/ folder
+	if DirAccess.dir_exists_absolute("user://charas/" + skin):
+		var err: Error = config.load("user://charas/%s/chara.cfg" % [skin])
+		if err != Error.OK:
+			printerr("Invalid/nonexistent chara.cfg file for %s!" % [skin])
+			return
+		else:
+			base_path = "user://charas"
+	# Check for our resources
+	if DirAccess.dir_exists_absolute("res://assets/game/chara/" + skin):
+		config.load("res://assets/game/chara/%s/chara.cfg" % [skin])
+		base_path = "res://assets/game/chara"
+	# Still nothing? Abort!
+	if config.get_sections().size() == 0: 
+		Globals.log("CHARA", "Character skin doesn't exist!")
+		return
+	
+	# Load character images
+	_do_not_update = true # Don't update everytime yet!
+	for state_key in State.keys():
+		var state_string: String = (state_key as String).to_lower()
+		if state_string == "idle_still": continue
+		var sec: String = state_string.to_pascal_case()
+		if config.has_section(sec):
+			Globals.log("CHARA", "Loading %s state definition for skin %s" % [state_string, skin])
+			var tex: Texture2D = get("%s_texture" % [state_string])
+			var tex_path: String = "%s/%s/%s.png" % [base_path, skin, state_string]
+			if ResourceLoader.exists(tex_path):
+				tex = load(tex_path)
+			elif FileAccess.file_exists(tex_path):
+				tex = ImageTexture.create_from_image(Image.load_from_file(tex_path))
+			set("%s_texture" % [state_string], tex)
+			set("%s_frames" % [state_string], config.get_value(sec, "frames", get("%s_frames" % [state_string])))
+			set("%s_speed" % [state_string], config.get_value(sec, "speed", get("%s_speed" % [state_string])))
+	_do_not_update = false
+	_update_texture()
 
 func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return

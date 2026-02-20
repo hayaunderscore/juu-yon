@@ -1,17 +1,25 @@
 extends Node
 
 var config: Dictionary = {
-	"game": {
+	"Game": {
 		"free_play": true,
-		"song_folder": "songs/",
-		"language": "ja"
+		"song_folder": "res://songs/",
+		"language": "ja",
 	},
-	"audio": {
+	"Player1": {
+		"chara": "default",
+		"name": "Don-chan",
+	},
+	"Player2": {
+		"chara": "default",
+		"name": "Kat-chan",
+	},
+	"Audio": {
 		"music": 100,
 		"sound": 100,
 	}
 }
-var config_path: String = "res://config.cfg"
+var config_path: String = "user://config.cfg"
 
 func get_section_key(section: String, key: String) -> Variant:
 	if not config.has(section):
@@ -36,4 +44,6 @@ func _ready() -> void:
 				cfg.set_value(section, key, sec[key])
 		cfg.save(config_path)
 	
-	TranslationServer.set_locale(get_section_key("game", "language"))
+	TranslationServer.set_locale(get_section_key("Game", "language"))
+	Globals.player_skins[0] = get_section_key("Player1", "chara")
+	Globals.player_skins[1] = get_section_key("Player2", "chara")
