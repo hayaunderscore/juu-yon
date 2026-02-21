@@ -245,7 +245,7 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 func update_top_back(delta: float):
 	var target_clear: float = 0.0
 	if %Chara.clear: target_clear = 1.0
-	top_back_clear.modulate.a = move_toward(top_back_clear.modulate.a, target_clear, delta * 8)
+	top_back_clear.modulate.a = move_toward(top_back_clear.modulate.a, target_clear, delta * 4)
 
 func _process(delta: float) -> void:
 	if not tja: return
@@ -363,12 +363,10 @@ func _on_gauge_unfilled_soul() -> void:
 
 func _on_gauge_rainbow_soul() -> void:
 	%Chara.state = %Chara.State.SPIN
-	var mat: ShaderMaterial = %Chara.material
-	mat.set_shader_parameter("mixture", 0.5)
+	%Chara.rainbow = true
 
 func _on_gauge_unrainbow_soul() -> void:
-	var mat: ShaderMaterial = %Chara.material
-	mat.set_shader_parameter("mixture", 0.0)
+	%Chara.rainbow = false
 
 func _on_taiko_combo_callout(combo: int) -> void:
 	$CalloutBalloon.show_combo(combo)

@@ -29,7 +29,18 @@ func _ready() -> void:
 	Globals.control_banner.deactivate()
 	Globals.control_banner.don_pressed.connect(_on_control_banner_don_pressed)
 	Globals.control_banner.kat_pressed.connect(kat_pressed)
+	
+	if not Configuration.get_section_key("Game", "free_play"):
+		items.add_theme_constant_override("separation", 48)
+	
+	await get_tree().process_frame
+	
+	var count: int = 0
 	for item in items.get_children():
+		count += 1
+		if count > 2 and not Configuration.get_section_key("Game", "free_play"):
+			item.queue_free()
+			continue
 		if item is PanelContainer:
 			prev_y.push_back(item.global_position.y)
 			highlights.push_back(item.get_node("Highlight"))
@@ -38,8 +49,6 @@ func _ready() -> void:
 			item.global_position.y = 720
 	%P1AnimPlayer.play("Enter")
 	SoundHandler.play_sound("title/title_enter.wav")
-	
-	await get_tree().process_frame
 	
 	for item in items.get_children():
 		if item is PanelContainer:
@@ -67,6 +76,8 @@ func _physics_process(delta: float) -> void:
 	%TaikoCharaP1.beat = elapsed * (%TaikoCharaP1.bpm / 60)
 	
 	description_container.pivot_offset = description_container.size / 2.0
+	
+	if prev_y.size() == 0: return
 	
 	for i in range(items.get_child_count()):
 		var item: PanelContainer = items.get_child(i) as PanelContainer
@@ -116,7 +127,7 @@ func _on_control_banner_don_pressed(id: Variant) -> void:
 	tween.tween_property(item, "global_position:x", get_viewport_rect().size.x / 2.0 - 51, 0.3)
 	tween.set_parallel(false)
 	tween.tween_callback(choose_callback).set_delay(2.0)
-	%TaikoCharaP1.do_combo_animation(64, false)
+	%TaikoCharaP1.state = %TaikoCharaP1.State.SPIN
 	if not selected_voices[selected].is_empty():
 		SoundHandler.play_sound(selected_voices[selected])
 	if selected == 3: get_tree().quit()
@@ -128,7 +139,8 @@ func choose_callback():
 		0:
 			TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true, Color("e35f2d"), true)
 		1: pass
-		2: pass
+		2: 
+			TransitionHandler.change_scene_to_file("uid://bj5pg2lc8b500", true, Color("#6ABCC5"), true)
 
 func kat_pressed(_id, side):
 	selected = wrapi(selected + side, 0, items.get_child_count())

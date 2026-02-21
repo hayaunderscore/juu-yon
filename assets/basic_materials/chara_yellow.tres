@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dt6mla3xb5hed"]
+
+[ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="1_mgr1g"]
+
+[resource]
+shader = ExtResource("1_mgr1g")
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/mixture = 0.0
+shader_parameter/lerp_to_add = 0.0
+shader_parameter/alpha = 1.0
+shader_parameter/offset = Vector2(0, 0)

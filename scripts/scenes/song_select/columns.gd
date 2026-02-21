@@ -120,17 +120,31 @@ func _ready() -> void:
 		voice_lines.set(bvoice.replace("voice_", "").get_basename(), load("res://assets/snd/songselect/" + bvoice))
 	find_tjas(Configuration.get_section_key("Game", "song_folder"))
 	
+	var back: TJAMeta = TJAMeta.new()
+	back.title = tr("Back")
+	back.box_back_color = Color.CHOCOLATE
+	back.box = true
+	back.set_style_box()
+	back.set_text()
+	back.path = ""
+	back.back = true
+	
 	if songs.size() == 0:
 		OS.alert("No songs found!\nPlease check your song folder.")
 		get_tree().quit()
 		return
+	
+	songs.push_back(back)
 	
 	if songs[0].box and songs[0].box_back_color:
 		background.modulate = songs[0].box_back_color
 	
 	queue_redraw()
 	
-	timer.timeout.connect(start_music)
+	timer.timeout.connect(func():
+		WorkerThreadPool.add_task(start_music)
+		# WorkerThreadPool.wait_for_task_completion(task)
+	)
 	play_voice_line("enter")
 	await get_tree().create_timer(0.9).timeout
 	
@@ -151,8 +165,8 @@ func start_music():
 			"wav": song.wave = AudioStreamWAV.load_from_file(song.path + header_value)
 			_: printerr("Unknown music file extension! (Must be vorbis (ogg), mp3 or wav)")
 		Globals.log("COLUMNS", "Loaded music file for %s" % [song.title])
-	music.stream = song.wave
-	music.play(song.demo_start)
+	music.set_deferred_thread_group("stream", song.wave)
+	music.call_deferred_thread_group("play", song.demo_start)
 
 func select_song():
 	Globals.control_banner.deactivate_side()
@@ -236,6 +250,9 @@ func box_select():
 		pref_box = prev
 	var task: int = WorkerThreadPool.add_task(find_tjas.bind(box.path, true))
 	WorkerThreadPool.wait_for_task_completion(task)
+	if box.path == Configuration.get_section_key("Game", "song_folder"):
+		back.path = ""
+		songs.push_back(back)
 	pref_box = null
 	entry_retransition = false
 	entry_transition = 0
@@ -297,7 +314,10 @@ func diff_select_to_song_select():
 
 func don_pressed(_id):
 	if songs[selected_index].box:
-		box_select()
+		if songs[selected_index].path == "":
+			TransitionHandler.change_scene_to_file("uid://dyvmwrm570eh6", true, Color("e35f2d"), true)
+		else:
+			box_select()
 		return
 	if state == State.SONG_SELECT:
 		# SoundHandler.play_sound("dong.wav")
@@ -330,7 +350,7 @@ func _process(delta: float) -> void:
 	
 	var back_color: Color = song.box_back_color
 	var header_color: Color = song.index_box.bg_color
-	if song.back or song.from_box: 
+	if (song.back or song.from_box) and song.path != "": 
 		back_color = song.from_box.box_back_color
 		header_color = song.from_box.index_box.bg_color
 
@@ -340,6 +360,8 @@ func _process(delta: float) -> void:
 	genre_text.first_outline_color = header_text.first_outline_color
 	if song.box and not song.back:
 		genre_text.text = song.title_localized.get(TranslationServer.get_locale(), song.title)
+	if song.back and song.path == "":
+		genre_text.text = tr("Back")
 	
 	if entry_retransition:
 		entry_transition -= delta*3

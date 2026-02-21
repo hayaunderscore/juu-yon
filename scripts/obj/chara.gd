@@ -16,6 +16,7 @@ enum State {
 @export var player_number: int = 1
 @export var state: State = State.IDLE_STILL:
 	set(v): 
+		if _cant_change_state and not Engine.is_editor_hint(): return
 		var changed: bool = false
 		if gogo and v == State.IDLE:
 			v = State.GOGO
@@ -27,6 +28,8 @@ enum State {
 			frame = 0; _last_interval = 0; _current_interval = 0;
 			changed = true
 		state = v; 
+		if state == State.SPIN:
+			_cant_change_state = true
 		if changed: _update_texture();
 @export var frame: int = 0:
 	set(v): 
@@ -62,6 +65,7 @@ func _update_texture():
 @export var idle_frames: int = 1:
 	set(v): idle_frames = v; _update_texture()
 @export var idle_speed: float = 1.0
+@export var idle_offset: Vector2 = Vector2.ZERO
 
 @export_group("10 Combo", "combo_")
 @export var combo_texture: Texture2D:
@@ -69,6 +73,7 @@ func _update_texture():
 @export var combo_frames: int = 1:
 	set(v): combo_frames = v; _update_texture()
 @export var combo_speed: float = 1.0
+@export var combo_offset: Vector2 = Vector2.ZERO
 
 @export_group("GoGo Time", "gogo_")
 @export var gogo_texture: Texture2D:
@@ -76,6 +81,7 @@ func _update_texture():
 @export var gogo_frames: int = 1:
 	set(v): gogo_frames = v; _update_texture()
 @export var gogo_speed: float = 1.0
+@export var gogo_offset: Vector2 = Vector2.ZERO
 
 @export_group("Spin", "spin_")
 @export var spin_texture: Texture2D:
@@ -83,6 +89,7 @@ func _update_texture():
 @export var spin_frames: int = 1:
 	set(v): spin_frames = v; _update_texture()
 @export var spin_speed: float = 1.0
+@export var spin_offset: Vector2 = Vector2.ZERO
 
 @export_group("Clear", "clear_")
 @export var clear_texture: Texture2D:
@@ -90,6 +97,7 @@ func _update_texture():
 @export var clear_frames: int = 1:
 	set(v): clear_frames = v; _update_texture()
 @export var clear_speed: float = 1.0
+@export var clear_offset: Vector2 = Vector2.ZERO
 
 @export_group("Fail", "fail_")
 @export var fail_texture: Texture2D:
@@ -97,17 +105,20 @@ func _update_texture():
 @export var fail_frames: int = 1:
 	set(v): fail_frames = v; _update_texture()
 @export var fail_speed: float = 1.0
+@export var fail_offset: Vector2 = Vector2.ZERO
 
 @export_group("Miscellaneous Frames", "misc_")
 @export var misc_texture: Texture2D:
 	set(v): misc_texture = v; _update_texture()
 @export var misc_frames: int = 1:
 	set(v): misc_frames = v; _update_texture()
+@export var misc_offset: Vector2 = Vector2.ZERO
 var misc_speed: float = 1.0
 
 var _current_interval: int = 0
 var _last_interval: int = 0
 var _combo_tween: Tween
+var _cant_change_state: bool = false
 
 var beat: float = 0
 var bpm: float = 120
@@ -158,6 +169,7 @@ func _ready() -> void:
 			set("%s_texture" % [state_string], tex)
 			set("%s_frames" % [state_string], config.get_value(sec, "frames", get("%s_frames" % [state_string])))
 			set("%s_speed" % [state_string], config.get_value(sec, "speed", get("%s_speed" % [state_string])))
+			set("%s_offset" % [state_string], config.get_value(sec, "offset", get("%s_offset" % [state_string])))
 	_do_not_update = false
 	_update_texture()
 
@@ -165,7 +177,9 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return
 	if state == State.SPIN and frame != spin_frames - 1: return
 	var prev: State = state
+	_cant_change_state = false
 	state = State.COMBO
+	_cant_change_state = true
 	# Use spin frame if our previous state was a spin
 	if prev == State.SPIN:
 		var atlas: AtlasTexture = texture as AtlasTexture
@@ -175,9 +189,11 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var cur_y: float = position.y
 	_combo_tween = create_tween()
-	_combo_tween.tween_property(self, "position:y", position.y - height, (30 / bpm)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-	_combo_tween.tween_property(self, "position:y", cur_y, (30 / bpm)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-	if return_to_idle: _combo_tween.tween_property(self, "state", State.IDLE, 0)
+	_combo_tween.tween_property(self, "position:y", position.y - height, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.tween_property(self, "position:y", cur_y, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.tween_callback(func(): _cant_change_state = false)
+	if return_to_idle: 
+		_combo_tween.tween_property(self, "state", State.IDLE, 0)
 
 var spin_current_frame: int = 0
 
@@ -188,6 +204,7 @@ func _physics_process(delta: float) -> void:
 	if state_key == "idle_still": state_key = "idle"
 	var max_frames: int = get(state_key + "_frames")
 	var speed: float = get(state_key + "_speed")
+	var offset: Vector2 = get(state_key + "_offset")
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
@@ -200,6 +217,29 @@ func _physics_process(delta: float) -> void:
 				spin_current_frame += 1
 				if spin_current_frame >= spin_frames - 1:
 					do_combo_animation()
+	
+	if material:
+		var sh: ShaderMaterial = material as ShaderMaterial
+		# Fun fact about the full gauge tint- it seems to switch
+		# between additive and traditional lerp color mixing
+		# So emulate that
+		if rainbow:
+			var rprev: float = sh.get_shader_parameter("lerp_to_add")
+			var rtarget: float = 0.0
+			if state == State.GOGO:
+				if frame >= gogo_frames / 2.0:
+					rtarget = 1.0
+			elif frame % 2 == 0:
+				rtarget = 1.0
+			sh.set_shader_parameter("lerp_to_add", lerpf(rprev, rtarget, delta*8))
+		# Transition the yellow tint when entering
+		var prev: float = sh.get_shader_parameter("mixture")
+		var target: float = 0.0 if not rainbow else 0.5
+		sh.set_shader_parameter("mixture", lerpf(prev, target, delta*8))
+		# Offset the character
+		# Yes I did this in shader over just putting this in a subnode
+		sh.set_shader_parameter("offset", offset)
+		# print("HI")
 	
 	# $Label.text = "State: %s" % [State.find_key(state)]
 	# $Label2.text = "Frame: %d" % [frame]

@@ -159,7 +159,6 @@ offset_top = -4.239998
 offset_right = -15.680023
 offset_bottom = -4.0
 texture = SubResource("AtlasTexture_gqmmt")
-player_number = null
 state = 1
 
 [node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
