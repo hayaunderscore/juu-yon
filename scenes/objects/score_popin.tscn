@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://dj3s7wst6dpip"]
+
+[ext_resource type="Script" uid="uid://c6ihd62tvky4e" path="res://scripts/obj/taiko_number.gd" id="1_tupmj"]
+[ext_resource type="Texture2D" uid="uid://c7ld7f6bp6jfx" path="res://assets/game/lane/score_numbers.png" id="2_j0kw6"]
+
+[sub_resource type="Animation" id="Animation_31rly"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 0.2901961, 0.15686275, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(96, -40)]
+}
+
+[sub_resource type="Animation" id="Animation_slukw"]
+resource_name = "default"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.4, 0.5),
+"transitions": PackedFloat32Array(0.5, 1, 2, 1),
+"update": 0,
+"values": [Color(1, 0.286, 0.16000003, 0), Color(1, 0.286, 0.16000003, 1), Color(1, 0.286, 0.16000003, 1), Color(1, 0.286, 0.16000003, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(0.5, 1, 0.5, 2, 1),
+"update": 0,
+"values": [Vector2(96, -42), Vector2(0, -42), Vector2(0, -42), Vector2(0, -52), Vector2(0, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yexl6"]
+_data = {
+&"RESET": SubResource("Animation_31rly"),
+&"default": SubResource("Animation_slukw")
+}
+
+[node name="ScorePopin" type="Control" unique_id=1670845254]
+modulate = Color(1, 0.2901961, 0.15686275, 1)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 96.0
+offset_top = -40.0
+offset_right = 136.0
+script = ExtResource("1_tupmj")
+font = ExtResource("2_j0kw6")
+font_size = Vector2i(48, 48)
+alignment = 2
+value = 500
+glyph_offset = -14.0
+letters_scale = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+metadata/_custom_type_script = "uid://c6ihd62tvky4e"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=791018365]
+libraries/ = SubResource("AnimationLibrary_yexl6")

@@ -12,6 +12,7 @@ var roll: bool = false
 @onready var top_back: Sprite2D = %Back
 @onready var top_back_clear: Sprite2D = %Clear
 @onready var top_back_fail: Sprite2D = %Fail
+var score_handler: ScoreHandler = ScoreHandler.new()
 
 func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 	var current_beat: float = 0.0
@@ -87,6 +88,24 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	%Gauge.difficulty = chart.course
 	%Gauge.total_notes = current_note_list.filter(func(a): return a["note"] < 5 and a["note"] > 0).size()
 	$Timer.start()
+	# Score parameters
+	score_handler.score_mode = clampi(chart.scoremode, 0, 3) as ScoreHandler.ScoreType
+	score_handler.score_init = chart.scoreinit[0]
+	score_handler.score_diff = chart.scorediff
+
+var popin: PackedScene = preload("uid://dj3s7wst6dpip")
+var score_real: int = 0
+func create_score_diff(val: int):
+	var prev: int = score_real
+	score_real = val
+	var diff: int = val - prev
+	var score_pop: TaikoNumber = popin.instantiate()
+	var anim: AnimationPlayer = score_pop.get_node("AnimationPlayer")
+	score_pop.value = diff
+	anim.play("default")
+	%Score.add_child(score_pop)
+	await anim.animation_finished
+	%Score.value += diff
 
 var elapsed: float = 0.0
 var beat: float = 0.0
@@ -148,9 +167,13 @@ func auto_roll():
 		auto_don_side = !auto_don_side
 		roll_cnt = 0
 		if current_roll_note.get("note", 0) == 5:
+			create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 			add_note_to_gauge(1, true)
 		elif current_roll_note.get("note", 0) == 6:
+			create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 			add_note_to_gauge(3, true)
+		elif current_roll_note.get("note", 0) == 7:
+			create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
 	roll_cnt += 1
 
 var add_mat: CanvasItemMaterial = preload("uid://j5mp4mbuaxqe")
@@ -250,7 +273,10 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 	spr.texture = TaikoNoteDrawer.notes[type]
 	note_curve.add_child(note)
 	# Create judge effect
-	if not skip_judge: create_judge_effect(good, type == 3 or type == 4)
+	if not skip_judge: 
+		# TODO create score effect
+		create_score_diff(score_handler.calc_score(score_real, taiko.combo, 3 if good else 2, %Chara.gogo)[0])
+		create_judge_effect(good, type == 3 or type == 4)
 	# TODO transition
 	var tween: Tween = create_tween()
 	tween.tween_property(note, "progress_ratio", 1.0, 0.3)
@@ -369,6 +395,7 @@ func _physics_process(delta: float) -> void:
 				if roll_type == 7:
 					SoundHandler.play_sound("geki.wav")
 					add_note_to_gauge(7, true)
+					create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
 				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 

@@ -10,6 +10,7 @@ class_name TaikoNumber
 		value = n_value
 		queue_redraw()
 @export var glyph_offset: float = 0.0
+@export var speed_override: float = 0.0
 
 @export_group("Scaling", "scaling_")
 @export var scaling_individual: bool = false
@@ -26,25 +27,36 @@ var last_value: int
 func redraw():
 	queue_redraw()
 
+func bump_indiv_scaling():
+	var st: String = str(value)
+	var length: int = len(st)
+	if last_len != length:
+		for i in range(length - last_len):
+			letters_scale.push_front(Vector2.ONE)
+		for j in range(length - scaling_ignore):
+			letters_scale[j] = Vector2.ONE + scaling_add
+		last_len = length
+	var change_last_zero: bool = false
+	var last_st: String = str(last_value)
+	for i in range(length):
+		if (i < last_len and last_st.length() > i and st.length() > i and last_st.unicode_at(i) != st.unicode_at(i)) \
+		or (change_last_zero and i >= length - (scaling_ignore + 1)):
+			letters_scale[i] = Vector2.ONE + scaling_add
+			change_last_zero = true
+
 func _draw() -> void:
 	var st: String = str(value)
 	var length: int = len(st)
 	letters_scale.resize(length)
 	# print("hi")
 	if last_value != value:
-		last_value = value
 		# print("reset scales")
-		if last_len != length and last_len < length and scaling_individual:
-			for i in range(0, length - last_len):
-				letters_scale.push_front(null)
-				letters_scale.push_front(Vector2.ONE)
-			for j in range(0, length - scaling_ignore):
-				letters_scale[j] = Vector2.ONE + scaling_add
-			last_len = length
-			# print("haha reset")
-		elif not scaling_individual:
+		if not scaling_individual:
 			for j in range(0, length):
 				letters_scale[j] = Vector2.ONE + scaling_add
+		else:
+			bump_indiv_scaling()
+		last_value = value
 			# print("haha reset not indiv")
 	var width: float = length * font_size.x
 	width += glyph_offset * (length - 1)
@@ -66,10 +78,11 @@ func _draw() -> void:
 		pos.x += font_size.x + glyph_offset
 
 func _process(delta: float) -> void:
+	var speed: float = 2.0 if is_zero_approx(speed_override) else speed_override
 	for i in range(len(letters_scale)):
 		var scal: Vector2 = letters_scale[i]
 		if scal.length() > 0.0:
-			letters_scale[i].x = move_toward(scal.x, 1.0, delta*2)
-			letters_scale[i].y = move_toward(scal.y, 1.0, delta*2)
+			letters_scale[i].x = move_toward(scal.x, 1.0, delta*speed)
+			letters_scale[i].y = move_toward(scal.y, 1.0, delta*speed)
 			# print(scal)
 			queue_redraw()
