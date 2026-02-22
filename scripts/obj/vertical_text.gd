@@ -12,6 +12,8 @@ class_name VerticalText2D
 	get: return text
 	set(value): text = value
 
+@export var always_update: bool = false
+
 @export_group("Font")
 @export var font: Font:
 	set(value):
@@ -153,10 +155,14 @@ func _update_size():
 			_text_size.y += get_char_height(content) * scale.y
 
 func _update_texture():
-	if not _size_update_called:
-		_size_update_called = true
-		_update_size.call_deferred()
-		emit_changed.call_deferred()
+	if not always_update:
+		if not _size_update_called:
+			_size_update_called = true
+			_update_size.call_deferred()
+			emit_changed.call_deferred()
+	else:
+		_update_size()
+		emit_changed()
 
 func _get_width() -> int:
 	return maxi(int(int(_text_size.x + (padding.x * 2)) / scale.x), minimum_size.x)

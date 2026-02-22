@@ -32,7 +32,7 @@ expand_margin_right = 19.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="Texture2D" id="Texture2D_lgwnu"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_jk1qb")
 text = "ss_enu"
@@ -42,7 +42,6 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.6156863, 0.14509805, 0.011764706, 1)
 padding = Vector2i(16, 12)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgwnu"]
@@ -72,7 +71,7 @@ expand_margin_right = 19.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="Texture2D" id="Texture2D_7b55j"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_jk1qb")
 text = "My Room"
@@ -82,7 +81,6 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.39607844, 0.4509804, 0.14901961, 1)
 padding = Vector2i(16, 12)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1go"]
@@ -94,7 +92,7 @@ texture_margin_bottom = 41.0
 modulate_color = Color(0.5294118, 0.88235295, 0.88235295, 1)
 
 [sub_resource type="Texture2D" id="Texture2D_tbmy8"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_jk1qb")
 text = "Options"
@@ -104,7 +102,6 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.009647905, 0.54906696, 0.5762288, 1)
 padding = Vector2i(16, 12)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jk1qb"]
@@ -127,7 +124,7 @@ expand_margin_right = 19.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="Texture2D" id="Texture2D_5dd4i"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_jk1qb")
 text = "Exit"
@@ -137,7 +134,6 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.51908237, 0.1994845, 0.24980545, 1)
 padding = Vector2i(16, 12)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgwnu"]

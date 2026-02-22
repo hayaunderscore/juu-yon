@@ -4,6 +4,7 @@ var song_name: String
 var app_title: String = ProjectSettings.get("application/config/name")
 var players_entered: Array[bool] = [false, false]
 var player_skins: Array[String] = ["default", "default"]
+var default_score_mode: ScoreHandler.ScoreType
 
 var overlay: CanvasLayer = preload("res://scenes/objects/overlay.tscn").instantiate()
 var banner_scene: PackedScene = preload("res://scenes/objects/control_banner.tscn")
@@ -12,6 +13,7 @@ var control_banner: TaikoControlBanner
 signal language_changed(locale: String)
 
 func _ready() -> void:
+	default_score_mode = Configuration.get_section_key_from_string("Game:default_score_mode")
 	control_banner = banner_scene.instantiate()
 	add_child.call_deferred(control_banner)
 	add_child.call_deferred(overlay)

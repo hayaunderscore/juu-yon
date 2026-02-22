@@ -28,59 +28,59 @@ texture_margin_right = 19.0
 texture_margin_bottom = 17.0
 
 [sub_resource type="Texture2D" id="Texture2D_g5hix"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_85aq5")
 text = "Back"
 tr_text = "Back"
+always_update = null
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
 outline_color = Color(0.40606204, 0.22587702, 0.0890513, 1)
 padding = Vector2i(32, 32)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_rftt1"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_85aq5")
 text = "o_general"
 tr_text = "o_general"
+always_update = null
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_0un6s"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_85aq5")
 text = "o_ctrl"
 tr_text = "o_ctrl"
+always_update = null
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_kywri"]
-resource_local_to_scene = false
+resource_local_to_scene = true
 resource_name = ""
 script = ExtResource("7_85aq5")
 text = "o_sound"
 tr_text = "o_sound"
+always_update = null
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5hix"]
@@ -99,10 +99,10 @@ resource_name = ""
 script = ExtResource("7_85aq5")
 text = "Back"
 tr_text = "Back"
+always_update = null
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
-minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [node name="Control" type="Control" unique_id=732167424]

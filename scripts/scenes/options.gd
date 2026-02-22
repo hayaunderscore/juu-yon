@@ -31,6 +31,7 @@ var item_options: Array[Array] = [
 	[
 		{ "name": "o_opt_freeplay", "config_option": "Game:free_play", "type": "bool" },
 		{ "name": "o_opt_score_delay", "config_option": "Game:score_delay", "type": "bool" },
+		{ "name": "o_opt_score_type", "config_option": "Game:default_score_mode", "type": "enum", "enum": ScoreHandler.ScoreType, "callback": func(_val): Globals.default_score_mode = Configuration.get_section_key_from_string("Game:default_score_mode") },
 		{ "name": "o_opt_language", "config_option": "Game:language", "type": "lang" },
 	],
 	[], # Controls are handled differently as well
@@ -96,6 +97,34 @@ func determine_suboptions(option: Dictionary, control: Control, idx: int):
 					child.global_position.y += prev.texture.get_height() * 1.5
 				prev = child
 			update_lang_toggle(control, TranslationServer.get_locale())
+		"enum":
+			# Must specify `enum` parameter
+			var enum_dict: Dictionary = option["enum"]
+			for key in enum_dict.keys():
+				var l: TextureRect = create_vertical_text(21)
+				l.name = key
+				var tex: VerticalText2D = l.texture
+				tex.text = key
+				if len(key) > 3:
+					tex.scale.y = (3.0 / len(key))
+				l.size.y = tex.get_height()
+				l.set_anchors_preset(Control.PRESET_TOP_LEFT)
+				control.add_child(l)
+			await get_tree().process_frame
+			# Adjust heights...
+			var height_update: Callable = func():
+				var prev: TextureRect = null
+				var prev_yy: float = 0.0
+				for child in control.get_children():
+					if child is not TextureRect: continue
+					child.global_position.x -= child.texture.get_width() * 2
+					if prev:
+						prev_yy += (prev.texture.get_height() * prev.texture.scale.y) + 20
+						child.global_position.y += prev_yy
+					prev = child
+				
+			update_enum_toggle(control, option, Configuration.get_section_key_from_string(option["config_option"]))
+			height_update.call_deferred()
 
 func update_bool_toggle(selected: int, truthy: bool = false):
 	var on: TextureRect = options_container.get_child(selected).get_child(0)
@@ -113,6 +142,13 @@ func update_lang_toggle(control: Control, locale: String):
 		if child is not TextureRect: continue
 		child.texture.outline_color = Color.BLACK if child.name == rname else Color("#683A17")
 	Globals.change_language(locale)
+
+func update_enum_toggle(control: Control, option: Dictionary, selected: int):
+	var enum_dict: Dictionary = option["enum"]
+	for child in control.get_children():
+		if child is not TextureRect: continue
+		child.texture.outline_color = Color.BLACK if child.name == enum_dict.find_key(selected) else Color("#683A17")
+	Configuration.set_section_key_from_string(option["config_option"], selected)
 
 var opt_tween: Tween
 func create_options(selected: int):
@@ -278,6 +314,12 @@ func handle_pressed_submenu():
 			var lang: String = Configuration.get_section_key_from_string(option["config_option"])
 			var next: Array = next_from_key(lang_dict, lang)
 			update_lang_toggle(options_container.get_child(current_option), next[0])
+		"enum":
+			var prev: String = ScoreHandler.ScoreType.find_key(Configuration.get_section_key_from_string(option["config_option"]))
+			var next: Array = next_from_key(ScoreHandler.ScoreType, prev)
+			update_enum_toggle(options_container.get_child(current_option), option, next[1])
+			if option.has("callback"):
+				(option["callback"] as Callable).call(next[1])
 
 func _don_pressed(id: Variant) -> void:
 	if not Globals.players_entered[id]: return

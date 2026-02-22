@@ -129,5 +129,5 @@ enum BranchCondition {
 ## Common difference used to calculate the score.
 @export var scorediff: int = 120
 ## Type of score mode used.
-@export var scoremode: int = ScoreHandler.ScoreType.AC14
+@export var scoremode: int = Globals.default_score_mode
 @export_group("", "")
