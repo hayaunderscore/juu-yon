@@ -146,3 +146,5 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 texture = ExtResource("9_a50jo")
 centered = false
+
+[connection signal="finished" from="Music" to="MarginContainer/SongSelectColumns" method="_on_music_finished"]

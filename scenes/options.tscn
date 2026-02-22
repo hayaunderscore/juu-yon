@@ -38,6 +38,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.40606204, 0.22587702, 0.0890513, 1)
 padding = Vector2i(32, 32)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_rftt1"]
@@ -51,6 +52,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_0un6s"]
@@ -64,6 +66,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Texture2D" id="Texture2D_kywri"]
@@ -77,6 +80,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5hix"]
@@ -98,6 +102,7 @@ tr_text = "Back"
 font = ExtResource("4_o7i7e")
 font_size = 32
 outline_size = 18
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [node name="Control" type="Control" unique_id=732167424]
@@ -318,7 +323,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 64
+theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 128
 theme_override_constants/margin_right = 160
 theme_override_constants/margin_bottom = 160

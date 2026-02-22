@@ -95,6 +95,13 @@ func taiko_input(note: int, side: int, volume: int = 100):
 func _process(delta: float) -> void:
 	global_position.y = move_toward(global_position.y, orig_pos.y, delta*64)
 	
+	var t: String = tr($ControlLabels/Decide.text)
+	if len(t) > 2:
+		# print("HI")
+		$ControlLabels/Decide.scale = (((len(t) - 1.0) / len(t))) * Vector2.ONE
+	else:
+		$ControlLabels/Decide.scale = Vector2.ONE
+	
 	if not Globals.players_entered[player]: 
 		visible = false
 		if not entry_mode:

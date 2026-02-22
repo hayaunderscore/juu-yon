@@ -160,6 +160,13 @@ offset_right = -15.680023
 offset_bottom = -4.0
 texture = SubResource("AtlasTexture_gqmmt")
 state = 1
+idle_offset = Vector2(0, 0)
+combo_offset = Vector2(0, 0)
+gogo_offset = Vector2(0, 0)
+spin_offset = Vector2(0, 0)
+clear_offset = Vector2(0, 0)
+fail_offset = Vector2(0, 0)
+misc_offset = Vector2(0, 0)
 
 [node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
 unique_name_in_owner = true
@@ -377,6 +384,11 @@ offset_top = -224.0
 offset_right = 716.0
 offset_bottom = -3.9680023
 metadata/_edit_group_ = true
+
+[node name="JudgePoint" type="Marker2D" parent="TaikoArea/Lane/Judge" unique_id=1224778906]
+unique_name_in_owner = true
+z_index = 10
+position = Vector2(48, 48)
 
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 2.0

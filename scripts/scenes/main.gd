@@ -202,7 +202,31 @@ func create_judge_effect(good: bool = true, big: bool = false):
 		base.queue_free()
 		note.queue_free()
 	)
+	judge_create(JudgeType.GOOD if good else JudgeType.OK)
 
+enum JudgeType {
+	BAD,
+	OK,
+	GOOD
+}
+
+var judge_bad: Texture2D = preload("uid://htanu7exw36e")
+var judge_ok: Texture2D = preload("uid://bv3mhdwnknuf5")
+var judge_good: Texture2D = preload("uid://biohn4qhfd10f")
+func judge_create(type: JudgeType):
+	var judge: Sprite2D = Sprite2D.new()
+	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
+	judge.modulate.a = 0.0
+	judge.offset.y = -48
+	%JudgePoint.add_child(judge)
+	var judge_tween: Tween = create_tween()
+	judge_tween.set_parallel(true)
+	judge_tween.tween_property(judge, "modulate:a", 1.0, 0.02)
+	judge_tween.tween_property(judge, "offset:y", -72, 0.06)
+	judge_tween.tween_property(judge, "modulate:a", 0.0, 0.1).set_delay(0.35)
+	judge_tween.set_parallel(false)
+	judge_tween.tween_callback(judge.queue_free)
+	
 var note_follow: PackedScene = preload("uid://bpksjoo45newj")
 var note_rainbow: PackedScene = preload("uid://mfmyctup3c1t")
 @onready var note_curve: Path2D = $NoteCurvePath

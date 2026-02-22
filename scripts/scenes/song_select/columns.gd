@@ -242,9 +242,7 @@ func box_select():
 	back.path = prev.path if prev and prev.box else Configuration.get_section_key("Game", "song_folder")
 	
 	songs.clear()
-	if box.path != Configuration.get_section_key("Game", "song_folder"):
-		songs.push_back(back)
-		
+	
 	pref_box = box
 	if box.back:
 		pref_box = prev
@@ -252,7 +250,7 @@ func box_select():
 	WorkerThreadPool.wait_for_task_completion(task)
 	if box.path == Configuration.get_section_key("Game", "song_folder"):
 		back.path = ""
-		songs.push_back(back)
+	songs.push_back(back)
 	pref_box = null
 	entry_retransition = false
 	entry_transition = 0
@@ -459,16 +457,17 @@ func _draw() -> void:
 			trans = 1.0
 		
 		# Song index
-		box = song.index_box
-		bsize.y = 30
-		var alpha: float = 1.0 - minf(1.0, box_side_transition)
-		if state == State.DIFF_SELECT:
-			alpha = 0
-		box.bg_color.a = alpha
-		draw_style_box(box, Rect2(Vector2(0, -bsize.y), bsize))
-		var count_str: String = "%d" % [wrapped_i + 1]
-		var str_width: float = font.get_string_size(count_str, HORIZONTAL_ALIGNMENT_CENTER).x
-		draw_string(font, Vector2((bsize.x / 2.0) - (str_width / 2.0), -bsize.y + 24), count_str, HORIZONTAL_ALIGNMENT_CENTER, -1, 20, Color(1, 1, 1, alpha))
+		if not song.back:
+			box = song.index_box
+			bsize.y = 30
+			var alpha: float = 1.0 - minf(1.0, box_side_transition)
+			if state == State.DIFF_SELECT:
+				alpha = 0
+			box.bg_color.a = alpha
+			draw_style_box(box, Rect2(Vector2(0, -bsize.y), bsize))
+			var count_str: String = "%d" % [wrapped_i + 1]
+			var str_width: float = font.get_string_size(count_str, HORIZONTAL_ALIGNMENT_CENTER).x
+			draw_string(font, Vector2((bsize.x / 2.0) - (str_width / 2.0), -bsize.y + 24), count_str, HORIZONTAL_ALIGNMENT_CENTER, -1, 20, Color(1, 1, 1, alpha))
 		
 		if state >= State.DIFF_SELECT and i == selected_index:
 			var clr: Color = Color.WHITE
@@ -612,3 +611,6 @@ func _draw() -> void:
 		#draw_string_outline(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 18, outline_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		#draw_string(font, Vector2.ZERO, subtitle, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, subtitle_color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_VERTICAL)
 		x += padding + bsize.x
+
+func _on_music_finished() -> void:
+	WorkerThreadPool.add_task(start_music)

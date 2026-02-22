@@ -42,6 +42,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.6156863, 0.14509805, 0.011764706, 1)
 padding = Vector2i(16, 12)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgwnu"]
@@ -81,6 +82,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.39607844, 0.4509804, 0.14901961, 1)
 padding = Vector2i(16, 12)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1go"]
@@ -102,6 +104,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.009647905, 0.54906696, 0.5762288, 1)
 padding = Vector2i(16, 12)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jk1qb"]
@@ -134,6 +137,7 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.51908237, 0.1994845, 0.24980545, 1)
 padding = Vector2i(16, 12)
+minimum_size = null
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgwnu"]

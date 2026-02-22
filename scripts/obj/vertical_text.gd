@@ -50,6 +50,7 @@ class_name VerticalText2D
 		if value == scale: return
 		scale = value
 		_update_texture()
+@export var minimum_size: Vector2i = Vector2.ZERO
 
 # Character sets
 var rotate_chars: PackedStringArray = [
@@ -158,10 +159,10 @@ func _update_texture():
 		emit_changed.call_deferred()
 
 func _get_width() -> int:
-	return int(int(_text_size.x + (padding.x * 2)) / scale.x)
+	return maxi(int(int(_text_size.x + (padding.x * 2)) / scale.x), minimum_size.x)
 
 func _get_height() -> int:
-	return int(int(_text_size.y + (padding.y * 2)) / scale.y)
+	return maxi(int(int(_text_size.y + (padding.y * 2)) / scale.y), minimum_size.y)
 
 func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color, _transpose: bool = false, outline: bool = false) -> void:
 	if _group_sequence.is_empty() or _text_size.y <= 0: return

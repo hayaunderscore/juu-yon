@@ -225,6 +225,7 @@ anchors_preset = 0
 offset_top = 32.0
 offset_right = 192.0
 offset_bottom = 104.0
+pivot_offset = Vector2(96, 36)
 script = ExtResource("7_ei5th")
 font = ExtResource("8_1ru0b")
 text = "ui_decide"

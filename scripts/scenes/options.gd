@@ -126,6 +126,7 @@ func create_options(selected: int):
 		tex.font_size = 32
 		tex.outline_size = 18
 		tex.text = option["name"]
+		tex.minimum_size.x = 36
 		tex.outline_color = Color("#683A17")
 		trect.size_flags_vertical = Control.SIZE_FILL
 		trect.texture = tex
