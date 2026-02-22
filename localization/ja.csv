@@ -40,3 +40,4 @@ o_opt_off,しない,Off
 ui_left,左,←
 ui_right,右,→
 ui_decide,決定,Decide
+o_opt_score_delay,スコア遅延,Score Delay

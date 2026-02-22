@@ -5,6 +5,8 @@ var config: Dictionary = {
 		"free_play": true,
 		"song_folder": "res://songs/",
 		"language": "ja",
+		"score_delay": true,
+		"default_score_mode": ScoreHandler.ScoreType.AC14 as int
 	},
 	"Player1": {
 		"chara": "default",

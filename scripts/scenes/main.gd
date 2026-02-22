@@ -5,6 +5,7 @@ var tja: TJA
 var chart: TJAChartInfo
 var current_note_list: Array[Dictionary]
 var roll: bool = false
+var score_delay: bool = true
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -92,6 +93,7 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	score_handler.score_mode = clampi(chart.scoremode, 0, 3) as ScoreHandler.ScoreType
 	score_handler.score_init = chart.scoreinit[0]
 	score_handler.score_diff = chart.scorediff
+	score_delay = Configuration.get_section_key("Game", "score_delay")
 
 var popin: PackedScene = preload("uid://dj3s7wst6dpip")
 var score_real: int = 0
@@ -104,7 +106,8 @@ func create_score_diff(val: int):
 	score_pop.value = diff
 	anim.play("default")
 	%Score.add_child(score_pop)
-	await anim.animation_finished
+	if score_delay:
+		await anim.animation_finished
 	%Score.value += diff
 
 var elapsed: float = 0.0

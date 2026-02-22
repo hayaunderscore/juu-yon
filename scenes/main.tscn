@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
 [ext_resource type="PackedScene" uid="uid://de7ff4q8ai73x" path="res://scenes/objects/callout_balloon.tscn" id="22_jscy8"]
 [ext_resource type="Texture2D" uid="uid://c7ld7f6bp6jfx" path="res://assets/game/lane/score_numbers.png" id="22_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://bhocaaqmmd8vw" path="res://assets/game/stage/0.png" id="24_y6deb"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
 blend_mode = 2
@@ -216,7 +217,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("13_trceg")
 theme_override_font_sizes/font_size = 30
-text = "fuck"
+text = "No chart loaded! Somehow..."
 horizontal_alignment = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TaikoArea/SongBorder/MarginContainer" unique_id=1265497362]
@@ -229,14 +230,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("13_trceg")
 theme_override_font_sizes/font_size = 16
-text = "fuck"
+text = "00:00"
 
 [node name="Beat" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=1875648584]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("13_trceg")
 theme_override_font_sizes/font_size = 16
-text = "fuck"
+text = "0.00"
 
 [node name="Taiko" type="TextureRect" parent="TaikoArea" unique_id=1677631364 node_paths=PackedStringArray("don_light_up", "kat_light_up", "good_light_up", "difficulity_light_up", "difficulity_light_up_good")]
 layout_mode = 0
@@ -294,7 +295,6 @@ script = ExtResource("10_jkv2x")
 font = ExtResource("11_jkv2x")
 font_size = Vector2i(60, 60)
 glyph_offset = -16.0
-speed_override = null
 scaling_pivot = Vector2(30, 60)
 scaling_add = Vector2(0, 0.2)
 letters_scale = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
@@ -429,6 +429,20 @@ scaling_ignore = 2
 scaling_add = Vector2(0, 0.2)
 letters_scale = Array[Vector2]([Vector2(1, 1)])
 metadata/_custom_type_script = "uid://c6ihd62tvky4e"
+
+[node name="Footer" type="TextureRect" parent="." unique_id=1953270415]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -72.0
+offset_right = 480.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("24_y6deb")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]

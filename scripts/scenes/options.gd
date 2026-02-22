@@ -30,6 +30,7 @@ var item_options: Array[Array] = [
 	[], # Back, this doesnt have any options to speak of
 	[
 		{ "name": "o_opt_freeplay", "config_option": "Game:free_play", "type": "bool" },
+		{ "name": "o_opt_score_delay", "config_option": "Game:score_delay", "type": "bool" },
 		{ "name": "o_opt_language", "config_option": "Game:language", "type": "lang" },
 	],
 	[], # Controls are handled differently as well
