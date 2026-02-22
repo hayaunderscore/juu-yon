@@ -271,7 +271,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				if init.size() == 2:
 					chart.scoreinit[1] = floor(init[1])
 				chart.scorediff = (tja.chart_meta.get("scorediff", "") as String).to_int()
-				chart.scoremode = (tja.chart_meta.get("scoremode", "") as String).to_int()
+				var default: ScoreHandler.ScoreType = 1 as ScoreHandler.ScoreType
+				var mloop: MainLoop = Engine.get_main_loop()
+				if mloop and mloop is SceneTree: 
+					default = (mloop as SceneTree).root.get_node("/root/Globals").default_score_mode
+				var scrmode: String = tja.chart_meta.get("scoremode", str(default as int)) as String
+				if scrmode.is_empty(): scrmode = str(default as int)
+				chart.scoremode = scrmode.to_int()
 				current_note_data = chart.notes
 				current_barline_data = chart.barline_data
 				current_balloon_data = chart.balloons

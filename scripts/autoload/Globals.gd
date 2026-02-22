@@ -13,10 +13,11 @@ var control_banner: TaikoControlBanner
 signal language_changed(locale: String)
 
 func _ready() -> void:
-	default_score_mode = Configuration.get_section_key_from_string("Game:default_score_mode")
 	control_banner = banner_scene.instantiate()
 	add_child.call_deferred(control_banner)
 	add_child.call_deferred(overlay)
+	await get_tree().process_frame
+	default_score_mode = Configuration.get_section_key_from_string("Game:default_score_mode")
 
 func change_free_play(t: bool):
 	overlay.visible = t
