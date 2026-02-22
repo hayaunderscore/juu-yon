@@ -9,10 +9,20 @@ var overlay: CanvasLayer = preload("res://scenes/objects/overlay.tscn").instanti
 var banner_scene: PackedScene = preload("res://scenes/objects/control_banner.tscn")
 var control_banner: TaikoControlBanner
 
+signal language_changed(locale: String)
+
 func _ready() -> void:
 	control_banner = banner_scene.instantiate()
 	add_child.call_deferred(control_banner)
 	add_child.call_deferred(overlay)
+
+func change_free_play(t: bool):
+	overlay.visible = t
+
+func change_language(locale: String):
+	TranslationServer.set_locale(locale)
+	Configuration.set_section_key_from_string("Game:language", locale)
+	language_changed.emit(locale)
 
 func _process(_delta: float) -> void:
 	var window: Window = get_window()

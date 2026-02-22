@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://coggfx70byrns" path="res://assets/songselect/bar.png" id="5_o7i7e"]
 [ext_resource type="Texture2D" uid="uid://di8gmhj22ewlp" path="res://assets/songselect/bar_highlight.png" id="6_uon5e"]
 [ext_resource type="Script" uid="uid://dqyl0g1a5jxrj" path="res://scripts/obj/vertical_text.gd" id="7_85aq5"]
+[ext_resource type="StyleBox" uid="uid://8adcufa5k1u3" path="res://assets/songselect/box_selected.tres" id="9_85aq5"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gycth"]
 texture = ExtResource("5_o7i7e")
@@ -21,9 +22,9 @@ modulate_color = Color(1, 0.58066666, 0.26, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gyu1t"]
 texture = ExtResource("6_uon5e")
-texture_margin_left = 18.0
+texture_margin_left = 19.0
 texture_margin_top = 17.0
-texture_margin_right = 18.0
+texture_margin_right = 19.0
 texture_margin_bottom = 17.0
 
 [sub_resource type="Texture2D" id="Texture2D_g5hix"]
@@ -38,9 +39,6 @@ outline_size = 18
 outline_color = Color(0.40606204, 0.22587702, 0.0890513, 1)
 padding = Vector2i(32, 32)
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85aq5"]
-bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Texture2D" id="Texture2D_rftt1"]
 resource_local_to_scene = false
@@ -79,6 +77,27 @@ font_size = 32
 outline_size = 18
 outline_color = Color(0.40784314, 0.22745098, 0.09019608, 1)
 padding = Vector2i(32, 32)
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5hix"]
+texture = ExtResource("5_o7i7e")
+texture_margin_left = 18.0
+texture_margin_top = 17.0
+texture_margin_right = 42.0
+texture_margin_bottom = 41.0
+expand_margin_right = 23.0
+expand_margin_bottom = 24.0
+modulate_color = Color(0.90588236, 0.5882353, 0.25882354, 1)
+
+[sub_resource type="Texture2D" id="Texture2D_85aq5"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("7_85aq5")
+text = "Back"
+tr_text = "Back"
+font = ExtResource("4_o7i7e")
+font_size = 32
+outline_size = 18
 metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [node name="Control" type="Control" unique_id=732167424]
@@ -165,6 +184,12 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_gyu1t")
 
+[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Back/PanelContainer/MarginContainer" unique_id=79580356]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("9_85aq5")
+
 [node name="TextContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/Back/PanelContainer/MarginContainer" unique_id=1894886605]
 layout_mode = 2
 size_flags_vertical = 0
@@ -172,12 +197,6 @@ size_flags_vertical = 0
 [node name="Text" type="TextureRect" parent="MarginContainer/HBoxContainer/Back/PanelContainer/MarginContainer/TextContainer" unique_id=1445121351]
 layout_mode = 2
 texture = SubResource("Texture2D_g5hix")
-
-[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Back/PanelContainer/MarginContainer" unique_id=79580356]
-modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_85aq5")
 
 [node name="General" type="CenterContainer" parent="MarginContainer/HBoxContainer" unique_id=491304604]
 layout_mode = 2
@@ -199,6 +218,12 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_gyu1t")
 
+[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/General/PanelContainer/MarginContainer" unique_id=179841059]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("9_85aq5")
+
 [node name="TextContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/General/PanelContainer/MarginContainer" unique_id=2136475325]
 layout_mode = 2
 size_flags_vertical = 0
@@ -206,12 +231,6 @@ size_flags_vertical = 0
 [node name="Text" type="TextureRect" parent="MarginContainer/HBoxContainer/General/PanelContainer/MarginContainer/TextContainer" unique_id=620274270]
 layout_mode = 2
 texture = SubResource("Texture2D_rftt1")
-
-[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/General/PanelContainer/MarginContainer" unique_id=179841059]
-modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_85aq5")
 
 [node name="Controls" type="CenterContainer" parent="MarginContainer/HBoxContainer" unique_id=805571783]
 layout_mode = 2
@@ -233,6 +252,12 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_gyu1t")
 
+[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Controls/PanelContainer/MarginContainer" unique_id=138475359]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("9_85aq5")
+
 [node name="TextContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/Controls/PanelContainer/MarginContainer" unique_id=1131962875]
 layout_mode = 2
 size_flags_vertical = 0
@@ -240,12 +265,6 @@ size_flags_vertical = 0
 [node name="Text" type="TextureRect" parent="MarginContainer/HBoxContainer/Controls/PanelContainer/MarginContainer/TextContainer" unique_id=1126790750]
 layout_mode = 2
 texture = SubResource("Texture2D_0un6s")
-
-[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Controls/PanelContainer/MarginContainer" unique_id=138475359]
-modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_85aq5")
 
 [node name="Audio" type="CenterContainer" parent="MarginContainer/HBoxContainer" unique_id=1828355463]
 layout_mode = 2
@@ -267,6 +286,12 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_gyu1t")
 
+[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Audio/PanelContainer/MarginContainer" unique_id=1523238254]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("9_85aq5")
+
 [node name="TextContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/Audio/PanelContainer/MarginContainer" unique_id=1492715319]
 layout_mode = 2
 size_flags_vertical = 0
@@ -275,8 +300,66 @@ size_flags_vertical = 0
 layout_mode = 2
 texture = SubResource("Texture2D_kywri")
 
-[node name="Highlight" type="Panel" parent="MarginContainer/HBoxContainer/Audio/PanelContainer/MarginContainer" unique_id=1523238254]
-modulate = Color(1, 1, 1, 0)
+[node name="OptionBoxControl" type="Control" parent="." unique_id=1691026723]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_right = -960.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionBoxControl" unique_id=621888537]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 128
+theme_override_constants/margin_right = 160
+theme_override_constants/margin_bottom = 160
+
+[node name="PanelContainer" type="PanelContainer" parent="OptionBoxControl/MarginContainer" unique_id=558614070]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_g5hix")
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionBoxControl/MarginContainer/PanelContainer" unique_id=1550398127]
+layout_mode = 2
+theme_override_constants/margin_left = -18
+theme_override_constants/margin_top = -17
+theme_override_constants/margin_right = -42
+theme_override_constants/margin_bottom = -42
+
+[node name="Panel" type="Panel" parent="OptionBoxControl/MarginContainer/PanelContainer/MarginContainer" unique_id=396747919]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_85aq5")
+theme_override_styles/panel = SubResource("StyleBoxTexture_gyu1t")
+
+[node name="FullOptionsContainer" type="MarginContainer" parent="OptionBoxControl/MarginContainer/PanelContainer/MarginContainer" unique_id=28126314]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 64
+
+[node name="OptionsContainer" type="HBoxContainer" parent="OptionBoxControl/MarginContainer/PanelContainer/MarginContainer/FullOptionsContainer" unique_id=1964926922]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 72
+alignment = 2
+
+[node name="BackContainer" type="HBoxContainer" parent="OptionBoxControl/MarginContainer/PanelContainer/MarginContainer/FullOptionsContainer" unique_id=970399191]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="TextureRect" type="TextureRect" parent="OptionBoxControl/MarginContainer/PanelContainer/MarginContainer/FullOptionsContainer/BackContainer" unique_id=1036968913]
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("Texture2D_85aq5")

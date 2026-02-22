@@ -114,6 +114,7 @@ script = ExtResource("5_vakh2")
 font = ExtResource("2_fi1wv")
 text = "Song Select"
 alignment = 2
+translate = false
 first_outline_color = Color(0.99215686, 0.3529412, 0.078431375, 1)
 second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
 text_size = 32

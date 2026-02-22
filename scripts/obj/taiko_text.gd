@@ -18,6 +18,7 @@ class_name TaikoText
 	set(v):
 		orientation = v
 		queue_redraw()
+@export var translate: bool = true
 
 @export_group("Colors")
 @export var color: Color = Color.WHITE:
@@ -51,7 +52,7 @@ func _ready() -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	var t: String = tr(text)
+	var t: String = tr(text) if translate else text
 	var length: int = len(t)
 	var string_size: Vector2 = font.get_string_size(t, alignment, -1, text_size, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, orientation)
 	var pos: Vector2 = Vector2(0.0, size.y - text_size / 2.0)

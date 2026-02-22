@@ -227,7 +227,7 @@ func _physics_process(delta: float) -> void:
 			var rprev: float = sh.get_shader_parameter("lerp_to_add")
 			var rtarget: float = 0.0
 			if state == State.GOGO:
-				if frame >= gogo_frames / 2.0:
+				if (frame / 4) % 2 == 0:
 					rtarget = 1.0
 			elif frame % 2 == 0:
 				rtarget = 1.0

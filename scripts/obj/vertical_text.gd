@@ -124,6 +124,7 @@ func get_char_height(chr: String) -> float:
 func _init() -> void:
 	if font == null:
 		font = ThemeDB.fallback_font
+	Globals.language_changed.connect.call_deferred(func(_locale): _update_texture())
 
 var _size_update_called: bool = false
 
