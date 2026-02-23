@@ -599,9 +599,13 @@ func _on_music_finished() -> void:
 
 func _on_gauge_filled_soul() -> void:
 	%Chara.clear = true
+	if %Chara.state == %Chara.State.IDLE:
+		%Chara.state = %Chara.State.CLEAR
 
 func _on_gauge_unfilled_soul() -> void:
 	%Chara.clear = false
+	if %Chara.state == %Chara.State.CLEAR:
+		%Chara.state = %Chara.State.IDLE
 
 func _on_gauge_rainbow_soul() -> void:
 	%Chara.state = %Chara.State.SPIN
