@@ -17,8 +17,11 @@ class_name TaikoNumber
 @export var scaling_pivot: Vector2
 @export var scaling_ignore: int = 0
 @export var scaling_add: Vector2 = Vector2.ZERO
+@export var scaling_speed: float = 0.15
+@export var return_speed: float = 0.2
 
-@export var letters_scale: Array[Vector2]
+var letters_scale: Array[Vector2]
+var letters_tween: Array[Tween]
 var last_len: int
 var last_value: int
 
@@ -27,33 +30,48 @@ var last_value: int
 func redraw():
 	queue_redraw()
 
+func create_letter_tween(i: int):
+	if letters_tween[i] and is_instance_valid(letters_tween[i]): letters_tween[i].kill()
+	letters_tween[i] = create_tween()
+	letters_tween[i].tween_method(func(val):
+		letters_scale[i] = val
+	, Vector2.ONE, Vector2.ONE + scaling_add, scaling_speed)
+	letters_tween[i].tween_method(func(val):
+		letters_scale[i] = val
+	, Vector2.ONE + scaling_add, Vector2.ONE, return_speed)
+
 func bump_indiv_scaling():
 	var st: String = str(value)
 	var length: int = len(st)
 	if last_len != length:
 		for i in range(length - last_len):
+			letters_tween.push_front(null)
 			letters_scale.push_front(Vector2.ONE)
 		for j in range(length - scaling_ignore):
-			letters_scale[j] = Vector2.ONE + scaling_add
+			create_letter_tween(j)
 		last_len = length
 	var change_last_zero: bool = false
 	var last_st: String = str(last_value)
 	for i in range(length):
 		if (i < last_len and last_st.length() > i and st.length() > i and last_st.unicode_at(i) != st.unicode_at(i)) \
 		or (change_last_zero and i >= length - (scaling_ignore + 1)):
-			letters_scale[i] = Vector2.ONE + scaling_add
+			create_letter_tween(i)
 			change_last_zero = true
 
 func _draw() -> void:
 	var st: String = str(value)
 	var length: int = len(st)
 	letters_scale.resize(length)
+	letters_tween.resize(length)
+	for i in range(letters_scale.size()):
+		if is_zero_approx(letters_scale[i].length()):
+			letters_scale[i] = Vector2.ONE
 	# print("hi")
 	if last_value != value:
 		# print("reset scales")
 		if not scaling_individual:
 			for j in range(0, length):
-				letters_scale[j] = Vector2.ONE + scaling_add
+				create_letter_tween(j)
 		else:
 			bump_indiv_scaling()
 		last_value = value
@@ -77,12 +95,7 @@ func _draw() -> void:
 		draw_texture_rect_region(font, Rect2(-scaling_pivot, font_size), Rect2(Vector2(chr.to_int() * font_size.x, 0.0), font_size))
 		pos.x += font_size.x + glyph_offset
 
-func _process(delta: float) -> void:
-	var speed: float = 2.0 if is_zero_approx(speed_override) else speed_override
+func _process(_delta: float) -> void:
+	if is_zero_approx(scaling_add.length()): return
 	for i in range(len(letters_scale)):
-		var scal: Vector2 = letters_scale[i]
-		if scal.length() > 0.0:
-			letters_scale[i].x = move_toward(scal.x, 1.0, delta*speed)
-			letters_scale[i].y = move_toward(scal.y, 1.0, delta*speed)
-			# print(scal)
-			queue_redraw()
+		queue_redraw()

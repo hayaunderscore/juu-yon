@@ -70,6 +70,14 @@ colors = PackedColorArray(1, 0.9166666, 0, 1, 0, 0, 0, 0)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_muem4"]
 gradient = SubResource("Gradient_jbj1t")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y6deb"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
 [sub_resource type="Curve2D" id="Curve2D_dp3eg"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 224, 236, -66.438576, 52.157387, 66.438576, -52.157387, 332, 128, -70.1641, 16.143953, 70.1641, -16.143953, 548, 32, -44.70633, -2.483685, 44.70633, 2.483685, 724, 20, 0, 0, 0, 0, 876, 56)
@@ -296,8 +304,9 @@ font = ExtResource("11_jkv2x")
 font_size = Vector2i(60, 60)
 glyph_offset = -16.0
 scaling_pivot = Vector2(30, 60)
-scaling_add = Vector2(0, 0.2)
-letters_scale = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+scaling_add = Vector2(0, 0.225)
+scaling_speed = 0.05
+return_speed = 0.15
 
 [node name="Lane" type="TextureRect" parent="TaikoArea" unique_id=252513849]
 z_index = -1
@@ -392,6 +401,34 @@ unique_name_in_owner = true
 z_index = 10
 position = Vector2(48, 48)
 
+[node name="Panel" type="Panel" parent="TaikoArea" unique_id=376487631]
+z_index = -1
+layout_mode = 0
+offset_left = 32.0
+offset_top = -16.0
+offset_right = 160.0
+offset_bottom = 28.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_y6deb")
+
+[node name="Nametag" type="Label" parent="TaikoArea/Panel" unique_id=1675991746]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 4.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(64, 0)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_font_sizes/font_size = 18
+text = "Don-chan"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 2.0
 one_shot = true
@@ -427,7 +464,8 @@ scaling_individual = true
 scaling_pivot = Vector2(0, 48)
 scaling_ignore = 2
 scaling_add = Vector2(0, 0.2)
-letters_scale = Array[Vector2]([Vector2(1, 1)])
+scaling_speed = 0.05
+return_speed = 0.1
 metadata/_custom_type_script = "uid://c6ihd62tvky4e"
 
 [node name="Footer" type="TextureRect" parent="." unique_id=1953270415]

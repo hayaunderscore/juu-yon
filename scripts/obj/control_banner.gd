@@ -67,6 +67,13 @@ func deactivate_side():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("auto_p1") and Globals.players_entered[0]:
+		Globals.players_auto[0] = not Globals.players_auto[0]
+		$Player1/AutoIcon.visible = Globals.players_auto[0]
+	if Input.is_action_just_pressed("auto_p2") and Globals.players_entered[1]:
+		Globals.players_auto[1] = not Globals.players_auto[1]
+		$Player1/AutoIcon.visible = Globals.players_auto[1]
+	
 	if not active():
 		for i in taikos.size():
 			var taiko: SelectTaiko = taikos[i]

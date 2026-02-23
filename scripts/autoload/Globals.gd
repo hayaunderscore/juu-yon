@@ -3,6 +3,7 @@ extends Node
 var song_name: String
 var app_title: String = ProjectSettings.get("application/config/name")
 var players_entered: Array[bool] = [false, false]
+var players_auto: Array[bool] = [false, false]
 var player_skins: Array[String] = ["default", "default"]
 var default_score_mode: ScoreHandler.ScoreType
 

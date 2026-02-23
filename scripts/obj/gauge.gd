@@ -72,10 +72,11 @@ func _update_signals(prev: float):
 		fire_tween = create_tween()
 		fire_tween.tween_property(fire, "scale", Vector2.ZERO, 0.1)
 		rainbow_parallax.hide()
+	value = clampf(value, 0.0, clear_max)
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	fire.frame = (fire.frame + 1) % fire.hframes
-	if value >= 100.0: 
+	if value >= clear_max:
 		soul.visible = true
 		soul.self_modulate.a = 0.0 if soul.self_modulate.a == 1.0 else 1.0

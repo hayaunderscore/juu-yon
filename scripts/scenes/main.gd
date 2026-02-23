@@ -33,6 +33,9 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pick_random_bg()
+	%Nametag.text = Configuration.get_section_key_from_string("Player1:name") if not Globals.players_auto[0] else tr("game_mod_auto")
+	if len(%Nametag.text) > 8:
+		%Nametag.scale.x = 8.0 / len(%Nametag.text)
 
 # TODO 2P
 var bg_path: String = "res://assets/game/top_bg/p1/"
@@ -196,50 +199,53 @@ var ok_tex_hit: Array[Texture2D] = [
 	preload("uid://dbrb5yxudsjmk"),
 	preload("uid://870vju77rh3d"),
 ]
-func create_judge_effect(good: bool = true, big: bool = false):
-	var effect_table: Array[Texture2D] = good_tex_effect if good else ok_tex_effect
-	var hit_table: Array[Texture2D] = good_tex_hit if good else ok_tex_hit
-	# Judge effect
-	var base: Sprite2D = Sprite2D.new()
-	var big_base: Sprite2D = null
-	base.texture = good_tex_effect[0]
-	base.material = add_mat
-	base.z_index = 1
-	base.modulate.a = 0.75
-	if big:
-		big_base = Sprite2D.new()
-		big_base.texture = effect_table[1]
-		big_base.material = add_mat
-		big_base.scale = Vector2.ONE * 0.5 # Starts small then scales later- see tween
-		base.add_child(big_base)
-	%LanePivot.add_child(base)
-	# Lane note hit effect
-	var note: Sprite2D = Sprite2D.new()
-	note.texture = hit_table[1 if big else 0]
-	%LanePivot.add_child(note)
-	# Tween both of these together
-	var tween: Tween = create_tween()
-	tween.set_parallel(true)
-	if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
-	tween.tween_property(base, "modulate:a", 0, 0.1).set_delay(0.05)
-	tween.tween_property(note, "modulate:a", 0, 0.3)
-	tween.set_parallel(false)
-	tween.tween_callback(func():
-		base.queue_free()
-		note.queue_free()
-	)
-	judge_create(JudgeType.GOOD if good else JudgeType.OK)
+func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false):
+	if not bad:
+		var effect_table: Array[Texture2D] = good_tex_effect if good else ok_tex_effect
+		var hit_table: Array[Texture2D] = good_tex_hit if good else ok_tex_hit
+		# Judge effect
+		var base: Sprite2D = Sprite2D.new()
+		var big_base: Sprite2D = null
+		base.texture = good_tex_effect[0]
+		base.material = add_mat
+		base.z_index = 1
+		base.modulate.a = 0.75
+		if big:
+			big_base = Sprite2D.new()
+			big_base.texture = effect_table[1]
+			big_base.material = add_mat
+			big_base.scale = Vector2.ONE * 0.5 # Starts small then scales later- see tween
+			base.add_child(big_base)
+		%LanePivot.add_child(base)
+		# Lane note hit effect
+		var note: Sprite2D = Sprite2D.new()
+		note.texture = hit_table[1 if big else 0]
+		%LanePivot.add_child(note)
+		# Tween both of these together
+		var tween: Tween = create_tween()
+		tween.set_parallel(true)
+		if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
+		tween.tween_property(base, "modulate:a", 0, 0.1).set_delay(0.05)
+		tween.tween_property(note, "modulate:a", 0, 0.3)
+		tween.set_parallel(false)
+		tween.tween_callback(func():
+			base.queue_free()
+			note.queue_free()
+		)
+	judge_create(JudgeType.BAD if bad else JudgeType.GOOD if good else JudgeType.OK)
 
 enum JudgeType {
 	BAD,
 	OK,
-	GOOD
+	GOOD,
+	ROLL
 }
 
 var judge_bad: Texture2D = preload("uid://htanu7exw36e")
 var judge_ok: Texture2D = preload("uid://bv3mhdwnknuf5")
 var judge_good: Texture2D = preload("uid://biohn4qhfd10f")
 func judge_create(type: JudgeType):
+	add_hit_to_gauge(type)
 	var judge: Sprite2D = Sprite2D.new()
 	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
 	judge.modulate.a = 0.0
@@ -256,7 +262,7 @@ func judge_create(type: JudgeType):
 var note_follow: PackedScene = preload("uid://bpksjoo45newj")
 var note_rainbow: PackedScene = preload("uid://mfmyctup3c1t")
 @onready var note_curve: Path2D = $NoteCurvePath
-func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
+func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType = JudgeType.GOOD):
 	var balloon: bool = false
 	var balloon_tex: AtlasTexture
 	var rainbow: TextureRect
@@ -278,8 +284,11 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, good: bool = true):
 	# Create judge effect
 	if not skip_judge: 
 		# TODO create score effect
-		create_score_diff(score_handler.calc_score(score_real, taiko.combo, 3 if good else 2, %Chara.gogo)[0])
-		create_judge_effect(good, type == 3 or type == 4)
+		var j: int = judgetype
+		if (type == 3 or type == 4) and judgetype != JudgeType.BAD:
+			j += 1
+		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
+		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
 	# TODO transition
 	var tween: Tween = create_tween()
 	tween.tween_property(note, "progress_ratio", 1.0, 0.3)
@@ -299,6 +308,9 @@ func update_top_back(delta: float):
 	var target_clear: float = 0.0
 	if %Chara.clear: target_clear = 1.0
 	top_back_clear.modulate.a = move_toward(top_back_clear.modulate.a, target_clear, delta * 4)
+	target_clear = 0.0
+	if %Chara.idiot: target_clear = 1.0
+	top_back_fail.modulate.a = move_toward(top_back_fail.modulate.a, target_clear, delta * 4)
 
 func _process(delta: float) -> void:
 	if not tja: return
@@ -329,20 +341,8 @@ func _process(delta: float) -> void:
 	%Soul.beat = beat
 	%SongBorder.size.x = get_viewport_rect().size.x
 
-func _physics_process(delta: float) -> void:
-	if not tja: return
-	if not chart: return
-	
-	if Input.is_action_just_pressed("pause"):
-		audio.stream_paused = !audio.stream_paused
-		if not $Timer.is_stopped(): $Timer.paused = !$Timer.paused
-	
-	handle_play_events()
-	
-	if current_note_list.size() <= 0: return
-	
+func auto_play():
 	auto_roll()
-	
 	while current_note_list.size() > 0 and current_note_list[-1]["time"] < elapsed:
 		var note: Dictionary = current_note_list.pop_back()
 		if not note.has("time"): continue
@@ -356,51 +356,228 @@ func _physics_process(delta: float) -> void:
 			1:
 				taiko.taiko_input(0, 1 if auto_don_side else 0)
 				taiko.combo += 1
-				if taiko.combo % 10 == 0:
-					%Chara.do_combo_animation()
 				auto_don_side = !auto_don_side
 				add_note_to_gauge(type)
-				%Gauge.add_good()
+				# %Gauge.add_good()
 			2:
 				taiko.taiko_input(1, 1 if auto_kat_side else 0)
 				taiko.combo += 1
-				if taiko.combo % 10 == 0:
-					%Chara.do_combo_animation()
 				auto_kat_side = !auto_kat_side
 				add_note_to_gauge(type)
-				%Gauge.add_good()
+				# %Gauge.add_good()
 			3:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(0, side)
-				if taiko.combo % 10 == 0:
-					%Chara.do_combo_animation()
 				add_note_to_gauge(type)
-				%Gauge.add_good()
+				# %Gauge.add_good()
 			4:
 				taiko.combo += 1
 				for side in range(2):
 					taiko.taiko_input(1, side)
-				if taiko.combo % 10 == 0:
-					%Chara.do_combo_animation()
 				add_note_to_gauge(type)
-				%Gauge.add_good()
-		# if current_note_list.size() <= 0: break
-		if type == 5 or type == 6 or type == 7:
-			roll = true
-			roll_cnt = 0
-			current_roll_note = note
-		if type == 8: 
-			roll = false
-			if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
-				var rolln: Dictionary = note["roll_note"]
-				var roll_type: int = rolln["note"]
-				if roll_type == 7:
-					SoundHandler.play_sound("geki.wav")
-					add_note_to_gauge(7, true)
-					create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
-				chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+				# %Gauge.add_good()
+			5, 6, 7:
+				roll = true
+				roll_cnt = 0
+				current_roll_note = note
+			8:
+				roll = false
+				if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
+					var rolln: Dictionary = note["roll_note"]
+					var roll_type: int = rolln["note"]
+					if roll_type == 7:
+						SoundHandler.play_sound("geki.wav")
+						add_note_to_gauge(7, true)
+						create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
+					chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
+
+const JUDGEMENT_GREAT = 0.042
+const JUDGEMENT_GOOD = 0.075
+const JUDGEMENT_BAD = 0.108
+
+var drumrolls: Array[bool] = [false, false, false, false, false, true, true, true, true, true, false, false, true, false]
+
+func hit_note(type: int, time: float) -> JudgeType:
+	if drumrolls[type]: return JudgeType.ROLL
+	var judgetype: int = JudgeType.BAD
+	if time - JUDGEMENT_GREAT <= elapsed and elapsed <= (time + JUDGEMENT_GREAT):
+		judgetype = JudgeType.GOOD
+	elif time - JUDGEMENT_GOOD <= elapsed and elapsed <= (time + JUDGEMENT_GOOD):
+		judgetype = JudgeType.OK
+	# Change score!
+	if judgetype != JudgeType.BAD:
+		taiko.combo += 1
+		add_note_to_gauge(type, false, judgetype)
+		%Chara.idiot = false
+		if %Chara.state == %Chara.State.FAIL:
+			%Chara.state = %Chara.State.IDLE
+	else:
+		taiko.combo = 0
+		create_judge_effect(false, false, true)
+		%Chara.idiot = true
+		if %Chara.state == %Chara.State.IDLE:
+			%Chara.state = %Chara.State.FAIL
+	return judgetype as JudgeType
+
+func check_note(check_type: int) -> JudgeType:
+	var hit: JudgeType = JudgeType.BAD
+	if current_note_list.size() <= 0: return hit
+	var offset: int = 0
+	while current_note_list.size() > 0 and not (current_note_list[-1-offset]["time"] > elapsed + JUDGEMENT_BAD):
+		var note: Dictionary = current_note_list[-1-offset]
+		var type: int = note["note"]
+		var time: float = note["time"]
+		var old_type: int = type
+		match check_type:
+			1:
+				if type == 3:
+					type = 1
+			2:
+				if type == 4:
+					type = 2
+		if type != check_type: 
+			offset += 1
+			continue
+		var result = hit_note(type, time)
+		type = old_type
+		current_note_list.pop_back()
+		if result == JudgeType.ROLL: 
+			offset += 1
+			continue
+		chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
+		hit = result
+		break
+	return hit
+
+func hit_don(player: int, event: InputEvent) -> int:
+	if event.is_echo(): return 0
+	if event.is_action_pressed("don_left_p%d" % [player]):
+		return 0
+	if event.is_action_pressed("don_right_p%d" % [player]):
+		return 1
+	return -1
+
+func hit_kat(player: int, event: InputEvent) -> int:
+	if event.is_echo(): return 0
+	if event.is_action_pressed("kat_left_p%d" % [player]):
+		return 0
+	if event.is_action_pressed("kat_right_p%d" % [player]):
+		return 1
+	return -1
+
+func hit_either(player: int, event: InputEvent) -> PackedInt64Array:
+	if event.is_echo(): return [0, 0]
+	if event.is_action_pressed("don_left_p%d" % [player]):
+		return [0, 0]
+	if event.is_action_pressed("don_right_p%d" % [player]):
+		return [0, 1]
+	if event.is_action_pressed("kat_left_p%d" % [player]):
+		return [1, 0]
+	if event.is_action_pressed("kat_right_p%d" % [player]):
+		return [1, 1]
+	return [-1, -1]
+
+func handle_lingering_notes():
+	if current_note_list.size() <= 0: return
+	while current_note_list.size() > 0 and current_note_list[-1]["time"] < elapsed:
+		var note: Dictionary = current_note_list[-1]
+		# Look, we can't detect if we should hit if we don't have one.
+		if not note.has("time"): break
+		if note.has("dummy"): break
+		var type: int = note["note"]
+		var time: float = note["time"]
+		# Do not include special notes from now on.
+		if type >= 999: break
+		match type:
+			5, 6, 7:
+				roll = true
+				roll_cnt = 0
+				current_roll_note = note
+				current_note_list.pop_back()
+			8:
+				roll = false
+				if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
+					var rolln: Dictionary = note["roll_note"]
+					var roll_type: int = rolln["note"]
+					if roll_type == 7:
+						SoundHandler.play_sound("geki.wav")
+						add_note_to_gauge(7, true)
+						create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
+					chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+				current_note_list.pop_back()
+		if time > elapsed - JUDGEMENT_BAD: break
+		var result: JudgeType = hit_note(type, time)
+		current_note_list.pop_back()
+		if result == JudgeType.ROLL: break
+		add_hit_to_gauge(result)
+		chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
+
+func add_hit_to_gauge(hit: JudgeType):
+	if hit == JudgeType.GOOD:
+		%Gauge.add_good()
+	if hit == JudgeType.BAD:
+		%Gauge.add_bad()
+	if hit == JudgeType.OK:
+		%Gauge.add_ok()
+
+func handle_note_input(player: int, event: InputEvent):
+	if Globals.players_auto[player]: return
+	player += 1 # Adjust for action names
+	
+	var res: int = hit_don(player, event)
+	if res != -1 and not roll:
+		var hit: JudgeType = check_note(1)
+		taiko.taiko_input(0, res, 100, hit == JudgeType.GOOD)
+		# add_hit_to_gauge(hit)
+	res = hit_kat(player, event)
+	if res != -1 and not roll:
+		var hit: JudgeType = check_note(2)
+		taiko.taiko_input(1, res, 100, hit == JudgeType.GOOD)
+		# add_hit_to_gauge(hit)
+	var roll_res: PackedInt64Array = hit_either(player, event)
+	if roll_res[0] != -1 and roll and not current_roll_note.is_empty():
+		res = hit_don(player, event)
+		if res != -1: 
+			taiko.taiko_input(0, res)
+			if current_roll_note.get("note", 0) == 5:
+				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
+				add_note_to_gauge(1, true)
+			elif current_roll_note.get("note", 0) == 6:
+				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
+				add_note_to_gauge(3, true)
+			elif current_roll_note.get("note", 0) == 7:
+				create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
+		res = hit_kat(player, event)
+		if res != -1: 
+			taiko.taiko_input(1, res)
+			if current_roll_note.get("note", 0) == 5:
+				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
+				add_note_to_gauge(2, true)
+			elif current_roll_note.get("note", 0) == 6:
+				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
+				add_note_to_gauge(4, true)
+
+func _input(event: InputEvent) -> void:
+	if not tja: return
+	if not chart: return
+	
+	handle_note_input(0, event)
+
+func _physics_process(delta: float) -> void:
+	if not tja: return
+	if not chart: return
+	
+	if Input.is_action_just_pressed("pause"):
+		audio.stream_paused = !audio.stream_paused
+		if not $Timer.is_stopped(): $Timer.paused = !$Timer.paused
+	
+	handle_play_events()
+	
+	if current_note_list.size() <= 0: return
+	if Globals.players_auto[0]: auto_play()
+	else: handle_lingering_notes()
 
 func _on_timer_timeout() -> void:
 	audio.play()
@@ -423,4 +600,5 @@ func _on_gauge_unrainbow_soul() -> void:
 	%Chara.rainbow = false
 
 func _on_taiko_combo_callout(combo: int) -> void:
+	%Chara.do_combo_animation()
 	$CalloutBalloon.show_combo(combo)

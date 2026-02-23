@@ -270,7 +270,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 					chart.scoreinit[0] = floor(init[0])
 				if init.size() == 2:
 					chart.scoreinit[1] = floor(init[1])
-				chart.scorediff = (tja.chart_meta.get("scorediff", "") as String).to_int()
+				chart.scorediff = (tja.chart_meta.get("scorediff", str(chart.scorediff)) as String).to_int()
 				var default: ScoreHandler.ScoreType = 1 as ScoreHandler.ScoreType
 				var mloop: MainLoop = Engine.get_main_loop()
 				if mloop and mloop is SceneTree: 

@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://ce6lxrt1keyai" path="res://scenes/objects/select_taiko.tscn" id="1_ftekv"]
 [ext_resource type="Script" uid="uid://cx2jxwdyy0w5c" path="res://scripts/obj/control_banner.gd" id="1_q6wok"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="2_q6wok"]
+[ext_resource type="Texture2D" uid="uid://cgdsbpqkepye6" path="res://assets/songselect/auto.png" id="4_3e3aa"]
 
 [node name="ControlBanner" type="ColorRect" unique_id=2002845654]
 z_index = 999
@@ -55,6 +56,14 @@ text = "taiko_start_p1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="AutoIcon" type="TextureRect" parent="Player1" unique_id=1025820373]
+visible = false
+layout_mode = 0
+offset_top = -30.656006
+offset_right = 144.0
+offset_bottom = 113.343994
+texture = ExtResource("4_3e3aa")
+
 [node name="Player2" type="ColorRect" parent="." unique_id=1811507957]
 layout_mode = 1
 anchors_preset = -1
@@ -94,3 +103,15 @@ theme_override_font_sizes/font_size = 32
 text = "taiko_start_p2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AutoIcon" type="TextureRect" parent="Player2" unique_id=291057968]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -144.0
+offset_top = -30.656006
+offset_bottom = 113.343994
+grow_horizontal = 0
+texture = ExtResource("4_3e3aa")
