@@ -36,10 +36,6 @@ No.
 
 Working on it.
 
-> Why is it always autoplay???
-
-Working on it.
-
 > My sound doesn't work!
 
 I'm primarily working on this on Linux, and so by default in the Project Settings, the sound driver I chose is ALSA.
