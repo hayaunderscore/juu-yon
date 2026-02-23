@@ -33,6 +33,7 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pick_random_bg()
+	pick_random_footer()
 	%Nametag.text = Configuration.get_section_key_from_string("Player1:name") if not Globals.players_auto[0] else tr("game_mod_auto")
 	if len(%Nametag.text) > 8:
 		%Nametag.scale.x = 8.0 / len(%Nametag.text)
@@ -40,18 +41,27 @@ func _ready() -> void:
 # TODO 2P
 var bg_path: String = "res://assets/game/top_bg/p1/"
 func pick_random_bg():
-	var dir: DirAccess = DirAccess.open(bg_path)
-	var paths: PackedStringArray = dir.get_files()
+	var paths: PackedStringArray = ResourceLoader.list_directory(bg_path)
 	var filtered: PackedStringArray
 	for path in paths:
 		if path.get_extension() == "png":
 			filtered.push_back(path)
 	var picked: String = filtered[randi_range(0, filtered.size() - 1)]
-	top_back.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path + picked))
-	if FileAccess.file_exists(bg_path.replace("p1", "clear") + picked):
-		top_back_clear.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path.replace("p1", "clear") + picked))
-	if FileAccess.file_exists(bg_path.replace("p1", "fail") + picked):
-		top_back_fail.texture = ImageTexture.create_from_image(Image.load_from_file(bg_path.replace("p1", "fail") + picked))
+	top_back.texture = load(bg_path + picked)
+	if ResourceLoader.exists(bg_path.replace("p1", "clear") + picked):
+		top_back_clear.texture = load(bg_path.replace("p1", "clear") + picked)
+	if ResourceLoader.exists(bg_path.replace("p1", "fail") + picked):
+		top_back_fail.texture = load(bg_path.replace("p1", "fail") + picked)
+
+var footer_path: String = "res://assets/game/stage/"
+func pick_random_footer():
+	var paths: PackedStringArray = ResourceLoader.list_directory(footer_path)
+	var filtered: PackedStringArray
+	for path in paths:
+		if path.get_extension() == "png":
+			filtered.push_back(path)
+	var picked: String = filtered[randi_range(0, filtered.size() - 1)]
+	$Footer.texture = load(footer_path + picked)
 
 var difficulty_icons: Dictionary[int, Texture2D] = {
 	TJAChartInfo.CourseType.EASY: preload("uid://by46t0vy31w7s"),
@@ -452,7 +462,7 @@ func check_note(check_type: int) -> JudgeType:
 	return hit
 
 func hit_don(player: int, event: InputEvent) -> int:
-	if event.is_echo(): return 0
+	if event.is_echo(): return -1
 	if event.is_action_pressed("don_left_p%d" % [player]):
 		return 0
 	if event.is_action_pressed("don_right_p%d" % [player]):
@@ -460,7 +470,7 @@ func hit_don(player: int, event: InputEvent) -> int:
 	return -1
 
 func hit_kat(player: int, event: InputEvent) -> int:
-	if event.is_echo(): return 0
+	if event.is_echo(): return -1
 	if event.is_action_pressed("kat_left_p%d" % [player]):
 		return 0
 	if event.is_action_pressed("kat_right_p%d" % [player]):
@@ -468,7 +478,7 @@ func hit_kat(player: int, event: InputEvent) -> int:
 	return -1
 
 func hit_either(player: int, event: InputEvent) -> PackedInt64Array:
-	if event.is_echo(): return [0, 0]
+	if event.is_echo(): return [-1, -1]
 	if event.is_action_pressed("don_left_p%d" % [player]):
 		return [0, 0]
 	if event.is_action_pressed("don_right_p%d" % [player]):
@@ -540,7 +550,7 @@ func handle_note_input(player: int, event: InputEvent):
 	if roll_res[0] != -1 and roll and not current_roll_note.is_empty():
 		res = hit_don(player, event)
 		if res != -1: 
-			taiko.taiko_input(0, res)
+			taiko.taiko_input(0, res, 100, false)
 			if current_roll_note.get("note", 0) == 5:
 				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 				add_note_to_gauge(1, true)
@@ -551,7 +561,7 @@ func handle_note_input(player: int, event: InputEvent):
 				create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
 		res = hit_kat(player, event)
 		if res != -1: 
-			taiko.taiko_input(1, res)
+			taiko.taiko_input(1, res, 100, false)
 			if current_roll_note.get("note", 0) == 5:
 				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 				add_note_to_gauge(2, true)
@@ -562,6 +572,7 @@ func handle_note_input(player: int, event: InputEvent):
 func _input(event: InputEvent) -> void:
 	if not tja: return
 	if not chart: return
+	if audio.stream_paused: return
 	
 	handle_note_input(0, event)
 

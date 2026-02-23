@@ -254,6 +254,10 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				# Set bpm and other stuff back to the start
 				bpm = tja.start_bpm
 				time = -tja.offset
+				# HAYA 2/23/26:
+				# I only noticed this when the Bassbook chart got fucked up on other difficulties
+				# VERY funny how this only gets addressed when I'm making this playable!
+				meter = 4.0 * 4.0 / 4.0
 				scroll.x = tja.head_scroll
 				scroll.y = 0
 				# Create a new chart

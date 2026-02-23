@@ -118,7 +118,7 @@ func _ready() -> void:
 	Globals.control_banner.kat_pressed.connect(kat_pressed)
 	for bvoice in ResourceLoader.list_directory("res://assets/snd/songselect/"):
 		voice_lines.set(bvoice.replace("voice_", "").get_basename(), load("res://assets/snd/songselect/" + bvoice))
-	find_tjas(Configuration.get_section_key("Game", "song_folder"))
+	find_tjas(Globals.get_song_folder())
 	
 	var back: TJAMeta = TJAMeta.new()
 	back.title = tr("Back")
@@ -228,7 +228,7 @@ func box_select():
 		
 		if box_stack.size() == 0:
 			# Annoying fix
-			box.path = Configuration.get_section_key("Game", "song_folder")
+			box.path = Globals.get_song_folder()
 	
 	var back: TJAMeta = TJAMeta.new()
 	var prev: TJAMeta = box_stack.back() if box_stack.size() > 0 else null
@@ -239,7 +239,7 @@ func box_select():
 	back.set_text()
 	back.back = true
 	back.from_box = prev if box.back else box
-	back.path = prev.path if prev and prev.box else Configuration.get_section_key("Game", "song_folder")
+	back.path = prev.path if prev and prev.box else Globals.get_song_folder()
 	
 	songs.clear()
 	
@@ -248,7 +248,7 @@ func box_select():
 		pref_box = prev
 	var task: int = WorkerThreadPool.add_task(find_tjas.bind(box.path, true))
 	WorkerThreadPool.wait_for_task_completion(task)
-	if box.path == Configuration.get_section_key("Game", "song_folder"):
+	if box.path == Globals.get_song_folder():
 		back.path = ""
 	songs.push_back(back)
 	pref_box = null
@@ -545,8 +545,14 @@ func _draw() -> void:
 					if j <= max_stars:
 						draw_circle(Vector2(24, star_y + 3), 4, star_clr)
 					if j < level:
+						if j > 10: 
+							star_star_clr = Color.CRIMSON
+							star_star_clr.a = minf(1, diff_trans)
 						draw_texture(star_tex, Vector2(15, star_y - 8), star_star_clr)
-					star_y -= 20
+					if j % 10 == 0 and j > 0:
+						star_y = diff_height + 64 - 24 - 9
+					else:
+						star_y -= 20
 
 				# Funny text
 				var diff_name: String = (TJAChartInfo.CourseType.find_key(chart.get("course_enum", -1))).to_pascal_case()

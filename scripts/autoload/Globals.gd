@@ -14,6 +14,9 @@ var control_banner: TaikoControlBanner
 signal language_changed(locale: String)
 
 func _ready() -> void:
+	# Disable input accumulation, you dunce
+	Input.use_accumulated_input = false
+
 	control_banner = banner_scene.instantiate()
 	add_child.call_deferred(control_banner)
 	add_child.call_deferred(overlay)
@@ -22,6 +25,13 @@ func _ready() -> void:
 
 func change_free_play(t: bool):
 	overlay.visible = t
+
+func get_song_folder():
+	var path: String = Configuration.get_section_key("Game", "song_folder")
+	# Replace res:// with executable path
+	if path.begins_with("res://") and not OS.has_feature("editor"):
+		path = path.replace("res://", OS.get_executable_path().get_base_dir() + "/")
+	return path
 
 func change_language(locale: String):
 	TranslationServer.set_locale(locale)
