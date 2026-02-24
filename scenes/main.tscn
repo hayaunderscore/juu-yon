@@ -170,13 +170,6 @@ offset_right = -15.680023
 offset_bottom = -4.0
 texture = SubResource("AtlasTexture_gqmmt")
 state = 1
-idle_offset = Vector2(0, 0)
-combo_offset = Vector2(0, 0)
-gogo_offset = Vector2(0, 0)
-spin_offset = Vector2(0, 0)
-clear_offset = Vector2(0, 0)
-fail_offset = Vector2(0, 0)
-misc_offset = Vector2(0, 0)
 
 [node name="Gauge" parent="." unique_id=398699042 instance=ExtResource("7_gqmmt")]
 unique_name_in_owner = true

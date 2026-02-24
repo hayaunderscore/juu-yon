@@ -351,6 +351,16 @@ func _process(delta: float) -> void:
 	%Soul.beat = beat
 	%SongBorder.size.x = get_viewport_rect().size.x
 
+func pop_balloon(note: Dictionary):
+	if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
+		var rolln: Dictionary = note["roll_note"]
+		var roll_type: int = rolln["note"]
+		if roll_type == 7:
+			SoundHandler.play_sound("geki.wav")
+			add_note_to_gauge(7, true)
+			create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
+		chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+
 func auto_play():
 	auto_roll()
 	while current_note_list.size() > 0 and current_note_list[-1]["time"] < elapsed:
@@ -393,14 +403,8 @@ func auto_play():
 				current_roll_note = note
 			8:
 				roll = false
-				if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
-					var rolln: Dictionary = note["roll_note"]
-					var roll_type: int = rolln["note"]
-					if roll_type == 7:
-						SoundHandler.play_sound("geki.wav")
-						add_note_to_gauge(7, true)
-						create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
-					chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+				pop_balloon(note)
+				
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 
 const JUDGEMENT_GREAT = 0.042
@@ -450,8 +454,8 @@ func check_note(check_type: int) -> JudgeType:
 		if type != check_type: 
 			offset += 1
 			continue
-		var result = hit_note(type, time)
 		type = old_type
+		var result = hit_note(type, time)
 		current_note_list.pop_back()
 		if result == JudgeType.ROLL: 
 			offset += 1
@@ -507,15 +511,14 @@ func handle_lingering_notes():
 				current_roll_note = note
 				current_note_list.pop_back()
 			8:
+				# Still rolling????
+				if current_roll_note.get("note", 0) == 7 and roll:
+					%Chara.fail_balloon()
 				roll = false
 				if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
 					var rolln: Dictionary = note["roll_note"]
-					var roll_type: int = rolln["note"]
-					if roll_type == 7:
-						SoundHandler.play_sound("geki.wav")
-						add_note_to_gauge(7, true)
-						create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
 					chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
+					# print("DIE")
 				current_note_list.pop_back()
 		if time > elapsed - JUDGEMENT_BAD: break
 		var result: JudgeType = hit_note(type, time)
@@ -558,7 +561,16 @@ func handle_note_input(player: int, event: InputEvent):
 				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 				add_note_to_gauge(3, true)
 			elif current_roll_note.get("note", 0) == 7:
-				create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
+				if current_roll_note.has("balloon_count"):
+					current_roll_note["balloon_count"] -= 1
+					if current_roll_note["balloon_count"] <= 0:
+						roll = false
+						pop_balloon(current_roll_note["roll_tail_ref"])
+						%Chara.pop_balloon()
+					else:
+						%Chara.start_balloon_animation()
+						%Chara.use_balloon()
+						create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
 		res = hit_kat(player, event)
 		if res != -1: 
 			taiko.taiko_input(1, res, 100, false)

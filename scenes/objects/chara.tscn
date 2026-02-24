@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cyg3g2n4iq4hc" path="res://assets/game/chara/default/spin.png" id="6_tokrm"]
 [ext_resource type="Texture2D" uid="uid://b07nf41ylog4b" path="res://assets/game/chara/default/clear.png" id="7_m0b5q"]
 [ext_resource type="Texture2D" uid="uid://bat2rty5rnacv" path="res://assets/game/chara/default/fail.png" id="8_otn75"]
+[ext_resource type="Texture2D" uid="uid://pme4x77r2sb5" path="res://assets/game/balloon.png" id="10_otn75"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m0b5q"]
 atlas = ExtResource("1_elhpt")
@@ -23,24 +24,18 @@ script = ExtResource("1_6t3on")
 idle_texture = ExtResource("1_elhpt")
 idle_frames = 8
 idle_speed = 0.25
-idle_offset = null
 combo_texture = ExtResource("3_167qt")
-combo_offset = null
 gogo_texture = ExtResource("4_fskk0")
 gogo_frames = 16
 gogo_speed = 0.5
-gogo_offset = null
 spin_texture = ExtResource("6_tokrm")
 spin_frames = 8
-spin_offset = null
 clear_texture = ExtResource("7_m0b5q")
 clear_frames = 2
-clear_offset = null
 fail_texture = ExtResource("8_otn75")
 fail_frames = 2
-fail_offset = null
 misc_texture = ExtResource("5_fskk0")
-misc_offset = null
+misc_frames = 2
 metadata/_custom_type_script = "uid://em0hp0g40r3u"
 
 [node name="Label" type="Label" parent="." unique_id=1407299343]
@@ -66,3 +61,10 @@ offset_left = 224.0
 offset_top = 120.0
 offset_right = 264.0
 offset_bottom = 143.0
+
+[node name="Balloon" type="Sprite2D" parent="." unique_id=1480267777]
+visible = false
+position = Vector2(168, 32)
+texture = ExtResource("10_otn75")
+centered = false
+hframes = 8

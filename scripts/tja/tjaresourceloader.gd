@@ -182,6 +182,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 	var time: float = 0.0
 	var meter: float = 4.0 * 4.0 / 4.0
 	var scroll: Vector2 = Vector2.RIGHT
+	var balloon_offset: int = 0
 	var chart: TJAChartInfo
 	var flags: int = TJAChartInfo.ChartFlags.NONE
 	
@@ -198,6 +199,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 	var branch_start_bpm: float = 0.0
 	var branch_start_meter: float = 0.0
 	var branch_start_scroll: Vector2 = Vector2.ZERO
+	var branch_start_balloon_offset: int = 0
 	var currently_branching: bool = false
 	var current_note_data: Array
 	var current_barline_data: Array
@@ -260,6 +262,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				meter = 4.0 * 4.0 / 4.0
 				scroll.x = tja.head_scroll
 				scroll.y = 0
+				balloon_offset = 0
 				# Create a new chart
 				chart = TJAChartInfo.new()
 				# And set parameters
@@ -267,7 +270,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				chart.level = (tja.chart_meta.get("level", "1") as String).to_int()
 				var balloons: PackedStringArray = (tja.chart_meta.get("balloon", "") as String).split(",")
 				for s in balloons:
-					chart.balloons.push_back(s.to_float())
+					chart.balloons.push_back(s.to_int())
 				# chart.balloons = (tja.chart_meta.get("balloon", "") as String).split_floats(",")
 				var init: PackedFloat64Array = (tja.chart_meta.get("scoreinit", "300,1000") as String).split_floats(",", false)
 				if init.size() >= 1:
@@ -318,13 +321,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				for note in barline_data:
 					note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
 			# Sort all notes by time
-			var sorted: Array[Dictionary] = chart.notes.duplicate(true)
+			var sorted: Array[Dictionary] = chart.notes.duplicate()
 			for i in range(0, sorted.size()):
 				chart.notes[i]["cached_index"] = i
 				chart.draw_data[i] = sorted[i]
 			for i in range(chart.branch_notes.size()):
 				var note_data: Array = chart.branch_notes[i]
-				var sorted_data = note_data.duplicate(true)
+				var sorted_data = note_data.duplicate()
 				for j in range(0, sorted_data.size()):
 					note_data[j]["cached_index"] = j
 					chart.branch_drawdata[i][j] = sorted_data[j]
@@ -442,6 +445,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						branch_start_meter = meter
 						branch_start_scroll = scroll
 						branch_start_time = time
+						branch_start_balloon_offset = balloon_offset
 						currently_branching = true
 						
 						flags |= TJAChartInfo.ChartFlags.BRANCHFUL
@@ -465,6 +469,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
+						balloon_offset = branch_start_balloon_offset
 						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.NORMAL]
 						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.NORMAL]
 					"e":
@@ -475,6 +480,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
+						balloon_offset = branch_start_balloon_offset
 						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.EXPERT]
 						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.EXPERT]
 					"m":
@@ -485,6 +491,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
+						balloon_offset = branch_start_balloon_offset
 						# TODO Branches.
 						# Branches are easily the hardest part of making a simulator
 						# And even more so with how I set up the notes and draw data
@@ -499,8 +506,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 			for idx in l.trim_suffix(","):
 				if idx == "/": break
 				var n: int = idx.to_int()
-				if n > 0:
-					if n == 9: n = 7
+				var ln: int = cur_note.get("note", 0)
+				var minim: int = 0
+				if (ln == 5 or ln == 6 or ln == 7 or ln == 9): minim = 7
+				# In the future actually support yam notes....
+				# For now, just force them to be balloons.
+				if n == 9: n = 7
+				if n > minim:
 					var no: Dictionary = {
 						"note": n,
 						"time": floor(time * 1000) / 1000,
@@ -511,13 +523,19 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						"roll_time": 0.0,
 						"roll_loadms": Vector2(-INF, -INF),
 						"balloon_value": 0,
-						"gogotime": gogotime
+						"gogotime": gogotime,
+						"balloon_count": 0
 					}
+					if n == 7: # Increase balloon offset for every balloon
+						var b: int = floori(current_balloon_data[balloon_offset]) if balloon_offset < current_balloon_data.size() else 0
+						no.set("balloon_count", b)
+						balloon_offset += 1
 					var last_note: Dictionary = {}
 					if n == 8: # Handle
 						var rnoteidx: int = current_note_data.find(cur_note)
 						current_note_data[rnoteidx].get_or_add("roll_time", time)
 						current_note_data[rnoteidx]["roll_color_mod"] = Color.WHITE
+						current_note_data[rnoteidx].get_or_add("roll_tail_ref", no)
 						cur_note["roll_tail"] = current_note_data.size()
 						last_note = current_note_data[rnoteidx]
 					# Set current note

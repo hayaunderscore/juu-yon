@@ -11,6 +11,9 @@ enum State {
 	CLEAR,
 	FAIL,
 	MISC,
+	BALLOON,
+	BALLOON_POP,
+	BALLOON_FAIL,
 }
 
 @export var player_number: int = 1
@@ -49,6 +52,9 @@ func _update_texture():
 	else: atlas = AtlasTexture.new()
 	var state_key: String = (State.find_key(state) as String).to_lower()
 	if state_key == "idle_still": state_key = "idle"
+	if state_key == "balloon": state_key = "idle"
+	if state_key == "balloon_pop": state_key = "misc"
+	if state_key == "balloon_fail": state_key = "fail"
 	var tex: Texture2D = get(state_key + "_texture")
 	atlas.atlas = tex
 	atlas.region = Rect2(0, 0, tex.get_width() / get(state_key + "_frames"), tex.get_height())
@@ -114,6 +120,8 @@ func _update_texture():
 	set(v): misc_frames = v; _update_texture()
 @export var misc_offset: Vector2 = Vector2.ZERO
 var misc_speed: float = 1.0
+var balloon_frame: int = 7
+var balloon_offset: Vector2 = Vector2(120, 100)
 
 var _current_interval: int = 0
 var _last_interval: int = 0
@@ -157,6 +165,9 @@ func _ready() -> void:
 	for state_key in State.keys():
 		var state_string: String = (state_key as String).to_lower()
 		if state_string == "idle_still": continue
+		if state_string == "balloon": continue
+		if state_string == "balloon_pop": continue
+		if state_string == "balloon_fail": continue
 		var sec: String = state_string.to_pascal_case()
 		if config.has_section(sec):
 			Globals.log("CHARA", "Loading %s state definition for skin %s" % [state_string, skin])
@@ -170,11 +181,16 @@ func _ready() -> void:
 			set("%s_frames" % [state_string], config.get_value(sec, "frames", get("%s_frames" % [state_string])))
 			set("%s_speed" % [state_string], config.get_value(sec, "speed", get("%s_speed" % [state_string])))
 			set("%s_offset" % [state_string], config.get_value(sec, "offset", get("%s_offset" % [state_string])))
+			if sec == "misc" and config.has_section_key(sec, "balloon_frame"):
+				balloon_frame = config.get_value(sec, "balloon_frame", balloon_frame)
+			if sec == "misc" and config.has_section_key(sec, "balloon_offset"):
+				balloon_offset = config.get_value(sec, "balloon_offset", balloon_offset)
 	_do_not_update = false
 	_update_texture()
 
 func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return
+	if state >= State.BALLOON: return
 	if state == State.SPIN and frame != spin_frames - 1: return
 	var prev: State = state
 	_cant_change_state = false
@@ -195,6 +211,68 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if return_to_idle: 
 		_combo_tween.tween_property(self, "state", State.IDLE, 0)
 
+func set_alpha(alpha: float):
+	var sh: ShaderMaterial = material as ShaderMaterial
+	sh.set_shader_parameter("alpha", alpha)
+
+@onready var balloon_spr: Sprite2D = $Balloon
+func start_balloon_animation():
+	if state == State.BALLOON: return
+	if state == State.BALLOON_POP:
+		if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
+	state = State.BALLOON
+	z_index += 2
+	_cant_change_state = true
+	balloon_spr.frame = 0
+	balloon_spr.offset = balloon_offset
+	balloon_spr.show()
+	frame = 0
+
+var _balloon_tween: Tween
+func use_balloon():
+	if _balloon_tween: _balloon_tween.kill()
+	_balloon_tween = create_tween()
+	_balloon_tween.tween_property(self, "frame", balloon_frame, 0)
+	_balloon_tween.tween_property(self, "frame", 0, 0).set_delay(0.05)
+	balloon_spr.frame = clampi(balloon_spr.frame + 1, 0, balloon_spr.hframes - 3)
+
+func pop_balloon():
+	if _balloon_tween: _balloon_tween.kill()
+	_cant_change_state = false
+	state = State.BALLOON_POP
+	_cant_change_state = true
+	frame = 1 # Second frame of MISC animation...
+	balloon_spr.frame = balloon_spr.hframes - 1
+	_balloon_tween = create_tween()
+	var cur_y: float = position.y
+	_balloon_tween.tween_property(self, "position:y", position.y - 32, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.tween_callback(balloon_spr.hide)
+	_balloon_tween.tween_property(self, "position:y", cur_y, 0.1).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.tween_method(set_alpha, 1.0, 0.0, 0.1).set_delay(0.3)
+	_balloon_tween.tween_callback(func(): 
+		_cant_change_state = false
+		state = State.IDLE
+		z_index -= 2
+	)
+	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05)
+
+func fail_balloon():
+	if _balloon_tween: _balloon_tween.kill()
+	_cant_change_state = false
+	state = State.BALLOON_FAIL
+	_cant_change_state = true
+	frame = 0
+	_balloon_tween = create_tween()
+	balloon_spr.hide()
+	_balloon_tween.tween_property(self, "frame", 1, 0).set_delay(0.1)
+	_balloon_tween.tween_method(set_alpha, 1.0, 0.0, 0.1).set_delay(0.4)
+	_balloon_tween.tween_callback(func(): 
+		_cant_change_state = false
+		state = State.IDLE
+		z_index -= 2
+	)
+	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05)
+
 var spin_current_frame: int = 0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -202,13 +280,18 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	var state_key: String = (State.find_key(state) as String).to_lower()
 	if state_key == "idle_still": state_key = "idle"
+	if state_key == "balloon": state_key = "idle"
+	if state_key == "balloon_pop": state_key = "misc"
+	if state_key == "balloon_fail": state_key = "fail"
 	var max_frames: int = get(state_key + "_frames")
 	var speed: float = get(state_key + "_speed")
 	var offset: Vector2 = get(state_key + "_offset")
+	if state >= State.BALLOON:
+		offset = balloon_offset
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
-		if state != State.MISC and state != State.IDLE_STILL:
+		if state != State.MISC and state != State.IDLE_STILL and state != State.BALLOON and state != State.BALLOON_POP and state != State.BALLOON_FAIL:
 			if state != State.SPIN:
 				frame = (_current_interval % max_frames)
 			else:
