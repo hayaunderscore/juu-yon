@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://crb81btn5dsei" path="res://assets/entry/taiko.png" id="9_lgwnu"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="10_flqon"]
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="10_lgwnu"]
+[ext_resource type="FontFile" uid="uid://cd45agtyt8161" path="res://assets/fonts/ipag.ttf" id="12_flqon"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5dd4i"]
 texture = ExtResource("5_oa1go")
@@ -273,9 +274,10 @@ corner_radius_bottom_right = 28
 corner_radius_bottom_left = 28
 
 [sub_resource type="LabelSettings" id="LabelSettings_rcqid"]
-font = ExtResource("4_8ln24")
+font = ExtResource("12_flqon")
 font_size = 20
-outline_size = 12
+font_color = Color(0, 0, 0, 1)
+outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
 [node name="Control" type="Control" unique_id=614042127]
@@ -405,13 +407,6 @@ layout_mode = 0
 offset_top = -384.0
 offset_bottom = 0.0
 texture = SubResource("AtlasTexture_lgwnu")
-idle_offset = Vector2(0, 0)
-combo_offset = Vector2(0, 0)
-gogo_offset = Vector2(0, 0)
-spin_offset = Vector2(0, 0)
-clear_offset = Vector2(0, 0)
-fail_offset = Vector2(0, 0)
-misc_offset = Vector2(0, 0)
 
 [node name="P1AnimPlayer" type="AnimationPlayer" parent="P1Anims" unique_id=2021040004]
 unique_name_in_owner = true

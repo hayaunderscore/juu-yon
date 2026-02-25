@@ -235,6 +235,7 @@ func use_balloon():
 	_balloon_tween.tween_property(self, "frame", balloon_frame, 0)
 	_balloon_tween.tween_property(self, "frame", 0, 0).set_delay(0.05)
 	balloon_spr.frame = clampi(balloon_spr.frame + 1, 0, balloon_spr.hframes - 3)
+	balloon_spr.position.y = 32
 
 func pop_balloon():
 	if _balloon_tween: _balloon_tween.kill()
@@ -245,16 +246,19 @@ func pop_balloon():
 	balloon_spr.frame = balloon_spr.hframes - 1
 	_balloon_tween = create_tween()
 	var cur_y: float = position.y
-	_balloon_tween.tween_property(self, "position:y", position.y - 32, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.set_parallel(true)
+	_balloon_tween.tween_property(self, "position:y", position.y - 72, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.tween_property(balloon_spr, "position:y", 32 + 72, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.set_parallel(false)
 	_balloon_tween.tween_callback(balloon_spr.hide)
-	_balloon_tween.tween_property(self, "position:y", cur_y, 0.1).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-	_balloon_tween.tween_method(set_alpha, 1.0, 0.0, 0.1).set_delay(0.3)
+	_balloon_tween.tween_method(set_alpha, 1.0, 0.0, 0.1).set_delay(0.4)
 	_balloon_tween.tween_callback(func(): 
 		_cant_change_state = false
 		state = State.IDLE
+		position.y = cur_y
 		z_index -= 2
-	)
-	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05)
+	).set_delay(0.05)
+	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05).set_delay(0.05)
 
 func fail_balloon():
 	if _balloon_tween: _balloon_tween.kill()
@@ -270,8 +274,8 @@ func fail_balloon():
 		_cant_change_state = false
 		state = State.IDLE
 		z_index -= 2
-	)
-	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05)
+	).set_delay(0.05)
+	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05).set_delay(0.05)
 
 var spin_current_frame: int = 0
 
