@@ -216,12 +216,18 @@ func set_alpha(alpha: float):
 	sh.set_shader_parameter("alpha", alpha)
 
 @onready var balloon_spr: Sprite2D = $Balloon
+var prev_z_index: int = -1
 func start_balloon_animation():
 	if state == State.BALLOON: return
 	if state == State.BALLOON_POP:
 		if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
+	z_index = prev_z_index
+	if _combo_tween:
+		_combo_tween.custom_step(9999)
+		_combo_tween.kill()
 	state = State.BALLOON
-	z_index += 2
+	prev_z_index = z_index
+	z_index = prev_z_index + 3
 	_cant_change_state = true
 	balloon_spr.frame = 0
 	balloon_spr.offset = balloon_offset
@@ -230,7 +236,8 @@ func start_balloon_animation():
 
 var _balloon_tween: Tween
 func use_balloon():
-	if _balloon_tween: _balloon_tween.kill()
+	if state != State.BALLOON: return
+	if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
 	_balloon_tween = create_tween()
 	_balloon_tween.tween_property(self, "frame", balloon_frame, 0)
 	_balloon_tween.tween_property(self, "frame", 0, 0).set_delay(0.05)
@@ -238,10 +245,10 @@ func use_balloon():
 	balloon_spr.position.y = 32
 
 func pop_balloon():
-	if _balloon_tween: _balloon_tween.kill()
+	if state != State.BALLOON: return
+	if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
 	_cant_change_state = false
 	state = State.BALLOON_POP
-	_cant_change_state = true
 	frame = 1 # Second frame of MISC animation...
 	balloon_spr.frame = balloon_spr.hframes - 1
 	_balloon_tween = create_tween()
@@ -256,11 +263,13 @@ func pop_balloon():
 		_cant_change_state = false
 		state = State.IDLE
 		position.y = cur_y
-		z_index -= 2
+		z_index = prev_z_index
 	).set_delay(0.05)
+	_cant_change_state = true
 	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05).set_delay(0.05)
 
 func fail_balloon():
+	if state != State.BALLOON: return
 	if _balloon_tween: _balloon_tween.kill()
 	_cant_change_state = false
 	state = State.BALLOON_FAIL

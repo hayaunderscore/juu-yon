@@ -111,12 +111,10 @@ enum BranchCondition {
 }
 
 @export_group("Branches", "branch_")
-## Branch notes for each of the 3 branches.
-@export var branch_notes: Array[Array] = [[], [], []]
-## Branch barlines for each of the 3 branches.
-@export var branch_barlines: Array[Array] = [[], [], []]
-## Branch drawdata for each of the 3 branches.
-@export var branch_drawdata: Array[Dictionary] = [{}, {}, {}]
+# Branch section notes, Array of an Array of BranchSection(s).
+@export var branch_section_notes: Array[Array] = [[], [], []]
+# Branch timeline
+@export var branch_timeline: Array[Dictionary]
 
 # Default values according to TJAPlayer3
 @export_group("Scoring", "score")

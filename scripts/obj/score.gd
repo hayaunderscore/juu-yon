@@ -2,6 +2,7 @@ extends Node
 class_name ScoreHandler
 
 enum ScoreType {
+	NONE = -1,
 	DONDERFUL,		# SCOREMODE:0
 	AC14,			# SCOREMODE:1
 	AC15,			# SCOREMODE:2

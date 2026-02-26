@@ -55,6 +55,7 @@ func get_note_hbscroll_position(scroll: Vector2, beat: float):
 
 func _draw() -> void:
 	for note in bar_list:
+		if not note.get("display", true): continue
 		var pos = get_note_position(note["time"], note["bpm"], note["scroll"], note["beat_position"])
 		if pos.x > lane_width.x + 96: continue
 		if pos.x < -global_position.x: continue
@@ -65,7 +66,7 @@ func _draw() -> void:
 	
 	var arr = draw_list.keys()
 	if arr.size() <= 0: return
-	for i in range(min(arr.size()-1,512), -1, -1):
+	for i in range(min(arr.size(), 512)):
 		#if not draw_list.has(i): continue
 		var note: Dictionary = draw_list[arr[i]]
 		var type: int = note["note"]

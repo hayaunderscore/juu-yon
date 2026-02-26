@@ -165,6 +165,27 @@ func merge(left: Array, right: Array, fun: Callable) -> Array:
 	return result
 #endregion
 
+func sort_notes(a: Dictionary, b: Dictionary):
+	if a["time"] == b["time"]:
+		# Use index as a tie breaker
+		return a.get("index", 0) > b.get("index", 0)
+	return a["time"] > b["time"]
+
+func add_barline(barline_data: Array, display: bool, time: float, scroll: Vector2, bpm: float, meter: float, branching: bool = false) -> Dictionary:
+	var barline: Dictionary = {
+		"time": time, 
+		"scroll": scroll, 
+		"bpm": bpm, 
+		"meter": meter, 
+		"note": TJAChartInfo.NoteType.BARLINE,
+	}
+	if display:
+		barline["display"] = true
+	barline_data.append(barline)
+	if branching:
+		barline["branch_start"] = true
+	return barline
+
 func _load(path: String, original_path: String, use_sub_threads: bool, cache_mode: int) -> Variant:
 	print("Loading TJA file %s" % [path])
 	
@@ -185,6 +206,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 	var balloon_offset: int = 0
 	var chart: TJAChartInfo
 	var flags: int = TJAChartInfo.ChartFlags.NONE
+	var nidx: int = 0
 	
 	var cur_note: Dictionary
 	var barlines: bool = true
@@ -201,9 +223,16 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 	var branch_start_scroll: Vector2 = Vector2.ZERO
 	var branch_start_balloon_offset: int = 0
 	var currently_branching: bool = false
+	var currently_sectioning: bool = false
+	var section_bar: Dictionary
 	var current_note_data: Array
 	var current_barline_data: Array
+	var current_command_log: Array[Dictionary]
+	# Trying to implement this was a headache- will implement them LATER
+	var current_positive_delay_log: Array[Dictionary]
+	var current_bpm_log: Array[Dictionary]
 	var current_balloon_data: PackedFloat64Array = PackedFloat64Array()
+	var explicit_barline: bool = false
 	
 	while file.get_position() < file.get_length():
 		# Current line
@@ -214,14 +243,15 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		
 		var add_bpm_change: Callable = func(added_time: float, added_bpm: float, current_chart: TJAChartInfo):
 			if current_chart.bpm_log.size() > 0:
-				var last_bpm_change: Dictionary = current_chart.bpm_log[current_chart.bpm_log.size()-1]
+				var last_bpm_change: Dictionary = current_chart.bpm_log[-1]
 				last_bpm_change["duration"] = (added_time) - last_bpm_change["time"]
 				last_bpm_change["beat_duration"] = (last_bpm_change["bpm"] / 60) * last_bpm_change["duration"]
 			# print("uhhh beat duration ", last_bpm_change["duration"], " and in beats ", last_bpm_change["beat_duration"])
 			current_chart.command_log.append({
 				"time": added_time, 
 				"com": TJAChartInfo.CommandType.BPMCHANGE, 
-				"val1": added_bpm
+				"val1": added_bpm,
+				"index": current_chart.command_log.size()
 			})
 			current_chart.bpm_log.append({
 				"time": added_time,
@@ -233,7 +263,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		
 		var add_positive_delay: Callable = func(added_time: float, added_delay: float, current_chart: TJAChartInfo):
 			if current_chart.positive_delay_log.size() > 0:
-				var last_bpm_change: Dictionary = current_chart.positive_delay_log[current_chart.positive_delay_log.size()-1]
+				var last_bpm_change: Dictionary = current_chart.positive_delay_log[-1]
 				last_bpm_change["duration"] = (added_time) - last_bpm_change["time"]
 			# print("uhhh beat duration ", last_bpm_change["duration"], " and in beats ", last_bpm_change["beat_duration"])
 			current_chart.positive_delay_log.append({
@@ -263,6 +293,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				scroll.x = tja.head_scroll
 				scroll.y = 0
 				balloon_offset = 0
+				nidx = 0
 				# Create a new chart
 				chart = TJAChartInfo.new()
 				# And set parameters
@@ -278,16 +309,16 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				if init.size() == 2:
 					chart.scoreinit[1] = floor(init[1])
 				chart.scorediff = (tja.chart_meta.get("scorediff", str(chart.scorediff)) as String).to_int()
-				var default: ScoreHandler.ScoreType = 1 as ScoreHandler.ScoreType
-				var mloop: MainLoop = Engine.get_main_loop()
-				if mloop and mloop is SceneTree: 
-					default = (mloop as SceneTree).root.get_node("/root/Globals").default_score_mode
+				var default: ScoreHandler.ScoreType = -1 as ScoreHandler.ScoreType
 				var scrmode: String = tja.chart_meta.get("scoremode", str(default as int)) as String
 				if scrmode.is_empty(): scrmode = str(default as int)
 				chart.scoremode = scrmode.to_int()
 				current_note_data = chart.notes
 				current_barline_data = chart.barline_data
 				current_balloon_data = chart.balloons
+				current_command_log = chart.command_log
+				current_bpm_log = chart.bpm_log
+				current_positive_delay_log = chart.positive_delay_log
 				# Add dummy bpm changes to base next bpm changes
 				add_bpm_change.call(time, bpm, chart)
 				add_positive_delay.call(time, 0, chart)
@@ -303,6 +334,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				currently_branching = false
 				current_note_data = chart.notes
 				current_barline_data = chart.barline_data
+				current_bpm_log = chart.bpm_log
+				current_positive_delay_log = chart.positive_delay_log
 			# More bpm and delay stuff
 			add_bpm_change.call(time, bpm, chart)
 			add_bpm_change.call(tja.wave.get_length(), bpm, chart)
@@ -313,33 +346,36 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
 			for note in chart.barline_data:
 				note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
-			for i in range(chart.branch_notes.size()):
-				var note_data: Array = chart.branch_notes[i]
-				for note in note_data:
-					note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
-				var barline_data: Array = chart.branch_barlines[i]
-				for note in barline_data:
-					note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
 			# Sort all notes by time
+			# Filter out dummy notes from any time
+			chart.notes = chart.notes.filter(func(a): return not a.has("dummy"))
+			# Originally this was merge sorted, which literally never needed to be done
+			# Just use normal sorting, with a stored index as a tie breaker.
+			chart.notes.sort_custom(sort_notes)
+			chart.command_log.sort_custom(sort_notes)
+			chart.branch_timeline.sort_custom(sort_notes)
 			var sorted: Array[Dictionary] = chart.notes.duplicate()
 			for i in range(0, sorted.size()):
 				chart.notes[i]["cached_index"] = i
 				chart.draw_data[i] = sorted[i]
-			for i in range(chart.branch_notes.size()):
-				var note_data: Array = chart.branch_notes[i]
-				var sorted_data = note_data.duplicate()
-				for j in range(0, sorted_data.size()):
-					note_data[j]["cached_index"] = j
-					chart.branch_drawdata[i][j] = sorted_data[j]
-			# Filter out dummy notes from any time
-			chart.notes = chart.notes.filter(func(a): return not a.has("dummy"))
-			var s: Array = merge_sort(chart.notes, func(a, b): a["time"] < b["time"])
-			chart.notes.assign(s)
-			for i in range(chart.branch_notes.size()):
-				var note_data: Array = chart.branch_notes[i]
-				note_data = note_data.filter(func(a): return not a.has("dummy"))
-				note_data = merge_sort(note_data, func(a, b): a["time"] < b["time"])
-				chart.branch_notes[i] = note_data
+			# Do the same with branches.
+			for i in range(chart.branch_section_notes.size()):
+				var section_path: Array = chart.branch_section_notes[i]
+				for j in range(section_path.size()):
+					var sec: BranchSection = section_path[j]
+					for note in sec.notes:
+						note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
+					for note in sec.barlines:
+						note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
+					sec.sort_and_create_drawdata()
+				# TODO do branches need to be sorted by their start time???
+				# Honestly fuck it
+				section_path.sort_custom(func(a: BranchSection, b: BranchSection):
+					if a.start_time == b.start_time:
+						return a.index > b.index
+					return a.start_time > b.start_time
+				)
+			
 			chart.flags = flags
 			flags = 0
 			tja.charts.push_back(chart)
@@ -348,8 +384,16 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 		
 		# Add a barline.
 		# This is early to account for scroll specific issues ffs
-		if barlines and not line.begins_with("#") and not cont_measure:
-			current_barline_data.append({"time": time, "scroll": scroll, "bpm": bpm, "meter": meter, "note": TJAChartInfo.NoteType.BARLINE})
+		if not line.begins_with("#") and not cont_measure:
+			if not explicit_barline:
+				var bar: Dictionary = add_barline(current_barline_data, barlines, time, scroll, bpm, meter, currently_branching)
+				if currently_sectioning:
+					section_bar = bar
+					currently_sectioning = false
+			else:
+				currently_sectioning = false
+				explicit_barline = false
+			currently_branching = false
 		
 		# Handle measures.
 		measures.append(line)
@@ -395,10 +439,10 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 					# #GOGOTIME and #GOGOEND
 					"gogostart":
 						gogotime = true
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOSTART})
+						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOSTART, "index": current_command_log.size()})
 					"gogoend":
 						gogotime = false
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOEND})
+						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOEND, "index": current_command_log.size()})
 					# #BARLINEON and #BARLINEOFF
 					"barlineon":
 						barlines = true
@@ -419,13 +463,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						if delay > 0:
 							add_bpm_change.call(time, bpm, chart)
 							add_positive_delay.call(time, delay, chart)
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.DELAY, "val1": command_value})
+						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.DELAY, "val1": command_value, "index": current_command_log.size()})
 					# #MEASURE <float-value>/<float-value>
 					"measure":
 						var line_data: PackedFloat64Array = command_value.split_floats("/")
 						if line_data.size() < 2: continue
 						meter = (4.0 * line_data[0]) / line_data[1]
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.MEASURE, "val1": meter})
+						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.MEASURE, "val1": meter, "index": current_command_log.size()})
 					"scroll":
 						if command_value.is_empty(): continue
 						if flags & TJAChartInfo.ChartFlags.BMSCROLL: continue
@@ -434,7 +478,13 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						else:
 							var numbers: PackedFloat64Array = parse_complex_number(command_value)
 							scroll = Vector2(numbers[0], numbers[1])
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.SCROLL, "val1": scroll})
+						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.SCROLL, "val1": scroll, "index": current_command_log.size()})
+					"section":
+						currently_sectioning = true
+						# Create an explicit barline for this section
+						# Otherwise the last branch will NEVER appear
+						section_bar = add_barline(chart.barline_data, barlines, time, scroll, bpm, meter, true)
+						explicit_barline = true
 					"branchstart":
 						var comargs: PackedStringArray = command_value.split(",")
 						if comargs.size() < 3:
@@ -448,58 +498,79 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						branch_start_balloon_offset = balloon_offset
 						currently_branching = true
 						
-						flags |= TJAChartInfo.ChartFlags.BRANCHFUL
-						
 						var cond: int = TJAChartInfo.BranchCondition.get(comargs[0], "r")
 						var expert_req: int = comargs[1].to_int()
 						var master_req: int = comargs[2].to_int()
-						chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.BRANCHSTART, "branch_cond": cond, "expert_req": expert_req, "master_req": master_req})
+						var two_measures: float = (120.0 / bpm) * 2.0
+						var start_time: float = time - two_measures
+						if not section_bar.is_empty():
+							start_time = section_bar["time"] - two_measures
+						
+						# For each of the current branch arrays, create a new BranchSection object
+						for i in range(chart.branch_section_notes.size()):
+							var branch_obj: BranchSection = BranchSection.new()
+							branch_obj.condition = cond as TJAChartInfo.BranchCondition
+							branch_obj.expert_requirement = expert_req
+							branch_obj.master_requirement = master_req
+							branch_obj.start_time = start_time
+							branch_obj.index = chart.branch_section_notes[i].size()
+							chart.branch_section_notes[i].push_back(branch_obj)
+						section_bar = {}
+						
+						flags |= TJAChartInfo.ChartFlags.BRANCHFUL
+						chart.branch_timeline.append({
+							"time": start_time,
+							"condition": cond as TJAChartInfo.BranchCondition,
+							"expert_req": expert_req,
+							"master_req": master_req,
+							"index": chart.branch_timeline.size()
+						})
+						print(time)
+						print(start_time)
+						# chart.command_log.append({"time": start_time, "com": TJAChartInfo.CommandType.BRANCHSTART, "branch_cond": cond, "expert_req": expert_req, "master_req": master_req, "index": chart.command_log.size()})
 					"branchend":
-						if not currently_branching:
-							print("Invalid #BRANCHEND (No branch found for this branch!)")
-							continue
 						currently_branching = false
 						current_note_data = chart.notes
 						current_barline_data = chart.barline_data
+						current_command_log = chart.command_log
 					"n":
-						if not currently_branching:
-							print("Invalid #N (No branch found for this path!)")
-							continue
 						bpm = branch_start_bpm
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
 						balloon_offset = branch_start_balloon_offset
-						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.NORMAL]
-						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.NORMAL]
+						var sect: BranchSection = (chart.branch_section_notes[TJAChartInfo.BranchType.NORMAL].back() as BranchSection)
+						current_note_data = sect.notes
+						current_barline_data = sect.barlines
+						current_command_log = sect.command_log
 					"e":
-						if not currently_branching:
-							print("Invalid #E (No branch found for this path!)")
-							continue
 						bpm = branch_start_bpm
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
 						balloon_offset = branch_start_balloon_offset
-						current_note_data = chart.branch_notes[TJAChartInfo.BranchType.EXPERT]
-						current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.EXPERT]
+						var sect: BranchSection = (chart.branch_section_notes[TJAChartInfo.BranchType.EXPERT].back() as BranchSection)
+						current_note_data = sect.notes
+						current_barline_data = sect.barlines
+						current_command_log = sect.command_log
 					"m":
-						if not currently_branching:
-							print("Invalid #M (No branch found for this path!)")
-							continue
 						bpm = branch_start_bpm
 						meter = branch_start_meter
 						scroll = branch_start_scroll
 						time = branch_start_time
 						balloon_offset = branch_start_balloon_offset
+						var sect: BranchSection = (chart.branch_section_notes[TJAChartInfo.BranchType.MASTER].back() as BranchSection)
+						current_note_data = sect.notes
+						current_barline_data = sect.barlines
+						current_command_log = sect.command_log
+						current_bpm_log = sect.bpm_log
+						current_positive_delay_log = sect.positive_delay_log
+						# Add dummy bpm changes to base next bpm changes
+						add_bpm_change.call(time, bpm, chart)
+						add_positive_delay.call(time, 0, chart)
 						# TODO Branches.
 						# Branches are easily the hardest part of making a simulator
 						# And even more so with how I set up the notes and draw data
-						# For now, force everything to master branch
-						#current_note_data = chart.branch_notes[TJAChartInfo.BranchType.MASTER]
-						#current_barline_data = chart.branch_barlines[TJAChartInfo.BranchType.MASTER]
-						current_note_data = chart.notes
-						current_barline_data = chart.barline_data
 					
 				continue
 			# Notes
@@ -524,7 +595,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						"roll_loadms": Vector2(-INF, -INF),
 						"balloon_value": 0,
 						"gogotime": gogotime,
-						"balloon_count": 0
+						"balloon_count": 0,
+						"index": nidx,
 					}
 					if n == 7: # Increase balloon offset for every balloon
 						var b: int = floori(current_balloon_data[balloon_offset]) if balloon_offset < current_balloon_data.size() else 0
@@ -544,6 +616,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						cur_note["roll_note"] = last_note
 						cur_note["roll_note_type"] = last_note["note"]
 						cur_note["roll_color_mod"] = Color.WHITE
+					nidx += 1
 					current_note_data.append(cur_note)
 				time += 60.0 * (meter / notes_in_measure) / bpm
 		

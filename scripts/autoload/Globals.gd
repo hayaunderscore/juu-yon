@@ -38,6 +38,18 @@ func change_language(locale: String):
 	Configuration.set_section_key_from_string("Game:language", locale)
 	language_changed.emit(locale)
 
+func sort_notes(a: Dictionary, b: Dictionary):
+	if a["time"] == b["time"]:
+		# Use index as a tie breaker
+		return a.get("index", 0) > b.get("index", 0)
+	return a["time"] > b["time"]
+
+func unsort_notes(a: Dictionary, b: Dictionary):
+	if a["time"] == b["time"]:
+		# Use index as a tie breaker
+		return a.get("index", 0) < b.get("index", 0)
+	return a["time"] < b["time"]
+
 func _process(_delta: float) -> void:
 	var window: Window = get_window()
 	var title: String = song_name

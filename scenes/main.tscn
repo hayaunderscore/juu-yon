@@ -21,6 +21,7 @@
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
+[ext_resource type="Texture2D" uid="uid://c18t0odfy2g45" path="res://assets/game/lane/branch_indicator/normal.png" id="18_og1vs"]
 [ext_resource type="PackedScene" uid="uid://de7ff4q8ai73x" path="res://scenes/objects/callout_balloon.tscn" id="22_jscy8"]
 [ext_resource type="Texture2D" uid="uid://c7ld7f6bp6jfx" path="res://assets/game/lane/score_numbers.png" id="22_pm3ni"]
 [ext_resource type="Texture2D" uid="uid://bhocaaqmmd8vw" path="res://assets/game/stage/0.png" id="24_y6deb"]
@@ -40,6 +41,14 @@ height = 176
 [sub_resource type="AtlasTexture" id="AtlasTexture_gqmmt"]
 atlas = ExtResource("4_jbj1t")
 region = Rect2(0, 0, 384, 384)
+
+[sub_resource type="Gradient" id="Gradient_y6deb"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.0069204154)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_og1vs"]
+gradient = SubResource("Gradient_y6deb")
 
 [sub_resource type="Gradient" id="Gradient_trceg"]
 offsets = PackedFloat32Array(0, 0.63822526, 1)
@@ -310,6 +319,48 @@ offset_right = 976.0
 offset_bottom = 177.0
 texture = ExtResource("10_a8y0u")
 expand_mode = 1
+
+[node name="BranchBG" type="TextureRect" parent="TaikoArea/Lane" unique_id=1720820492]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+clip_contents = true
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 798.0
+offset_bottom = 117.0
+texture = SubResource("GradientTexture2D_og1vs")
+
+[node name="BranchText" type="TextureRect" parent="TaikoArea/Lane/BranchBG" unique_id=1235746315]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -30.0
+offset_right = 176.0
+offset_bottom = 30.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("18_og1vs")
+
+[node name="BranchTextTransition" type="TextureRect" parent="TaikoArea/Lane/BranchBG" unique_id=243332878]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -30.0
+offset_right = 176.0
+offset_bottom = 30.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("18_og1vs")
 
 [node name="GogoGradient" type="TextureRect" parent="TaikoArea/Lane" unique_id=343743430]
 unique_name_in_owner = true
