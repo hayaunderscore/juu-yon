@@ -32,10 +32,6 @@ None of them. Or more like all of them, since its an amalgamation of Generation 
 
 No.
 
-> Branches don't work! Everything defaults to the Master branch!
-
-Working on it.
-
 > My sound doesn't work!
 
 I'm primarily working on this on Linux, and so by default in the Project Settings, the sound driver I chose is ALSA.
