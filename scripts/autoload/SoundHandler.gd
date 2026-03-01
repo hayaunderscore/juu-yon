@@ -95,3 +95,8 @@ func play_sound(snd: String, volume: float = 1.0) -> int:
 	var task: int = WorkerThreadPool.add_task(save_stream.bind(snd))
 	WorkerThreadPool.wait_for_task_completion(task)
 	return playback.play_stream(cached_sounds[snd], 0, db, 1.0, AudioServer.PLAYBACK_TYPE_DEFAULT, "Sound")
+
+func stop_sound(id: int):
+	if not sound_player.has_stream_playback(): return
+	var playback: AudioStreamPlaybackPolyphonic = sound_player.get_stream_playback()
+	playback.stop_stream(id)

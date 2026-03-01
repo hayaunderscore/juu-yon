@@ -1,0 +1,256 @@
+[gd_scene format=3 uid="uid://3837d4ycm15f"]
+
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="1_5ly47"]
+[ext_resource type="Script" uid="uid://d30nvwskawppa" path="res://scripts/scenes/pause.gd" id="1_jwri1"]
+[ext_resource type="Script" uid="uid://dqyl0g1a5jxrj" path="res://scripts/obj/vertical_text.gd" id="2_jwri1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n574a"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.7764706, 0.9372549, 0.9372549, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvm7r"]
+bg_color = Color(0.7764706, 0.9372549, 0.9372549, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wipuk"]
+bg_color = Color(0.4509804, 0.827451, 0.90588236, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.4509804, 0.827451, 0.90588236, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="Texture2D" id="Texture2D_2e3ka"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_jwri1")
+text = "p_resume"
+tr_text = "p_resume"
+font = ExtResource("1_5ly47")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+padding = Vector2i(4, 0)
+minimum_size = Vector2i(44, 0)
+glyph_spacing_multiplier = 0.9
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="Texture2D" id="Texture2D_iike4"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_jwri1")
+text = "p_restart"
+tr_text = "p_restart"
+font = ExtResource("1_5ly47")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+padding = Vector2i(4, 0)
+minimum_size = Vector2i(44, 0)
+glyph_spacing_multiplier = 0.9
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="Texture2D" id="Texture2D_67wyk"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_jwri1")
+text = "p_songsel"
+tr_text = "p_songsel"
+font = ExtResource("1_5ly47")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+padding = Vector2i(4, 0)
+minimum_size = Vector2i(44, 0)
+glyph_spacing_multiplier = 0.9
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="Texture2D" id="Texture2D_v4tje"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_jwri1")
+text = "p_menu"
+tr_text = "p_menu"
+font = ExtResource("1_5ly47")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+padding = Vector2i(4, 0)
+minimum_size = Vector2i(44, 0)
+glyph_spacing_multiplier = 0.85
+metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
+
+[sub_resource type="Animation" id="Animation_n574a"]
+resource_name = "Open"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MarginContainer:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1e-05, 1e-05), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yvm7r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MarginContainer:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wipuk"]
+_data = {
+&"Open": SubResource("Animation_n574a"),
+&"RESET": SubResource("Animation_yvm7r")
+}
+
+[node name="Pause" type="Control" unique_id=408960774]
+modulate = Color(1, 1, 1, 0)
+z_index = 4096
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jwri1")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=380750195]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.46666667, 0.5921569, 0.627451, 0.5019608)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=342454157]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_constants/margin_left = 128
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 128
+theme_override_constants/margin_bottom = 128
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=1786988041]
+clip_children = 2
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n574a")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer" unique_id=1638348993]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer" unique_id=1476310622]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yvm7r")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer" unique_id=980745960]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="MenuItems" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer" unique_id=1055867270]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 96
+alignment = 1
+
+[node name="Resume" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems" unique_id=736522921]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wipuk")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems/Resume" unique_id=1073521543]
+layout_mode = 2
+texture = SubResource("Texture2D_2e3ka")
+
+[node name="Restart" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems" unique_id=462717083]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wipuk")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems/Restart" unique_id=1717181666]
+layout_mode = 2
+texture = SubResource("Texture2D_iike4")
+
+[node name="SongSelect" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems" unique_id=599526593]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wipuk")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems/SongSelect" unique_id=102512554]
+layout_mode = 2
+texture = SubResource("Texture2D_67wyk")
+
+[node name="MainMenu" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems" unique_id=384390230]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wipuk")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/PanelContainer/MarginContainer/MenuItems/MainMenu" unique_id=415484980]
+layout_mode = 2
+texture = SubResource("Texture2D_v4tje")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=430319101]
+process_mode = 3
+libraries/ = SubResource("AnimationLibrary_wipuk")

@@ -31,7 +31,9 @@ func redraw():
 	queue_redraw()
 
 func create_letter_tween(i: int):
-	if letters_tween[i] and is_instance_valid(letters_tween[i]): letters_tween[i].kill()
+	if letters_tween[i] and is_instance_valid(letters_tween[i]):
+		letters_tween[i].custom_step(9999)
+		letters_tween[i].kill()
 	letters_tween[i] = create_tween()
 	letters_tween[i].tween_method(func(val):
 		letters_scale[i] = val

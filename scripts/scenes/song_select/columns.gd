@@ -91,6 +91,8 @@ func find_tjas(path: String, skip_box: bool = false):
 			return
 		var files: PackedStringArray = dir.get_directories()
 		files.append_array(dir.get_files())
+		var s: Array = Globals.merge_sort(files, func(a: String, b: String): return a < b)
+		files = PackedStringArray(s)
 		for file in files:
 			if dir.dir_exists(file):
 				var npath: String = path + file + "/"

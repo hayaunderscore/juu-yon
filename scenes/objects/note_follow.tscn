@@ -11,6 +11,7 @@ shader_parameter/color = Color(1, 1, 0, 1)
 shader_parameter/mixture = 0.0
 shader_parameter/lerp_to_add = 1.0
 shader_parameter/alpha = 1.0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="Animation" id="Animation_cdjsk"]
 resource_name = "Move"
@@ -22,7 +23,7 @@ tracks/0/path = NodePath("SoulAnim:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.033333335, 0.23333333),
+"times": PackedFloat32Array(0, 0.033333335, 0.3),
 "transitions": PackedFloat32Array(0.61557204, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 0, 1), Color(1, 1, 0, 1), Color(1, 0.38431373, 0, 1)]
@@ -34,7 +35,7 @@ tracks/1/path = NodePath("SoulAnim:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3),
+"times": PackedFloat32Array(0, 0.3666667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 1.5707963267948966]
@@ -46,7 +47,7 @@ tracks/2/path = NodePath("SoulAnim:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.23333333),
+"times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(0.5, 0.5),
 "update": 0,
 "values": [Vector2(0.3, 0.3), Vector2(1, 1)]
@@ -58,7 +59,7 @@ tracks/3/path = NodePath("Note:material:shader_parameter/color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.23333333),
+"times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(2, 1),
 "update": 0,
 "values": [Color(1, 1, 0, 1), Color(1, 1, 1, 1)]
@@ -70,7 +71,7 @@ tracks/4/path = NodePath("Note:material:shader_parameter/mixture")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.3),
+"times": PackedFloat32Array(0, 0.3666667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 1.0]
@@ -96,7 +97,7 @@ tracks/6/path = NodePath(".:modulate")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.23333333, 0.3),
+"times": PackedFloat32Array(0, 0.3, 0.3666667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
@@ -108,7 +109,7 @@ tracks/7/path = NodePath("Note:material:shader_parameter/alpha")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0, 0.23333333, 0.3),
+"times": PackedFloat32Array(0, 0.3, 0.3666667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [1.0, 1.0, 0.0]

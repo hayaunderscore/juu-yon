@@ -111,7 +111,7 @@ func _process(delta: float) -> void:
 	if not entry_mode: visible = true
 	
 	if Input.is_action_just_pressed(controls[0][0]) or Input.is_action_just_pressed(controls[0][1]):
-		taiko_input(0, 0)
+		taiko_input(0, 0, 0)
 		taiko_input(0, 1)
 	if side_active:
 		if Input.is_action_just_pressed(controls[1][0]):

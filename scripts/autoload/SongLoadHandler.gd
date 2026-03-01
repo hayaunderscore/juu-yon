@@ -1,7 +1,10 @@
 extends Node
 
+var last_clr: Color
+
 func select_song(tja: TJAMeta, diff: int):
 	var clr: Color = tja.from_box.box_back_color if tja.from_box else Color.WHITE
+	last_clr = clr
 	var title: Label = TransitionHandler.fade.get_node(^"%Title")
 	var subtitle: Label = TransitionHandler.fade.get_node(^"%Subtitle")
 	var title_container: Control = TransitionHandler.fade.get_node(^"%TitleContainer")
@@ -32,3 +35,15 @@ func select_song(tja: TJAMeta, diff: int):
 		TransitionHandler.anim.play("MoveOut")
 		main.load_tja(tja, tja.chart_metadata[diff]["cached_index"])
 	)
+
+func reload_song():
+	var main: MainScene = get_tree().current_scene as MainScene
+	var tja: TJAMeta = main.last_tja_meta
+	var diff: int = main.last_diff
+	main.process_mode = Node.PROCESS_MODE_DISABLED
+	TransitionHandler.change_scene_to_file("res://scenes/main.tscn", false, last_clr)
+	await get_tree().scene_changed
+	main = get_tree().current_scene as MainScene
+	main.process_mode = Node.PROCESS_MODE_INHERIT
+	main.load_tja(tja, diff)
+	TransitionHandler.anim.play("MoveOut")

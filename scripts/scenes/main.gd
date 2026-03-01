@@ -1,15 +1,10 @@
 extends Control
 class_name MainScene
 
-var _tja: TJA
 var chart: TJAChartInfo
 var current_note_list: Array[Dictionary]
 var roll: bool = false
 var score_delay: bool = true
-
-func _validate_property(property: Dictionary) -> void:
-	if property.name == "_tja" or property.name == "tja":
-		property.usage |= PROPERTY_USAGE_NONE | PROPERTY_USAGE_INTERNAL
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -146,16 +141,13 @@ func change_branch_visual(level: TJAChartInfo.BranchType):
 		branch_tween.tween_callback(func():
 			branch_text_transition.texture = branch_indicator_textures[clampi(last_level + dir, 0, 2)]
 			branch_text.texture = branch_indicator_textures[clampi(last_level, 0, 2)]
-			branch_text_transition.position.y = 26 + (branch_text_transition.size.y * -dir)
+			branch_text_transition.position.y = 26 + (branch_text_transition.size.y * 0.5 * -dir)
 			branch_text.position.y = 26
 			branch_text.position.x = 595
 			branch_text_transition.position.x = 595
 			branch_text.modulate.a = 1.0
 			branch_text_transition.modulate.a = 0.0
-			print(last_level)
-			print(last_level+dir)
 			last_level += dir
-			print("SET")
 		)
 		ll_real += dir
 		match ll_real:
@@ -172,10 +164,10 @@ func change_branch_visual(level: TJAChartInfo.BranchType):
 			_:
 				branch_tween.tween_property(%BranchBG, "self_modulate:a", 0, 0.1)
 		branch_tween.set_parallel(true)
-		branch_tween.tween_property(branch_text, "position:y", branch_text.size.y * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
-		branch_tween.tween_property(branch_text, "modulate:a", 0.0, 0.15)
-		branch_tween.tween_property(branch_text_transition, "position:y", branch_text_transition.size.y * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
-		branch_tween.tween_property(branch_text_transition, "modulate:a", 1.0, 0.15)
+		branch_tween.tween_property(branch_text, "position:y", branch_text.size.y * 0.5 * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
+		branch_tween.tween_property(branch_text, "modulate:a", 0.0, 0.1).set_delay(0.05)
+		branch_tween.tween_property(branch_text_transition, "position:y", branch_text_transition.size.y * 0.5 * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
+		branch_tween.tween_property(branch_text_transition, "modulate:a", 1.0, 0.1).set_delay(0.05)
 		branch_tween.set_parallel(false)
 		branch_tween.tween_interval(0.2)
 		count += 1
@@ -246,7 +238,17 @@ func handle_branch_params(command: Dictionary):
 			branch_condition_end_time = current_note_list.back()["time"]
 		branch_condition["end_time"] = branch_condition_end_time
 
+var last_tja_meta: TJAMeta
+var last_diff: int
+
+func reload_tja():
+	load_tja(last_tja_meta, last_diff)
+	%Chara.reset()
+
 func load_tja(new_tja: TJAMeta, diff: int):
+	last_tja_meta = new_tja
+	last_diff = diff
+	
 	var tja: TJA = new_tja.create_tja_from_meta()
 	chart = tja.charts[diff]
 	# TODO
@@ -361,9 +363,13 @@ func auto_roll():
 		if current_roll_note.get("note", 0) == 5:
 			create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 			add_note_to_gauge(1, true)
+			drumroll_count += 1
+			roll_hits += 1
 		elif current_roll_note.get("note", 0) == 6:
 			create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 			add_note_to_gauge(3, true)
+			drumroll_count += 1
+			roll_hits += 1
 		elif current_roll_note.get("note", 0) == 7:
 			if current_roll_note.has("balloon_count"):
 				current_roll_note["balloon_count"] -= 1
@@ -420,7 +426,7 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 		var tween: Tween = create_tween()
 		tween.set_parallel(true)
 		if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
-		tween.tween_property(base, "modulate:a", 0, 0.1).set_delay(0.05)
+		tween.tween_property(base, "modulate:a", 0, 0.02).set_delay(0.075)
 		tween.tween_property(note, "modulate:a", 0, 0.3)
 		tween.set_parallel(false)
 		tween.tween_callback(func():
@@ -439,7 +445,16 @@ enum JudgeType {
 var judge_bad: Texture2D = preload("uid://htanu7exw36e")
 var judge_ok: Texture2D = preload("uid://bv3mhdwnknuf5")
 var judge_good: Texture2D = preload("uid://biohn4qhfd10f")
+
+var good_hits: int
+var ok_hits: int
+var bad_hits: int
+var roll_hits: int
+
 func judge_create(type: JudgeType):
+	var var_name: String = "%s_hits" % [(JudgeType.find_key(type) as String).to_lower()]
+	if get(var_name):
+		set(var_name, get(var_name) + 1)
 	add_hit_to_gauge(type)
 	var judge: Sprite2D = Sprite2D.new()
 	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
@@ -486,16 +501,16 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
 	# TODO transition
 	var tween: Tween = create_tween()
-	tween.tween_property(note, "progress_ratio", 1.0, 0.3)
+	tween.tween_property(note, "progress_ratio", 1.0, 0.35)
 	if balloon:
 		tween.set_parallel(true)
-		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.3)
+		tween.tween_property(balloon_tex, "region:size:x", balloon_tex.atlas.get_width(), 0.35)
 		tween.set_parallel(false)
 	tween.tween_callback(anim.play.bind("Hit"))
 	if balloon:
 		tween.set_parallel(true)
-		tween.tween_property(rainbow, "position:x", balloon_tex.atlas.get_width(), 0.3)
-		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.3)
+		tween.tween_property(rainbow, "position:x", balloon_tex.atlas.get_width(), 0.35)
+		tween.tween_property(balloon_tex, "region:position:x", balloon_tex.atlas.get_width(), 0.35)
 		tween.set_parallel(false)
 		tween.tween_callback(rainbow.queue_free)
 
@@ -746,10 +761,12 @@ func handle_note_input(player: int, event: InputEvent):
 			if current_roll_note.get("note", 0) == 5:
 				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 				add_note_to_gauge(1, true)
+				roll_hits += 1
 				drumroll_count += 1
 			elif current_roll_note.get("note", 0) == 6:
 				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 				add_note_to_gauge(3, true)
+				roll_hits += 1
 				drumroll_count += 1
 			elif current_roll_note.get("note", 0) == 7:
 				if current_roll_note.has("balloon_count"):
@@ -784,8 +801,7 @@ func _physics_process(delta: float) -> void:
 	if not chart: return
 	
 	if Input.is_action_just_pressed("pause"):
-		audio.stream_paused = !audio.stream_paused
-		if not $Timer.is_stopped(): $Timer.paused = !$Timer.paused
+		$Pause.open()
 	
 	handle_play_events()
 	handle_branch_timeline()

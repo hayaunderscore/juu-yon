@@ -20,7 +20,6 @@ config/name_localized={
 }
 run/main_scene="uid://vxy0gpt3o0c8"
 config/features=PackedStringArray("4.6", "Mobile")
-run/max_fps=60
 config/icon="res://icon.svg"
 
 [audio]

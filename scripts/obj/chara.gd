@@ -188,6 +188,15 @@ func _ready() -> void:
 	_do_not_update = false
 	_update_texture()
 
+func reset():
+	idiot = false
+	gogo = false
+	clear = false
+	_cant_change_state = false
+	if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
+	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
+	state = State.IDLE
+
 func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return
 	if state >= State.BALLOON: return

@@ -101,6 +101,7 @@ func determine_suboptions(option: Dictionary, control: Control, idx: int):
 			# Must specify `enum` parameter
 			var enum_dict: Dictionary = option["enum"]
 			for key in enum_dict.keys():
+				if enum_dict[key] is int and enum_dict[key] < 0: continue
 				var l: TextureRect = create_vertical_text(21)
 				l.name = key
 				var tex: VerticalText2D = l.texture
@@ -287,6 +288,8 @@ func next_from_key(dict: Dictionary, key: Variant) -> Array:
 	var index: int = keys.find(key)
 	if index != -1:
 		var next: Variant = keys[wrapi(index + 1, 0, keys.size())]
+		if dict[next] is int and dict[next] < 0:
+			return next_from_key(dict, next)
 		return [next, dict[next]]
 	return []
 

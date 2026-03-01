@@ -43,6 +43,7 @@ func _ready() -> void:
 
 # scroll_[x/y]_t = scroll_[x/y] × (px_width_note_field / 4) × (bpm_note / 60 (s))  (#NMSCROLL), or otherwise 0
 func get_note_position(ms, bpm, scroll: Vector2, beat: float):
+	# print("HI")
 	if bemani_scroll and ms >= time: 
 		return get_note_hbscroll_position(scroll, beat)
 	return Vector2((scroll.x * speed_multiplier.x * (lane_width.x/4) * (bpm / 60)) * (ms - time),
@@ -60,18 +61,21 @@ func _draw() -> void:
 		if pos.x > lane_width.x + 96: continue
 		if pos.x < -global_position.x: continue
 		draw_set_transform(pos, pos.angle_to_point(Vector2.ZERO))
-		draw_texture_rect(bar_line, Rect2(-bar_line_size / 2, bar_line_size), false)
+		var color: Color = Color.YELLOW if note.get("branch_start") else Color.WHITE
+		draw_texture_rect(bar_line, Rect2(-bar_line_size / 2, bar_line_size), false, color)
 	
 	draw_set_transform(Vector2.ZERO)
 	
 	var arr = draw_list.keys()
 	if arr.size() <= 0: return
-	for i in range(min(arr.size(), 512)):
+	const MINIMUM_NOTE_COUNT: int = 512
+	for i in range(maxi(0, arr.size() - MINIMUM_NOTE_COUNT), arr.size()):
 		#if not draw_list.has(i): continue
 		var note: Dictionary = draw_list[arr[i]]
 		var type: int = note["note"]
 		if type >= 999: continue
 		var pos = get_note_position(note["time"], note["bpm"], note["scroll"], note["beat_position"])
+		# print(pos)
 		var col: Color = Color.WHITE
 		if type != 8:
 			if pos.x > lane_width.x + 96: continue

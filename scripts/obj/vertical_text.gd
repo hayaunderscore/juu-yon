@@ -52,7 +52,16 @@ class_name VerticalText2D
 		if value == scale: return
 		scale = value
 		_update_texture()
-@export var minimum_size: Vector2i = Vector2.ZERO
+@export var minimum_size: Vector2i = Vector2.ZERO:
+	set(value):
+		if value == minimum_size: return
+		minimum_size = value
+		_update_texture()
+@export var glyph_spacing_multiplier: float = 1.0:
+	set(value):
+		if value == glyph_spacing_multiplier: return
+		glyph_spacing_multiplier = value
+		_update_texture()
 
 # Character sets
 var rotate_chars: PackedStringArray = [
@@ -145,14 +154,14 @@ func _update_size():
 		if group_type == 'horizontal':
 			var seq_size: Vector2 = font.get_string_size(content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size) * scale
 			_text_size.x = maxf(_text_size.x, seq_size.x)
-			_text_size.y += font_size * scale.y # Horizontal sequences use full font_size
+			_text_size.y += font_size * scale.y * glyph_spacing_multiplier # Horizontal sequences use full font_size
 		else:
 			var char_size: Vector2 = font.get_string_size(content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size) * scale
 			var effective_width: float = char_size.x
 			if content in rotate_chars:
 				effective_width = char_size.y
 			_text_size.x = maxf(_text_size.x, effective_width)
-			_text_size.y += get_char_height(content) * scale.y
+			_text_size.y += get_char_height(content) * scale.y * glyph_spacing_multiplier
 
 func _update_texture():
 	if not always_update:
@@ -200,7 +209,7 @@ func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color
 			else:
 				font.draw_string(to_canvas_item, Vector2(-seq_size.x / 2.0, floori(char_y / 2.0)), content, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color, TextServer.JUSTIFICATION_NONE, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL, 2.0)
 		else:
-			var char_y: float = get_char_height(content) * scale.y
+			var char_y: float = get_char_height(content) * scale.y * glyph_spacing_multiplier
 			cur_char_y += char_y
 			var char_size: Vector2 = font.get_char_size(ord(content), font_size) * scale
 			var effective_width: float = char_size.x

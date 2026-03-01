@@ -43,3 +43,7 @@ ui_decide,決定,Decide
 o_opt_score_delay,スコア遅延,Score Delay
 o_opt_score_type,スコアモード,Score Mode
 game_mod_auto,オート,Auto
+p_resume,演奏をつづける,Resume
+p_restart,はじめからやりなおす,Restart
+p_songsel,「曲をえらぶ」にもどる,Back to Song Select
+p_menu,「モードをえらぶ」にもどる,Back to Menu

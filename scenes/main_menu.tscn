@@ -277,7 +277,7 @@ corner_radius_bottom_left = 28
 font = ExtResource("12_flqon")
 font_size = 20
 font_color = Color(0, 0, 0, 1)
-outline_size = 1
+outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
 [node name="Control" type="Control" unique_id=614042127]

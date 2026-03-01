@@ -21,6 +21,10 @@ var last_tweens: Array[Array] = [
 	[null, null],
 	[null, null]
 ]
+var last_ids: Array[Array] = [
+	[-1, -1],
+	[-1, -1]
+]
 var combo: int = 0:
 	set(n_combo):
 		combo = n_combo
@@ -51,7 +55,9 @@ func _process(delta: float) -> void:
 func taiko_input(note: int, side: int, volume: int = 100, good: bool = true):
 	var tween: Tween = last_tweens[note][side]
 	if tween: tween.stop()
-	SoundHandler.play_sound(note_sounds[note], volume / 100.0)
+	if last_ids[note][0] > -1:
+		SoundHandler.stop_sound(last_ids[note][0])
+	last_ids[note][0] = SoundHandler.play_sound(note_sounds[note], volume / 100.0)
 	var tex: TextureRect = light_up[note][side]
 	tex.modulate.a = 1.0
 	(don_light_up if note == 0 else kat_light_up).modulate.a = 1.0

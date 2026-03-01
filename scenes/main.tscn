@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://de7ff4q8ai73x" path="res://scenes/objects/callout_balloon.tscn" id="22_jscy8"]
 [ext_resource type="Texture2D" uid="uid://c7ld7f6bp6jfx" path="res://assets/game/lane/score_numbers.png" id="22_pm3ni"]
 [ext_resource type="Texture2D" uid="uid://bhocaaqmmd8vw" path="res://assets/game/stage/0.png" id="24_y6deb"]
+[ext_resource type="PackedScene" uid="uid://3837d4ycm15f" path="res://scenes/objects/pause.tscn" id="26_2wyq8"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
 blend_mode = 2
@@ -525,6 +526,10 @@ offset_right = 480.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("24_y6deb")
+
+[node name="Pause" parent="." unique_id=408960774 instance=ExtResource("26_2wyq8")]
+process_mode = 4
+layout_mode = 1
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]
