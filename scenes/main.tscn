@@ -528,7 +528,6 @@ grow_vertical = 0
 texture = ExtResource("24_y6deb")
 
 [node name="Pause" parent="." unique_id=408960774 instance=ExtResource("26_2wyq8")]
-process_mode = 4
 layout_mode = 1
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]

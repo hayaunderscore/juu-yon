@@ -93,7 +93,7 @@ metadata/_custom_type_script = "uid://dqyl0g1a5jxrj"
 
 [sub_resource type="Animation" id="Animation_n574a"]
 resource_name = "Open"
-length = 0.7
+length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -113,7 +113,7 @@ tracks/1/path = NodePath("MarginContainer:scale")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.7),
+"times": PackedFloat32Array(0, 0.2, 0.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(1e-05, 1e-05), Vector2(1e-05, 1e-05), Vector2(1, 1)]
@@ -153,6 +153,7 @@ _data = {
 }
 
 [node name="Pause" type="Control" unique_id=408960774]
+process_mode = 4
 modulate = Color(1, 1, 1, 0)
 z_index = 4096
 layout_mode = 3

@@ -181,7 +181,7 @@ func _get_height() -> int:
 
 func _draw_string(to_canvas_item: RID, rect: Rect2, _tile: bool, modulate: Color, _transpose: bool = false, outline: bool = false) -> void:
 	if _group_sequence.is_empty() or _text_size.y <= 0: return
-	if modulate.a <= 0: return
+	if modulate.a <= 0 or is_zero_approx(modulate.a): return
 	
 	var width: int = get_width()
 	var color: Color = outline_color if outline else font_color

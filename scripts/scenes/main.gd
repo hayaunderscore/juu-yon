@@ -601,7 +601,8 @@ func auto_play():
 				roll_cnt = 0
 				current_roll_note = note
 			8:
-				roll = false
+				if current_roll_note.get("note", 0) != 7:
+					roll = false
 				
 		if type != 5 and type != 6 and type != 7 and type != 8: chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 
@@ -730,12 +731,15 @@ func handle_lingering_notes():
 func add_hit_to_gauge(hit: JudgeType):
 	if hit == JudgeType.GOOD:
 		%Gauge.add_good()
+		good_hits += 1
 		branch_condition_count += 1
 	if hit == JudgeType.BAD:
 		%Gauge.add_bad()
+		bad_hits += 1
 		# branch_condition_count -= 1
 	if hit == JudgeType.OK:
 		%Gauge.add_ok()
+		ok_hits += 1
 		branch_condition_count += 0.5
 	branch_note_count += 1
 
@@ -800,7 +804,7 @@ func _input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if not chart: return
 	
-	if Input.is_action_just_pressed("pause"):
+	if Input.is_action_just_pressed("pause") and elapsed > -1:
 		$Pause.open()
 	
 	handle_play_events()
@@ -816,7 +820,7 @@ func _on_timer_timeout() -> void:
 
 func _on_music_finished() -> void:
 	# TODO results screen
-	TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true)
+	SongLoadHandler.results(good_hits + ok_hits, score_real, %Gauge.value, good_hits, ok_hits, bad_hits, roll_hits)
 
 func _on_gauge_filled_soul() -> void:
 	%Chara.clear = true

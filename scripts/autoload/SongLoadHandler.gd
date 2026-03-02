@@ -47,3 +47,26 @@ func reload_song():
 	main.process_mode = Node.PROCESS_MODE_INHERIT
 	main.load_tja(tja, diff)
 	TransitionHandler.anim.play("MoveOut")
+
+var results_fade: CanvasLayer = preload("uid://bsq8103sgqhv1").instantiate()
+var results_anim: AnimationPlayer
+func _ready() -> void:
+	results_anim = results_fade.get_node("AnimationPlayer")
+	add_child(results_fade)
+
+func results(note_count: int, score: int, gauge: float, goods: int, oks: int, bads: int, rolls: int):
+	var notes_hit: int = goods + oks + bads
+	results_anim.play("FadeIn")
+	await results_anim.animation_finished
+	get_tree().change_scene_to_file("uid://durmgvldn2ytb")
+	await get_tree().scene_changed
+	results_anim.play("RESET")
+	var resultss: ResultsScreen = get_tree().current_scene as ResultsScreen
+	resultss.total_notes = note_count
+	resultss.total_score[0] = score
+	resultss.total_gauge[0] = gauge
+	resultss.hit_notes[0] = notes_hit
+	resultss.hit_goods[0] = goods
+	resultss.hit_oks[0] = oks
+	resultss.hit_bads[0] = bads
+	resultss.hit_rolls[0] = rolls

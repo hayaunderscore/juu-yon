@@ -47,3 +47,6 @@ p_resume,演奏をつづける,Resume
 p_restart,はじめからやりなおす,Restart
 p_songsel,「曲をえらぶ」にもどる,Back to Song Select
 p_menu,「モードをえらぶ」にもどる,Back to Menu
+Results,成績発表,Results
+Notes Hit,最大コンボ数,Notes Hit
+Percentage,ただけた率,Percentage
