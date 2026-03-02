@@ -62,10 +62,10 @@ func results(note_count: int, score: int, gauge: float, goods: int, oks: int, ba
 	await get_tree().scene_changed
 	results_anim.play("RESET")
 	var resultss: ResultsScreen = get_tree().current_scene as ResultsScreen
-	resultss.total_notes = note_count
+	resultss.total_notes = notes_hit
 	resultss.total_score[0] = score
 	resultss.total_gauge[0] = gauge
-	resultss.hit_notes[0] = notes_hit
+	resultss.hit_notes[0] = note_count
 	resultss.hit_goods[0] = goods
 	resultss.hit_oks[0] = oks
 	resultss.hit_bads[0] = bads

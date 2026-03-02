@@ -48,8 +48,10 @@ var tick: bool = false
 var count: float = 0.0
 
 var results_music: Array[AudioStream] = [load("uid://c2c3wkg7ejqgp"), load("uid://0podvvpu8ixr")]
+@onready var chara: Array[TaikoCharacter] = [$CanvasLayer/TextureRect]
 
 func _ready() -> void:
+	$AnimationPlayer.play("Enter")
 	fade.play("FadeIn", -1, 99999)
 	fade.advance(0)
 	Globals.control_banner.hide()
@@ -58,26 +60,42 @@ func _ready() -> void:
 	await get_tree().create_timer(2.5).timeout
 	state = ResultsState.SCORE_TICK
 	fade.play("FadeOut")
+	await fade.animation_finished
+	$CanvasLayer.layer = 0
 	$Music.stream = results_music.pick_random()
 	$Music.play()
 
-func check_fail():
+var fail: Array[bool] = [false, false]
+func check_fail(player: int):
 	var back: TextureRect = $Back/Fail
-	if gauges[0].value >= TaikoGauge.clear_start:
+	if gauges[player].value >= TaikoGauge.clear_start:
 		back = $Back/Clear
+		chara[player].state = TaikoCharacter.State.SPIN
+		chara[player].gogo = true
+		SoundHandler.play_sound("result/norma_clear.wav")
+	else:
+		fail[player] = true
+		chara[player].state = TaikoCharacter.State.FAIL
+		SoundHandler.play_sound("result/norma_failed.wav")
 	var back_tween: Tween = create_tween()
+	back_tween.set_parallel(true)
 	back_tween.tween_property(back, "modulate:a", 1.0, 0.4)
+	if hit_notes[player] == hit_goods[player] + hit_oks[player]:
+		back_tween.tween_callback(SoundHandler.play_sound.bind("result/fullcombo.wav")).set_delay(2.5)
+
+var fast: bool = false
 
 func increase_value(player: int, varname: StringName, labelname: StringName, amount: float = 1, max: float = 0, format: String = "%d"):
 	var arr: PackedFloat64Array = get(varname)
 	var wait: bool = false
+	if fast: amount = 1.0
 	arr[player] = lerpf(0, max, amount)
 	if arr[player] >= max:
 		arr[player] = max
 		wait = true
 	var val: float = arr[player]
-	if varname == "current_score":
-		val = arr[player] * 10.0 / 10.0
+	if labelname == "scores":
+		val = (floori(arr[player]) / 10) * 10
 	var label: Label = get(labelname)[player] as Label
 	label.text = format % [floori(val)]
 	if labelname == "note_hits":
@@ -85,25 +103,46 @@ func increase_value(player: int, varname: StringName, labelname: StringName, amo
 		percentages[player].text = "%d%%" % [clampf(current_percentages[player], 0, 100)]
 		gauges[player].value = lerpf(0.0, total_gauge[player], amount)
 	if wait:
-		SoundHandler.play_sound("dong.wav")
+		if not fast:
+			SoundHandler.play_sound("dong.wav")
 		var prev: ResultsState = state
 		state = ResultsState.WAITING
-		await get_tree().create_timer(0.5).timeout
+		if not fast:
+			await get_tree().create_timer(0.5).timeout
 		count = 0.0
 		state = ((prev as int) + 1) as ResultsState
 		if state == ResultsState.DONE:
-			check_fail()
-	else:
+			check_fail(player)
+		else:
+			var t: Tween = create_tween()
+			chara[player].frame = 7
+			t.tween_callback(func(): chara[player].frame = 0).set_delay(0.15)
+	elif not fast:
 		SoundHandler.play_sound("result/count.wav")
 
 func _physics_process(delta: float) -> void:
+	var elapsed: float = $Music.get_playback_position() + AudioServer.get_time_since_last_mix()
+	for i in range(Globals.players_entered.size()):
+		var val: bool = Globals.players_entered[i]
+		if not val: continue
+		var donchan: TaikoCharacter = chara[i]
+		donchan.bpm = ($Music.stream as AudioStreamOggVorbis).bpm
+		if $Music.stream == results_music[1]:
+			elapsed -= 0.5
+		donchan.beat = elapsed * (donchan.bpm / 60.0) / (2.0 if fail[i] else 1.0)
+	
 	if state == ResultsState.WAITING or state == ResultsState.SEISEKI_HAPPYO: return
 	
 	if state == ResultsState.DONE:
 		if Input.is_action_just_pressed("don_left_p1") or Input.is_action_just_pressed("don_right_p1"):
 			process_mode = Node.PROCESS_MODE_DISABLED
+			SoundHandler.play_sound("dong.wav")
 			TransitionHandler.change_scene_to_file("uid://b8jopawilsvnu", true)
 			return
+	else:
+		if (Input.is_action_just_pressed("don_left_p1") or Input.is_action_just_pressed("don_right_p1")) and not fast:
+			SoundHandler.play_sound("dong.wav")
+			fast = true
 	
 	tick = not tick
 	if tick:

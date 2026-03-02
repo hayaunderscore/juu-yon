@@ -3,6 +3,7 @@
 [ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="1_mgr1g"]
 
 [resource]
+resource_local_to_scene = true
 shader = ExtResource("1_mgr1g")
 shader_parameter/color = Color(1, 1, 0, 1)
 shader_parameter/mixture = 0.0

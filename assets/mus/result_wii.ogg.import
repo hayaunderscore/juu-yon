@@ -14,6 +14,6 @@ dest_files=["res://.godot/imported/result_wii.ogg-6cfef8ab55946444d712a61263af1a
 
 loop=true
 loop_offset=8.27
-bpm=0.0
+bpm=120.0
 beat_count=0
 bar_beats=4
