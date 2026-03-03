@@ -547,11 +547,11 @@ func _draw() -> void:
 					if j <= max_stars:
 						draw_circle(Vector2(24, star_y + 3), 4, star_clr)
 					if j < level:
-						if j > 10: 
+						if j > 9: 
 							star_star_clr = Color.CRIMSON
 							star_star_clr.a = minf(1, diff_trans)
 						draw_texture(star_tex, Vector2(15, star_y - 8), star_star_clr)
-					if j % 10 == 0 and j > 0:
+					if j % 9 == 0 and j > 0:
 						star_y = diff_height + 64 - 24 - 9
 					else:
 						star_y -= 20

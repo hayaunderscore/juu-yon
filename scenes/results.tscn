@@ -256,7 +256,7 @@ draw_center = false
 border_width_left = 3
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lmve7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jmcgi"]
 resource_local_to_scene = true
 shader = ExtResource("14_lmve7")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -590,7 +590,7 @@ layer = 998
 layer = 999
 
 [node name="TextureRect" parent="CanvasLayer" unique_id=308592822 instance=ExtResource("13_f8ry2")]
-material = SubResource("ShaderMaterial_lmve7")
+material = SubResource("ShaderMaterial_jmcgi")
 offset_top = 60.0
 offset_bottom = 444.0
 scale = Vector2(0.75, 0.75)
