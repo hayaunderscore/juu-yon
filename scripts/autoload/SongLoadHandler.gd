@@ -12,7 +12,10 @@ func select_song(tja: TJAMeta, diff: int):
 	var border: Control = TransitionHandler.fade.get_node(^"%Border")
 	
 	title.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
-	subtitle.text = (tja.subtitle_localized.get(TranslationServer.get_locale(), tja.subtitle) as String).replace("--", "")
+	subtitle.text = ""
+	var localized: String = tja.subtitle_localized.get(TranslationServer.get_locale(), tja.subtitle) as String
+	if not tja.subtitle.begins_with("--"):
+		subtitle.text = localized.lstrip("++")
 	
 	var title_size: float = title.get_theme_font("font").get_string_size(title.text, title.horizontal_alignment, -1, 32, title.justification_flags, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL).x
 	var subtitle_size: float = subtitle.get_theme_font("font").get_string_size(subtitle.text, subtitle.horizontal_alignment, -1, 24, subtitle.justification_flags, TextServer.DIRECTION_AUTO, TextServer.ORIENTATION_HORIZONTAL).x

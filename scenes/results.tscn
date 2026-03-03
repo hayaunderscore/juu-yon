@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://binkxcwptb8yt" path="res://assets/result/bg_fail.png" id="4_00fns"]
 [ext_resource type="Texture2D" uid="uid://coggfx70byrns" path="res://assets/songselect/bar.png" id="7_f8ry2"]
 [ext_resource type="Texture2D" uid="uid://di8gmhj22ewlp" path="res://assets/songselect/bar_highlight.png" id="8_00fns"]
+[ext_resource type="Script" uid="uid://bhiur5e0pkavk" path="res://scripts/obj/mono_label.gd" id="9_it16x"]
 [ext_resource type="Texture2D" uid="uid://c25kqchha3jqv" path="res://assets/result/result_gauge.png" id="9_jmcgi"]
 [ext_resource type="AudioStream" uid="uid://chobf82lmrx81" path="res://assets/snd/result/seiseki_happyo.wav" id="10_00qb5"]
 [ext_resource type="AudioStream" uid="uid://0podvvpu8ixr" path="res://assets/mus/result_wii.ogg" id="11_00fns"]
@@ -205,8 +206,12 @@ expand_margin_top = 17.0
 expand_margin_right = 18.0
 expand_margin_bottom = 18.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_qcv7r"]
-font = ExtResource("2_r4wmc")
+[sub_resource type="FontVariation" id="FontVariation_lmve7"]
+base_font = ExtResource("2_r4wmc")
+variation_transform = Transform2D(1, 0, 0, 1.25, 0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jmcgi"]
+font = SubResource("FontVariation_lmve7")
 font_size = 64
 
 [sub_resource type="LabelSettings" id="LabelSettings_lkpjo"]
@@ -251,7 +256,7 @@ draw_center = false
 border_width_left = 3
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jmcgi"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lmve7"]
 resource_local_to_scene = true
 shader = ExtResource("14_lmve7")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -372,11 +377,14 @@ alignment = 2
 layout_mode = 2
 alignment = 2
 
-[node name="P1Score" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=900169746]
+[node name="P1Score" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1698209824]
 unique_name_in_owner = true
 layout_mode = 2
-text = "0"
-label_settings = SubResource("LabelSettings_qcv7r")
+script = ExtResource("9_it16x")
+label_settings = SubResource("LabelSettings_jmcgi")
+spacing = 48
+visual_offset = Vector2(0, 55)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
 [node name="Label2" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=812434086]
 layout_mode = 2
@@ -429,11 +437,15 @@ text = "Notes Hit"
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 2
 
-[node name="P1NotesHit" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=2039320261]
+[node name="P1NotesHit" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=928088374]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 2
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
 [node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/VBoxContainer" unique_id=1507345704]
 layout_mode = 2
@@ -457,12 +469,15 @@ text = "Percentage"
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 2
 
-[node name="P1Percentage" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer" unique_id=2040273000]
+[node name="P1Percentage" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer" unique_id=824755463]
 unique_name_in_owner = true
 layout_mode = 2
-text = "%"
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 2
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer" unique_id=1300829897]
 layout_mode = 2
@@ -519,29 +534,45 @@ alignment = 1
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=667448996]
 layout_mode = 2
 
-[node name="P1Goods" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1606212613]
+[node name="P1Goods" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1962046160]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 1
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
-[node name="P1Oks" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1447357198]
+[node name="P1Oks" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=160452809]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 1
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
-[node name="P1Bads" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=152123088]
+[node name="P1Bads" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=433472407]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 1
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
-[node name="P1Rolls" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=222837702]
+[node name="P1Rolls" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/Panel/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1197338482]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
 horizontal_alignment = 1
+spacing = 20
+visual_offset = Vector2(0, 24)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
 
 [node name="Voice" type="AudioStreamPlayer" parent="." unique_id=1846719536]
 stream = ExtResource("10_00qb5")
@@ -559,7 +590,7 @@ layer = 998
 layer = 999
 
 [node name="TextureRect" parent="CanvasLayer" unique_id=308592822 instance=ExtResource("13_f8ry2")]
-material = SubResource("ShaderMaterial_jmcgi")
+material = SubResource("ShaderMaterial_lmve7")
 offset_top = 60.0
 offset_bottom = 444.0
 scale = Vector2(0.75, 0.75)

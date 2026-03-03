@@ -446,15 +446,13 @@ var judge_bad: Texture2D = preload("uid://htanu7exw36e")
 var judge_ok: Texture2D = preload("uid://bv3mhdwnknuf5")
 var judge_good: Texture2D = preload("uid://biohn4qhfd10f")
 
-var good_hits: int
-var ok_hits: int
-var bad_hits: int
-var roll_hits: int
+var good_hits: int = 0
+var ok_hits: int = 0
+var bad_hits: int = 0
+var roll_hits: int = 0
 
 func judge_create(type: JudgeType):
 	var var_name: String = "%s_hits" % [(JudgeType.find_key(type) as String).to_lower()]
-	if get(var_name):
-		set(var_name, get(var_name) + 1)
 	add_hit_to_gauge(type)
 	var judge: Sprite2D = Sprite2D.new()
 	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
@@ -610,14 +608,21 @@ const JUDGEMENT_GREAT = 0.042
 const JUDGEMENT_GOOD = 0.075
 const JUDGEMENT_BAD = 0.108
 
+const judge_times: Dictionary[TJAChartInfo.CourseType, Array] = {
+	TJAChartInfo.CourseType.EASY: [0.125, 0.108333334, 0.041666667, 0],
+	TJAChartInfo.CourseType.NORMAL: [0.125, 0.108333334, 0.041666667, 0],
+	TJAChartInfo.CourseType.HARD: [0.108333334, 0.075, 0.025, 0],
+	TJAChartInfo.CourseType.ONI: [0.108333334, 0.075, 0.025, 0]
+}
+
 var drumrolls: Array[bool] = [false, false, false, false, false, true, true, true, true, true, false, false, true, false]
 
 func hit_note(type: int, time: float) -> JudgeType:
 	if drumrolls[type]: return JudgeType.ROLL
 	var judgetype: int = JudgeType.BAD
-	if time - JUDGEMENT_GREAT <= elapsed and elapsed <= (time + JUDGEMENT_GREAT):
+	if time - judge_times[chart.course][JudgeType.GOOD] <= elapsed and elapsed <= (time + judge_times[chart.course][JudgeType.GOOD]):
 		judgetype = JudgeType.GOOD
-	elif time - JUDGEMENT_GOOD <= elapsed and elapsed <= (time + JUDGEMENT_GOOD):
+	elif time - judge_times[chart.course][JudgeType.OK] <= elapsed and elapsed <= (time + judge_times[chart.course][JudgeType.OK]):
 		judgetype = JudgeType.OK
 	# Change score!
 	if judgetype != JudgeType.BAD:
@@ -638,7 +643,7 @@ func check_note(check_type: int) -> JudgeType:
 	var hit: JudgeType = JudgeType.BAD
 	if current_note_list.size() <= 0: return hit
 	var offset: int = 0
-	while current_note_list.size() > 0 and not (current_note_list[-1-offset]["time"] > elapsed + JUDGEMENT_BAD):
+	while current_note_list.size() > 0 and not (current_note_list[-1-offset]["time"] > elapsed + judge_times[chart.course][JudgeType.BAD]):
 		var note: Dictionary = current_note_list[-1-offset]
 		var type: int = note["note"]
 		var time: float = note["time"]
@@ -720,7 +725,7 @@ func handle_lingering_notes():
 					chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 					# print("DIE")
 				current_note_list.pop_back()
-		if time > elapsed - JUDGEMENT_BAD: break
+		if time > elapsed - judge_times[chart.course][JudgeType.BAD]: break
 		var result: JudgeType = hit_note(type, time)
 		current_note_list.pop_back()
 		if result == JudgeType.ROLL: break

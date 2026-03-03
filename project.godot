@@ -26,7 +26,7 @@ config/icon="res://icon.svg"
 
 buses/default_bus_layout="uid://86cuj0230l44"
 driver/driver="ALSA"
-driver/output_latency=3
+driver/output_latency=2
 
 [autoload]
 

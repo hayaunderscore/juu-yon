@@ -3,14 +3,14 @@ class_name ResultsScreen
 
 @onready var fade: AnimationPlayer = $Fade/AnimationPlayer
 @onready var panels: Array[VBoxContainer] = [%Player1Panel]
-@onready var scores: Array[Label] = [%P1Score]
-@onready var note_hits: Array[Label] = [%P1NotesHit]
+@onready var scores: Array[MinimalMonoLabel] = [%P1Score]
+@onready var note_hits: Array[MinimalMonoLabel] = [%P1NotesHit]
 @onready var gauges: Array[TextureProgressBar] = [%P1Gauge]
-@onready var percentages: Array[Label] = [%P1Percentage]
-@onready var goods: Array[Label] = [%P1Goods]
-@onready var oks: Array[Label] = [%P1Oks]
-@onready var bads: Array[Label] = [%P1Bads]
-@onready var rolls: Array[Label] = [%P1Rolls]
+@onready var percentages: Array[MinimalMonoLabel] = [%P1Percentage]
+@onready var goods: Array[MinimalMonoLabel] = [%P1Goods]
+@onready var oks: Array[MinimalMonoLabel] = [%P1Oks]
+@onready var bads: Array[MinimalMonoLabel] = [%P1Bads]
+@onready var rolls: Array[MinimalMonoLabel] = [%P1Rolls]
 
 var total_notes: int = 33892
 var total_score: PackedFloat64Array = [1257360]
@@ -80,7 +80,7 @@ func check_fail(player: int):
 	var back_tween: Tween = create_tween()
 	back_tween.set_parallel(true)
 	back_tween.tween_property(back, "modulate:a", 1.0, 0.4)
-	if hit_notes[player] == hit_goods[player] + hit_oks[player]:
+	if total_notes == hit_goods[player] + hit_oks[player]:
 		back_tween.tween_callback(SoundHandler.play_sound.bind("result/fullcombo.wav")).set_delay(2.5)
 
 var fast: bool = false
@@ -96,7 +96,7 @@ func increase_value(player: int, varname: StringName, labelname: StringName, amo
 	var val: float = arr[player]
 	if labelname == "scores":
 		val = (floori(arr[player]) / 10) * 10
-	var label: Label = get(labelname)[player] as Label
+	var label: MinimalMonoLabel = get(labelname)[player] as MinimalMonoLabel
 	label.text = format % [floori(val)]
 	if labelname == "note_hits":
 		current_percentages[player] = lerpf(0.0, floori((float(hit_notes[player]) / float(total_notes)) * 100), amount)
