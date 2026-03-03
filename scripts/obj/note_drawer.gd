@@ -56,7 +56,7 @@ func get_note_hbscroll_position(scroll: Vector2, beat: float):
 
 func _draw() -> void:
 	for note in bar_list:
-		if not note.get("display", true): continue
+		if not note.get("display"): continue
 		var pos = get_note_position(note["time"], note["bpm"], note["scroll"], note["beat_position"])
 		if pos.x > lane_width.x + 96: continue
 		if pos.x < -global_position.x: continue
