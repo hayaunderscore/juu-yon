@@ -153,6 +153,17 @@ func set_style_box():
 		style_box = from_box.style_box
 		index_box = from_box.index_box
 
+func get_localized_title() -> String:
+	return title_localized.get(TranslationServer.get_locale(), title)
+
+func get_localized_subtitle() -> Array:
+	var song_select_only: bool = false
+	if subtitle.begins_with("--"):
+		song_select_only = true
+	var sub: String = subtitle_localized.get(TranslationServer.get_locale(), subtitle)
+	sub = sub.lstrip("--").lstrip("++")
+	return [sub, song_select_only]
+
 static var text_texture_cache: Dictionary[String, Dictionary]
 
 var _updated_text_scale: bool = false

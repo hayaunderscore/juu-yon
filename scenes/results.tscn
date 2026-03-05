@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c25kqchha3jqv" path="res://assets/result/result_gauge.png" id="9_jmcgi"]
 [ext_resource type="AudioStream" uid="uid://chobf82lmrx81" path="res://assets/snd/result/seiseki_happyo.wav" id="10_00qb5"]
 [ext_resource type="AudioStream" uid="uid://0podvvpu8ixr" path="res://assets/mus/result_wii.ogg" id="11_00fns"]
+[ext_resource type="Texture2D" uid="uid://cho4uhsh8blcq" path="res://assets/songselect/difficulties/edit.png" id="11_it16x"]
 [ext_resource type="PackedScene" uid="uid://bsq8103sgqhv1" path="res://scenes/transition/fade.tscn" id="12_00fns"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="13_f8ry2"]
 [ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="14_lmve7"]
@@ -227,6 +228,24 @@ gradient = SubResource("Gradient_fiyj5")
 width = 380
 height = 40
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bpdww"]
+bg_color = Color(0.93, 0.5115, 0.2325, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0, 0, 0, 1)
+corner_radius_bottom_left = 24
+expand_margin_left = 18.0
+expand_margin_top = 17.0
+expand_margin_right = 18.0
+expand_margin_bottom = 17.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_odafc"]
+font = ExtResource("2_r4wmc")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yew12"]
 bg_color = Color(0.19607843, 0.19607843, 0.19607843, 1)
 border_width_left = 6
@@ -264,6 +283,18 @@ shader_parameter/mixture = 0.0
 shader_parameter/lerp_to_add = 0.0
 shader_parameter/alpha = 0.0
 shader_parameter/offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_it16x"]
+font = ExtResource("2_r4wmc")
+font_size = 48
+outline_size = 24
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bpdww"]
+font = ExtResource("2_r4wmc")
+font_size = 32
+outline_size = 16
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Results" type="Control" unique_id=434217777]
 layout_mode = 3
@@ -400,6 +431,36 @@ max_value = 98.24
 texture_under = SubResource("GradientTexture2D_xbu6e")
 texture_progress = ExtResource("9_jmcgi")
 texture_progress_offset = Vector2(5, 6)
+
+[node name="P1DiffContainer" type="PanelContainer" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer" unique_id=2035151113]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bpdww")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/P1DiffContainer" unique_id=2007994519]
+layout_mode = 2
+theme_override_constants/margin_left = -11
+theme_override_constants/margin_top = -16
+theme_override_constants/margin_right = -11
+theme_override_constants/margin_bottom = -16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/P1DiffContainer/MarginContainer" unique_id=135375868]
+custom_minimum_size = Vector2(0, 37)
+layout_mode = 2
+alignment = 1
+
+[node name="P1DiffIcon" type="TextureRect" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/P1DiffContainer/MarginContainer/HBoxContainer" unique_id=683843866]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("11_it16x")
+
+[node name="P1DiffName" type="Label" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/P1DiffContainer/MarginContainer/HBoxContainer" unique_id=803057615]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Oni"
+label_settings = SubResource("LabelSettings_odafc")
 
 [node name="Panel" type="PanelContainer" parent="HBoxContainer/MarginContainer/Player1Panel" unique_id=796673522]
 custom_minimum_size = Vector2(0, 205.5)
@@ -595,3 +656,26 @@ offset_top = 60.0
 offset_bottom = 444.0
 scale = Vector2(0.75, 0.75)
 state = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1249706764]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 96.0
+offset_bottom = 224.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=515089696]
+unique_name_in_owner = true
+layout_mode = 2
+text = "TITLE"
+label_settings = SubResource("LabelSettings_it16x")
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="VBoxContainer" unique_id=532825508]
+unique_name_in_owner = true
+layout_mode = 2
+label_settings = SubResource("LabelSettings_bpdww")
+horizontal_alignment = 1

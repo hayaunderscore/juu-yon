@@ -141,7 +141,7 @@ func change_branch_visual(level: TJAChartInfo.BranchType):
 		branch_tween.tween_callback(func():
 			branch_text_transition.texture = branch_indicator_textures[clampi(last_level + dir, 0, 2)]
 			branch_text.texture = branch_indicator_textures[clampi(last_level, 0, 2)]
-			branch_text_transition.position.y = 26 + (branch_text_transition.size.y * 0.5 * -dir)
+			branch_text_transition.position.y = 26 + (branch_text_transition.size.y * -dir)
 			branch_text.position.y = 26
 			branch_text.position.x = 595
 			branch_text_transition.position.x = 595
@@ -164,9 +164,9 @@ func change_branch_visual(level: TJAChartInfo.BranchType):
 			_:
 				branch_tween.tween_property(%BranchBG, "self_modulate:a", 0, 0.1)
 		branch_tween.set_parallel(true)
-		branch_tween.tween_property(branch_text, "position:y", branch_text.size.y * 0.5 * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
+		branch_tween.tween_property(branch_text, "position:y", branch_text.size.y * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
 		branch_tween.tween_property(branch_text, "modulate:a", 0.0, 0.1).set_delay(0.05)
-		branch_tween.tween_property(branch_text_transition, "position:y", branch_text_transition.size.y * 0.5 * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
+		branch_tween.tween_property(branch_text_transition, "position:y", branch_text_transition.size.y * dir, 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).as_relative()
 		branch_tween.tween_property(branch_text_transition, "modulate:a", 1.0, 0.1).set_delay(0.05)
 		branch_tween.set_parallel(false)
 		branch_tween.tween_interval(0.2)
@@ -240,6 +240,7 @@ func handle_branch_params(command: Dictionary):
 
 var last_tja_meta: TJAMeta
 var last_diff: int
+var last_true_diff: int
 
 func reload_tja():
 	load_tja(last_tja_meta, last_diff)
@@ -251,6 +252,7 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	
 	var tja: TJA = new_tja.create_tja_from_meta()
 	chart = tja.charts[diff]
+	last_true_diff = chart.course
 	# TODO
 	# merge_branches_prelim(chart)
 	current_note_list = chart.notes
@@ -825,7 +827,7 @@ func _on_timer_timeout() -> void:
 
 func _on_music_finished() -> void:
 	# TODO results screen
-	SongLoadHandler.results(good_hits + ok_hits, score_real, %Gauge.value, good_hits, ok_hits, bad_hits, roll_hits)
+	SongLoadHandler.results(last_tja_meta, last_true_diff, good_hits + ok_hits, score_real, %Gauge.value, good_hits, ok_hits, bad_hits, roll_hits)
 
 func _on_gauge_filled_soul() -> void:
 	%Chara.clear = true

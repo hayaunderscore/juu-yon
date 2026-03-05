@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name SongSelectColumns
 
 @export var padding: float = 24
 @export var timer: Timer
@@ -27,7 +28,7 @@ extends Control
 
 var voice_lines: Dictionary[String, AudioStream]
 
-@onready var difficulty_icons: Dictionary[int, Texture2D] = {
+const difficulty_icons: Dictionary[int, Texture2D] = {
 	-1: preload("uid://cexj018sv5j55"),
 	0: preload("uid://15kqjjs1ycyb"),
 	1: preload("uid://do2s2dpehwixs"),

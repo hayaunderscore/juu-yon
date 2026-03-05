@@ -59,8 +59,9 @@ func _draw() -> void:
 			origin.y = size.y - label_settings.font_size
 	var offset: Vector2 = Vector2(0, 0)
 	for chr in text:
-		draw_set_transform(origin + offset + visual_offset)
-		draw_string(label_settings.font, Vector2.ZERO, chr, 0, -1, label_settings.font_size, label_settings.font_color)
+		draw_set_transform(origin + offset + visual_offset + Vector2(spacing / 2.0, 0))
+		var char_size: int = label_settings.font.get_char_size(ord(chr), label_settings.font_size).x
+		draw_string(label_settings.font, Vector2(-char_size / 2.0, 0.0), chr, 0, -1, label_settings.font_size, label_settings.font_color)
 		# draw_char(label_settings.font, offset, chr, label_settings.font_size, label_settings.font_color)
 		offset.x += spacing
 

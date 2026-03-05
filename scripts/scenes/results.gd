@@ -47,6 +47,48 @@ var state: ResultsState = ResultsState.SEISEKI_HAPPYO
 var tick: bool = false
 var count: float = 0.0
 
+var title: String:
+	set(value):
+		if value == title: return
+		title = value
+		if is_inside_tree() and is_instance_valid(%Title):
+			%Title.text = title
+var subtitle: String:
+	set(value):
+		if value == subtitle: return
+		subtitle = value
+		if is_inside_tree() and is_instance_valid(%Subtitle):
+			%Subtitle.text = subtitle
+			%Subtitle.visible = not subtitle.is_empty()
+var course: Array[TJAChartInfo.CourseType] = [TJAChartInfo.CourseType.ONI]:
+	set(value):
+		if value == course: return
+		course = value
+		if is_inside_tree(): _update_course()
+
+const difficulty_colors: Dictionary[int, Color] = {
+	-1: Color.WHITE,
+	0: Color("#FF8463"),
+	1: Color("#C6D65A"),
+	2: Color("#8CBDDE"),
+	3: Color("ff85e2"),
+	4: Color("ed823b")
+}
+
+func _update_course():
+	for i in range(Globals.players_entered.size()):
+		var val: bool = Globals.players_entered[i]
+		if not val: continue
+		var diff: TJAChartInfo.CourseType = course[i]
+		var icon: TextureRect = get_node("%%P%dDiffIcon" % [i + 1])
+		var label: Label = get_node("%%P%dDiffName" % [i + 1])
+		var panel: PanelContainer = get_node("%%P%dDiffContainer" % [i + 1])
+		var diff_name: String = (TJAChartInfo.CourseType.find_key(diff) as String).to_pascal_case()
+		icon.texture = SongSelectColumns.difficulty_icons[diff]
+		label.text = diff_name
+		var style: StyleBoxFlat = panel.get_theme_stylebox("panel")
+		style.bg_color = difficulty_colors[diff]
+
 var results_music: Array[AudioStream] = [load("uid://c2c3wkg7ejqgp"), load("uid://0podvvpu8ixr")]
 @onready var chara: Array[TaikoCharacter] = [$CanvasLayer/TextureRect]
 
@@ -58,6 +100,7 @@ func _ready() -> void:
 	if Globals.players_entered == [false, false]:
 		Globals.players_entered[0] = true
 	await get_tree().create_timer(2.5).timeout
+	_update_course()
 	state = ResultsState.SCORE_TICK
 	fade.play("FadeOut")
 	await fade.animation_finished

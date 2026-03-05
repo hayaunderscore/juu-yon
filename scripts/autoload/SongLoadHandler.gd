@@ -57,7 +57,7 @@ func _ready() -> void:
 	results_anim = results_fade.get_node("AnimationPlayer")
 	add_child(results_fade)
 
-func results(note_count: int, score: int, gauge: float, goods: int, oks: int, bads: int, rolls: int):
+func results(meta: TJAMeta, diff: int, note_count: int, score: int, gauge: float, goods: int, oks: int, bads: int, rolls: int):
 	var notes_hit: int = goods + oks + bads
 	results_anim.play("FadeIn")
 	await results_anim.animation_finished
@@ -73,3 +73,6 @@ func results(note_count: int, score: int, gauge: float, goods: int, oks: int, ba
 	resultss.hit_oks[0] = oks
 	resultss.hit_bads[0] = bads
 	resultss.hit_rolls[0] = rolls
+	resultss.title = meta.get_localized_title()
+	resultss.subtitle = meta.get_localized_subtitle()[0]
+	resultss.course[0] = diff as TJAChartInfo.CourseType
