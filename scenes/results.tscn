@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://bsq8103sgqhv1" path="res://scenes/transition/fade.tscn" id="12_00fns"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="13_f8ry2"]
 [ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="14_lmve7"]
+[ext_resource type="Texture2D" uid="uid://b81agqknus0m" path="res://assets/result/turn.png" id="17_bpdww"]
 
 [sub_resource type="Animation" id="Animation_it16x"]
 resource_name = "Clear"
@@ -70,7 +71,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.4, 0.8),
 "transitions": PackedFloat32Array(0.5, 2, 1),
 "update": 0,
-"values": [Vector2(0, 60), Vector2(0, 0), Vector2(0, 60)]
+"values": [Vector2(0, 60), Vector2(0, 0), Vector2(0, 92)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -217,7 +218,7 @@ font_size = 64
 
 [sub_resource type="LabelSettings" id="LabelSettings_lkpjo"]
 font = ExtResource("2_r4wmc")
-font_size = 42
+font_size = 52
 
 [sub_resource type="Gradient" id="Gradient_fiyj5"]
 offsets = PackedFloat32Array(0)
@@ -275,7 +276,7 @@ draw_center = false
 border_width_left = 3
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jmcgi"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_it16x"]
 resource_local_to_scene = true
 shader = ExtResource("14_lmve7")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -286,13 +287,13 @@ shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="LabelSettings" id="LabelSettings_it16x"]
 font = ExtResource("2_r4wmc")
-font_size = 48
+font_size = 42
 outline_size = 24
 outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_bpdww"]
 font = ExtResource("2_r4wmc")
-font_size = 32
+font_size = 24
 outline_size = 16
 outline_color = Color(0, 0, 0, 1)
 
@@ -374,9 +375,9 @@ grow_vertical = 2
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 244
+theme_override_constants/margin_top = 268
 theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 48
+theme_override_constants/margin_bottom = 24
 
 [node name="Player1Panel" type="VBoxContainer" parent="HBoxContainer/MarginContainer" unique_id=1513935582]
 unique_name_in_owner = true
@@ -406,6 +407,7 @@ alignment = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/MarginContainer/VBoxContainer" unique_id=204488852]
 layout_mode = 2
+theme_override_constants/separation = -8
 alignment = 2
 
 [node name="P1Score" type="Control" parent="HBoxContainer/MarginContainer/Player1Panel/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1698209824]
@@ -600,7 +602,7 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
-horizontal_alignment = 1
+horizontal_alignment = 2
 spacing = 20
 visual_offset = Vector2(0, 24)
 metadata/_custom_type_script = "uid://bhiur5e0pkavk"
@@ -610,7 +612,7 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
-horizontal_alignment = 1
+horizontal_alignment = 2
 spacing = 20
 visual_offset = Vector2(0, 24)
 metadata/_custom_type_script = "uid://bhiur5e0pkavk"
@@ -620,7 +622,7 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
-horizontal_alignment = 1
+horizontal_alignment = 2
 spacing = 20
 visual_offset = Vector2(0, 24)
 metadata/_custom_type_script = "uid://bhiur5e0pkavk"
@@ -630,7 +632,7 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("9_it16x")
 label_settings = SubResource("LabelSettings_6uev3")
-horizontal_alignment = 1
+horizontal_alignment = 2
 spacing = 20
 visual_offset = Vector2(0, 24)
 metadata/_custom_type_script = "uid://bhiur5e0pkavk"
@@ -651,7 +653,7 @@ layer = 998
 layer = 999
 
 [node name="TextureRect" parent="CanvasLayer" unique_id=308592822 instance=ExtResource("13_f8ry2")]
-material = SubResource("ShaderMaterial_jmcgi")
+material = SubResource("ShaderMaterial_it16x")
 offset_top = 60.0
 offset_bottom = 444.0
 scale = Vector2(0.75, 0.75)
@@ -670,7 +672,7 @@ alignment = 1
 [node name="Title" type="Label" parent="VBoxContainer" unique_id=515089696]
 unique_name_in_owner = true
 layout_mode = 2
-text = "TITLE"
+text = "Example Title"
 label_settings = SubResource("LabelSettings_it16x")
 horizontal_alignment = 1
 
@@ -679,3 +681,33 @@ unique_name_in_owner = true
 layout_mode = 2
 label_settings = SubResource("LabelSettings_bpdww")
 horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1796746835]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 244.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_constants/separation = 0
+
+[node name="P1Turn" type="CenterContainer" parent="HBoxContainer2" unique_id=1464740135]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+
+[node name="P1TurnImage" type="TextureRect" parent="HBoxContainer2/P1Turn" unique_id=1759305633]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = ExtResource("17_bpdww")
+
+[node name="P2Turn" type="CenterContainer" parent="HBoxContainer2" unique_id=142124089]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+
+[node name="P2TurnImage" type="TextureRect" parent="HBoxContainer2/P2Turn" unique_id=1784032151]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("17_bpdww")

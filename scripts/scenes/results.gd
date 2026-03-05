@@ -11,6 +11,7 @@ class_name ResultsScreen
 @onready var oks: Array[MinimalMonoLabel] = [%P1Oks]
 @onready var bads: Array[MinimalMonoLabel] = [%P1Bads]
 @onready var rolls: Array[MinimalMonoLabel] = [%P1Rolls]
+@onready var turning_things: Array[TextureRect] = [%P1TurnImage, %P2TurnImage]
 
 var total_notes: int = 33892
 var total_score: PackedFloat64Array = [1257360]
@@ -164,6 +165,10 @@ func increase_value(player: int, varname: StringName, labelname: StringName, amo
 		SoundHandler.play_sound("result/count.wav")
 
 func _physics_process(delta: float) -> void:
+	for turny_thing in turning_things:
+		turny_thing.pivot_offset_ratio = Vector2.ONE * 0.5
+		turny_thing.rotation_degrees = Engine.get_process_frames() / 10.0
+	
 	var elapsed: float = $Music.get_playback_position() + AudioServer.get_time_since_last_mix()
 	for i in range(Globals.players_entered.size()):
 		var val: bool = Globals.players_entered[i]
