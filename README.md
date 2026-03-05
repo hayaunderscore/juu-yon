@@ -2,11 +2,12 @@
 
 Cross platform Gen-2 based TJA player and Taiko simulator powered by [Godot](https://godotengine.org/).
 
-[In-Game](https://github.com/user-attachments/assets/61d2f902-6d81-47c4-b85b-548961ad4f72)
+[In-Game](https://github.com/user-attachments/assets/937677c0-e302-4dc2-8230-f9017e9307fb)
 
-![Main Menu](preview/preview-title.png)
-
-![Song Select](preview/preview-songselect.png)
+<p align="center" float="left">
+  <img src="./preview/preview-title.png" width="49%" alt="Main Menu" />
+  <img src="./preview/preview-songselect.png" width="49%" alt="Song Select" />
+</p>
 
 # Features
 
