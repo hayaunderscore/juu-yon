@@ -5,6 +5,7 @@ var app_title: String = ProjectSettings.get("application/config/name")
 var players_entered: Array[bool] = [false, false]
 var players_auto: Array[bool] = [false, false]
 var player_skins: Array[String] = ["default", "default"]
+var player_puchi: Array[String] = ["", ""]
 var default_score_mode: ScoreHandler.ScoreType
 
 var overlay: CanvasLayer = preload("res://scenes/objects/overlay.tscn").instantiate()

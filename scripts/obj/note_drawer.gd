@@ -20,15 +20,54 @@ const notes: Array[Texture2D] = [
 	null,													# Roll/balloon end
 ]
 
+const notes_50: Array[Texture2D] = [
+	null,
+	preload("uid://bice24tfi8bkh"),
+	preload("uid://caslyoudpbn7a"),
+	preload("uid://bk7axv5jdy1ow"),
+	preload("uid://doi2xvyhshrtn"),
+	preload("uid://bggco14xk2m1k"),
+	preload("uid://catqp2h0wttov"),
+	preload("uid://bw6ljse5rfxpp"),
+	null
+]
+
+const notes_300: Array[Texture2D] = [
+	null,
+	preload("uid://yyvfwa276uhp"),
+	preload("uid://ejd0wejkw55l"),
+	null,
+	null,
+	preload("uid://2py03xa2fflr"),
+	null,
+	preload("uid://bva1cggm1ng0s"),
+	null
+]
+
+const se_notes: Array[Array] = [
+	[null], 															# Nothing
+	# Don
+	[preload("uid://gymxg3jdrtk2"), preload("uid://cef2angadifeb"), preload("uid://dlyh0oo3g1aco")],
+	[preload("uid://bwgkiy6kmrkom"), preload("uid://bvtmsp1wpsmry")], 	# Kat
+	[preload("uid://6ofx77suax8l")], 									# Don (Big)
+	[preload("uid://bvi0rtwdu2f2k")],									# Kat (Big)
+	[preload("uid://dn74sol0vm563")],									# Roll head
+	[preload("uid://de26vl5tjrw3i")],									# Roll head (Big)
+	[preload("uid://bex7nif11pyu5")],									# Balloon head
+	[null],																# Roll/balloon end
+]
+
 var roll_body: Texture2D = preload("res://assets/game/notes/roll_body.png")
 var roll_body_big: Texture2D = preload("res://assets/game/notes/roll_body_big.png")
 var roll_tail: Texture2D = preload("res://assets/game/notes/roll_tail.png")
 var roll_tail_big: Texture2D = preload("res://assets/game/notes/roll_tail_big.png")
 var balloon_tail: Texture2D = preload("res://assets/game/notes/balloon_tail.png")
+var roll_se: Texture2D = preload("uid://bv07mb0jnery3")
 var bar_line: Texture2D = preload("res://assets/game/notes/bar.tres")
 var bar_line_size: Vector2
 
 var current_beat: float = 0.0
+var current_combo: int = 0
 var bemani_scroll: bool = false
 var speed_multiplier: Vector2 = Vector2.ONE
 
@@ -77,6 +116,7 @@ func _draw() -> void:
 		var pos = get_note_position(note["time"], note["bpm"], note["scroll"], note["beat_position"])
 		# print(pos)
 		var col: Color = Color.WHITE
+		var se_note: int = note.get("se_note", 0)
 		if type != 8:
 			if pos.x > lane_width.x + 96: continue
 			if pos.x < - global_position.x - 96 and type != 7: continue
@@ -104,14 +144,26 @@ func _draw() -> void:
 					rect = Rect2(Vector2(dist, -graph_size.y / 2.0), graph_size).abs()
 					draw_set_transform(last_pos, last_pos.angle_to_point(pos))
 					draw_texture_rect_region(graph, rect, Rect2(Vector2.ZERO, graph.get_size()), col)
+					# Draw se note
+					rect = Rect2(-Vector2(-20, -53), Vector2(dist, roll_se.get_height())).abs()
+					draw_texture_rect(roll_se, rect, true, Color.WHITE)
 					draw_set_transform(Vector2.ZERO)
 				_:
 					var graph: Texture2D = notes[type]
+					if (floori(current_beat * 4) % 2 == 0):
+						if notes_50[type] and current_combo > 50:
+							graph = notes_50[type]
+						if notes_300[type] and current_combo > 300:
+							graph = notes_300[type]
 					var graph_size: Vector2 = graph.get_size()
 					var roll_time: float =  note.get("roll_time", 0)
 					if type == 7 and roll_time < time: pos = pos.max(Vector2.ZERO)
 					draw_set_transform(pos - graph_size / 2)
 					draw_texture_rect(graph, Rect2(Vector2.ZERO, graph_size), false)
+					var se_graph: Texture2D = se_notes[type][se_note]
+					if se_graph != null:
+						draw_set_transform(pos - se_graph.get_size() / 2.0)
+						draw_texture_rect(se_graph, Rect2(Vector2(0, 75), se_graph.get_size()), false, Color.WHITE)
 					if type == 7:
 						pos.x += graph_size.x
 						graph = balloon_tail

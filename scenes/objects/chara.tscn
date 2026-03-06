@@ -10,10 +10,21 @@
 [ext_resource type="Texture2D" uid="uid://b07nf41ylog4b" path="res://assets/game/chara/default/clear.png" id="7_m0b5q"]
 [ext_resource type="Texture2D" uid="uid://bat2rty5rnacv" path="res://assets/game/chara/default/fail.png" id="8_otn75"]
 [ext_resource type="Texture2D" uid="uid://pme4x77r2sb5" path="res://assets/game/balloon.png" id="10_otn75"]
+[ext_resource type="Texture2D" uid="uid://dg062puykqjoe" path="res://assets/game/takane.png" id="11_em0tm"]
+[ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="11_f7jsj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m0b5q"]
 atlas = ExtResource("1_elhpt")
 region = Rect2(0, 0, 384, 384)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmw4"]
+resource_local_to_scene = true
+shader = ExtResource("11_f7jsj")
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/mixture = 0.0
+shader_parameter/lerp_to_add = 1.0
+shader_parameter/alpha = 1.0
+shader_parameter/offset = Vector2(0, 0)
 
 [node name="TextureRect" type="TextureRect" unique_id=308592822]
 material = ExtResource("1_m0b5q")
@@ -68,3 +79,9 @@ position = Vector2(168, 32)
 texture = ExtResource("10_otn75")
 centered = false
 hframes = 8
+
+[node name="Puchichara" type="Sprite2D" parent="." unique_id=503529880]
+material = SubResource("ShaderMaterial_jvmw4")
+position = Vector2(40, 208)
+texture = ExtResource("11_em0tm")
+hframes = 2

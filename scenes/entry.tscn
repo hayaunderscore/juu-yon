@@ -11,18 +11,21 @@
 [ext_resource type="Texture2D" uid="uid://cwll0vcxpa7hd" path="res://assets/game/chara/default/idle.png" id="7_syqqh"]
 [ext_resource type="Texture2D" uid="uid://bi7nkf1o7uoic" path="res://assets/entry/p1_banner.png" id="9_eaxmw"]
 [ext_resource type="Texture2D" uid="uid://bri744ujen0v8" path="res://assets/entry/hole_bottom.svg" id="9_hoe4v"]
-[ext_resource type="Script" uid="uid://em0hp0g40r3u" path="res://scripts/obj/chara.gd" id="9_hxrcx"]
 [ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="9_npjjd"]
-[ext_resource type="Texture2D" uid="uid://cqa2b7hx02ile" path="res://assets/game/chara/default/combo.png" id="10_0e7yf"]
-[ext_resource type="Texture2D" uid="uid://dxqu1tov2m4al" path="res://assets/game/chara/default/gogo.png" id="11_lo8s7"]
 [ext_resource type="AudioStream" uid="uid://do7um7dhugxta" path="res://assets/snd/entry/voice_player_entry.wav" id="12_a075a"]
-[ext_resource type="Texture2D" uid="uid://jx0i5qbewuxl" path="res://assets/game/chara/default/misc.png" id="12_tobsv"]
+[ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="13_lo8s7"]
+[ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="14_tobsv"]
 [ext_resource type="PackedScene" uid="uid://bg6jjlqnir6j0" path="res://scenes/objects/bumpin_panel.tscn" id="15_bfx6h"]
 [ext_resource type="Texture2D" uid="uid://bcmncdk73g0hb" path="res://assets/entry/kat.svg" id="16_1vsll"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hxrcx"]
-atlas = ExtResource("7_syqqh")
-region = Rect2(0, 0, 384, 384)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hoe4v"]
+resource_local_to_scene = true
+shader = ExtResource("14_tobsv")
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/mixture = 0.0
+shader_parameter/lerp_to_add = 0.0
+shader_parameter/alpha = 1.0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mi5g8"]
 atlas = ExtResource("7_syqqh")
@@ -363,70 +366,58 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("BigDons/Player2/Taiko/Chara:visible")
+tracks/2/path = NodePath("Curtain:region_rect")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Curtain:region_rect")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.6),
 "transitions": PackedFloat32Array(0, 0, 0, 0, 0, 0, 1),
 "update": 0,
 "values": [Rect2(0, 0, 240, 720), Rect2(240, 0, 240, 720), Rect2(480, 0, 240, 720), Rect2(720, 0, 240, 720), Rect2(960, 0, 240, 720), Rect2(1200, 0, 240, 720), Rect2(1440, 0, 240, 720)]
 }
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Curtain:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Curtain:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.6, 1),
 "transitions": PackedFloat32Array(1, 2, 1),
 "update": 0,
 "values": [Vector2(-24, 0), Vector2(-24, 0), Vector2(960, 0)]
 }
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("BannerTop:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BannerTop:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
 "times": PackedFloat32Array(0, 0.5, 0.73333335, 1.25),
 "transitions": PackedFloat32Array(2, 1, 0.5, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0, -104), Vector2(0, -104), Vector2(0, 0)]
 }
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("BannerTop/TaikoText:text")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BannerTop/TaikoText:text")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": ["Player Entry", "Main Menu"]
 }
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("BannerTop/TaikoText:first_outline_color")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BannerTop/TaikoText:first_outline_color")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(0, 1),
 "update": 0,
@@ -462,70 +453,58 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("BigDons/Player2/Taiko/Chara:visible")
+tracks/2/path = NodePath("Curtain:region_rect")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
+"update": 0,
+"values": [Rect2(0, 0, 240, 720)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Curtain:region_rect")
+tracks/3/path = NodePath("Curtain:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Rect2(0, 0, 240, 720)]
+"values": [Vector2(-24, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Curtain:position")
+tracks/4/path = NodePath("BannerTop:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-24, 0)]
+"values": [Vector2(0, 0)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("BannerTop:position")
+tracks/5/path = NodePath("BannerTop/TaikoText:text")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
+"update": 1,
+"values": ["Player Entry"]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("BannerTop/TaikoText:text")
+tracks/6/path = NodePath("BannerTop/TaikoText:first_outline_color")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["Player Entry"]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("BannerTop/TaikoText:first_outline_color")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -579,7 +558,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 40.0
-offset_bottom = 40.000244
+offset_bottom = 40.000122
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -606,21 +585,13 @@ offset_bottom = 869.001
 texture = ExtResource("4_mi5g8")
 metadata/_edit_group_ = true
 
-[node name="Chara" type="TextureRect" parent="BigDons/Player1/Taiko" unique_id=123176742]
+[node name="Chara" parent="BigDons/Player1/Taiko" unique_id=308592822 instance=ExtResource("13_lo8s7")]
+material = SubResource("ShaderMaterial_hoe4v")
 layout_mode = 0
 offset_left = -24.0
 offset_top = -248.0
 offset_right = 360.0
 offset_bottom = 136.0
-texture = SubResource("AtlasTexture_hxrcx")
-script = ExtResource("9_hxrcx")
-idle_texture = ExtResource("7_syqqh")
-idle_frames = 8
-combo_texture = ExtResource("10_0e7yf")
-gogo_texture = ExtResource("11_lo8s7")
-gogo_frames = 16
-misc_texture = ExtResource("12_tobsv")
-metadata/_custom_type_script = "uid://em0hp0g40r3u"
 
 [node name="HoleBottom" type="TextureRect" parent="BigDons/Player1" unique_id=803144163]
 layout_mode = 0
@@ -633,7 +604,7 @@ layout_mode = 0
 offset_left = 88.0
 offset_top = 216.0
 offset_right = 382.0
-offset_bottom = 336.00055
+offset_bottom = 336.0005
 texture = ExtResource("9_eaxmw")
 
 [node name="Player2" type="TextureRect" parent="BigDons" unique_id=1451118920]

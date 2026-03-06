@@ -26,7 +26,7 @@ config/icon="res://icon.svg"
 
 buses/default_bus_layout="uid://86cuj0230l44"
 driver/driver="ALSA"
-driver/output_latency=2
+driver/output_latency=3
 
 [autoload]
 
@@ -35,6 +35,7 @@ SongLoadHandler="*uid://c61qqxk1ljwtm"
 TransitionHandler="*uid://cigmxfu62qpij"
 Globals="*uid://jrhbwmo827k2"
 Configuration="*uid://dc2ub4grkqx3y"
+PuchicharaDB="*uid://b1km40j756vxi"
 
 [display]
 

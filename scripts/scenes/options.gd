@@ -32,6 +32,7 @@ var item_options: Array[Array] = [
 		{ "name": "o_opt_freeplay", "config_option": "Game:free_play", "type": "bool" },
 		{ "name": "o_opt_score_delay", "config_option": "Game:score_delay", "type": "bool" },
 		{ "name": "o_opt_score_type", "config_option": "Game:default_score_mode", "type": "enum", "enum": ScoreHandler.ScoreType, "callback": func(_val): Globals.default_score_mode = Configuration.get_section_key_from_string("Game:default_score_mode") },
+		{ "name": "o_opt_stats", "config_option": "Game:display_stats", "type": "bool" },
 		{ "name": "o_opt_language", "config_option": "Game:language", "type": "lang" },
 	],
 	[], # Controls are handled differently as well

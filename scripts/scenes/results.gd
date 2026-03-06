@@ -104,10 +104,10 @@ func _ready() -> void:
 	_update_course()
 	state = ResultsState.SCORE_TICK
 	fade.play("FadeOut")
-	await fade.animation_finished
-	$CanvasLayer.layer = 0
 	$Music.stream = results_music.pick_random()
 	$Music.play()
+	await fade.animation_finished
+	$CanvasLayer.layer = 0
 
 var fail: Array[bool] = [false, false]
 func check_fail(player: int):
@@ -170,14 +170,16 @@ func _physics_process(delta: float) -> void:
 		turny_thing.rotation_degrees = Engine.get_process_frames() / 10.0
 	
 	var elapsed: float = $Music.get_playback_position() + AudioServer.get_time_since_last_mix()
+	if not $Music.stream: elapsed = 0.0
 	for i in range(Globals.players_entered.size()):
 		var val: bool = Globals.players_entered[i]
 		if not val: continue
 		var donchan: TaikoCharacter = chara[i]
-		donchan.bpm = ($Music.stream as AudioStreamOggVorbis).bpm
+		if $Music.stream:
+			donchan.bpm = ($Music.stream as AudioStreamOggVorbis).bpm
 		if $Music.stream == results_music[1]:
-			elapsed -= 0.5
-		donchan.beat = elapsed * (donchan.bpm / 60.0) / (2.0 if fail[i] else 1.0)
+			elapsed -= 0.25
+		donchan.beat = maxf(0.0, elapsed * (donchan.bpm / 60.0) / (2.0 if fail[i] else 1.0))
 	
 	if state == ResultsState.WAITING or state == ResultsState.SEISEKI_HAPPYO: return
 	

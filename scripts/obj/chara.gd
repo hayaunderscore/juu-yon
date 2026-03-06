@@ -135,9 +135,27 @@ var clear: bool = false
 var idiot: bool = false
 var rainbow: bool = false
 
+@onready var puchichara: Sprite2D = $Puchichara
+var puchi_ref: PuchicharaDB.Puchichara
+
+func update_puchichara():
+	var puchi_name: String = Globals.player_puchi[player_number - 1]
+	var puchi: PuchicharaDB.Puchichara = PuchicharaDB.puchicharas.get(puchi_name)
+	if puchi == null:
+		puchi_ref = null
+		puchichara.hide()
+		return
+	# Load puchichara texture for the first time
+	if puchi.texture == null:
+		puchi.texture = ImageTexture.create_from_image(Image.load_from_file(puchi.image_path))
+	puchichara.texture = puchi.texture
+	puchichara.show()
+	puchi_ref = puchi
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	update_puchichara()
 	# Get textures based on the selected skin
 	var skin: String = Globals.player_skins[player_number - 1]
 	# Read config file
@@ -213,9 +231,12 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 		spin_current_frame = 0
 	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var cur_y: float = position.y
+	var prev_puchi_chara_y: float = puchichara.position.y
 	_combo_tween = create_tween()
 	_combo_tween.tween_property(self, "position:y", position.y - height, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.parallel().tween_property(puchichara, "position:y", prev_puchi_chara_y + height, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	_combo_tween.tween_property(self, "position:y", cur_y, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	_combo_tween.parallel().tween_property(puchichara, "position:y", prev_puchi_chara_y, minf(30 / bpm, 1.0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	_combo_tween.tween_callback(func(): _cant_change_state = false)
 	if return_to_idle: 
 		_combo_tween.tween_property(self, "state", State.IDLE, 0)
@@ -262,8 +283,10 @@ func pop_balloon():
 	balloon_spr.frame = balloon_spr.hframes - 1
 	_balloon_tween = create_tween()
 	var cur_y: float = position.y
+	var prev_puchi_chara_y: float = puchichara.position.y
 	_balloon_tween.set_parallel(true)
 	_balloon_tween.tween_property(self, "position:y", position.y - 72, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_balloon_tween.tween_property(puchichara, "position:y", puchichara.position.y + 72, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	_balloon_tween.tween_property(balloon_spr, "position:y", 32 + 72, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	_balloon_tween.set_parallel(false)
 	_balloon_tween.tween_callback(balloon_spr.hide)
@@ -273,6 +296,7 @@ func pop_balloon():
 		state = State.IDLE
 		position.y = cur_y
 		z_index = prev_z_index
+		puchichara.position.y = prev_puchi_chara_y
 	).set_delay(0.05)
 	_cant_change_state = true
 	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05).set_delay(0.05)
@@ -297,9 +321,31 @@ func fail_balloon():
 
 var spin_current_frame: int = 0
 
+var _puchichara_interval: int = -9999999
+func _update_puchichara_position():
+	if not puchichara.visible: return
+	var sine: float = sin(beat * PI / 2)
+	puchichara.offset.y = sine * 24
+	var interval: int = floori(beat / 2.0)
+	if _puchichara_interval != interval:
+		_puchichara_interval = interval
+		puchichara.frame = abs(_puchichara_interval) % 2
+	# Transfer over alpha and yellowing over to puchichara as well
+	var sh: ShaderMaterial = material as ShaderMaterial
+	var puchi_sh: ShaderMaterial = puchichara.material as ShaderMaterial
+	puchi_sh.set_shader_parameter("mixture", sh.get_shader_parameter("mixture"))
+	puchi_sh.set_shader_parameter("alpha", sh.get_shader_parameter("alpha"))
+	# Same with balloon offsets
+	# Puchicharas are offsetted differently when not in balloon state
+	if state >= State.BALLOON:
+		puchi_sh.set_shader_parameter("offset", balloon_offset)
+	elif get_tree().current_scene is MainScene:
+		puchi_sh.set_shader_parameter("offset", Vector2(320, 24))
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	_update_puchichara_position()
 	var state_key: String = (State.find_key(state) as String).to_lower()
 	if state_key == "idle_still": state_key = "idle"
 	if state_key == "balloon": state_key = "idle"

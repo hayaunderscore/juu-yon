@@ -186,6 +186,29 @@ func add_barline(barline_data: Array, display: bool, time: float, scroll: Vector
 		barline["branch_start"] = true
 	return barline
 
+func get_se_note(list: Array[Dictionary], measure_ms: float, note: Dictionary, ms: float):
+	var type: int = note["note"]
+	if type >= 999: return
+	if list.size() > 1:
+		var last_note: Dictionary = list[-2]
+		if last_note["note"] in [1, 2]:
+			if ms - last_note["time"] < (measure_ms / 8.0):
+				last_note["se_note"] = 1
+			else:
+				last_note["se_note"] = 0
+		else:
+			last_note["se_note"] = 0
+		if list.size() > 3:
+			if list[-4]["note"] == 1 and list[-3]["note"] == 1 and list[-2]["note"] == 1:
+				if (list[-3]["time"] - list[-4]["time"] < (measure_ms/8)) and (list[-2]["time"] - list[-3]["time"] < (measure_ms/8)):
+					if list.size() > 5:
+						if (list[-4]["time"] - list[-5]["time"] >= (measure_ms/8)) and (list[-1]["time"] - list[-2]["time"] >= (measure_ms/8)):
+							list[-3]["se_note"] = 2
+					else:
+						list[-3]["se_note"] = 2
+	else:
+		note["se_note"] = 0
+
 func _load(path: String, original_path: String, use_sub_threads: bool, cache_mode: int) -> Variant:
 	print("Loading TJA file %s" % [path])
 	
@@ -618,6 +641,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 						cur_note["roll_color_mod"] = Color.WHITE
 					nidx += 1
 					current_note_data.append(cur_note)
+					# Phonetizations may be incorrect in branches for now
+					get_se_note(current_note_data, 60 * meter / bpm, no, no["time"])
 				time += 60.0 * (meter / notes_in_measure) / bpm
 		
 		if notes_in_measure == 0:

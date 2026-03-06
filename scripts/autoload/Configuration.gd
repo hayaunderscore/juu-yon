@@ -6,14 +6,17 @@ var config: Dictionary = {
 		"song_folder": "res://songs/",
 		"language": "ja",
 		"score_delay": true,
-		"default_score_mode": ScoreHandler.ScoreType.AC14 as int
+		"default_score_mode": ScoreHandler.ScoreType.AC14 as int,
+		"display_stats": false
 	},
 	"Player1": {
 		"chara": "default",
+		"puchichara": "",
 		"name": "Don-chan",
 	},
 	"Player2": {
 		"chara": "default",
+		"puchichara": "",
 		"name": "Kat-chan",
 	},
 	"Audio": {
@@ -68,3 +71,5 @@ func _ready() -> void:
 	Globals.change_free_play(get_section_key("Game", "free_play"))
 	Globals.player_skins[0] = get_section_key("Player1", "chara")
 	Globals.player_skins[1] = get_section_key("Player2", "chara")
+	Globals.player_puchi[0] = get_section_key("Player1", "puchichara")
+	Globals.player_puchi[1] = get_section_key("Player2", "puchichara")

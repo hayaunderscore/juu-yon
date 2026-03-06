@@ -11,7 +11,6 @@
 [ext_resource type="Script" uid="uid://bhiur5e0pkavk" path="res://scripts/obj/mono_label.gd" id="9_it16x"]
 [ext_resource type="Texture2D" uid="uid://c25kqchha3jqv" path="res://assets/result/result_gauge.png" id="9_jmcgi"]
 [ext_resource type="AudioStream" uid="uid://chobf82lmrx81" path="res://assets/snd/result/seiseki_happyo.wav" id="10_00qb5"]
-[ext_resource type="AudioStream" uid="uid://0podvvpu8ixr" path="res://assets/mus/result_wii.ogg" id="11_00fns"]
 [ext_resource type="Texture2D" uid="uid://cho4uhsh8blcq" path="res://assets/songselect/difficulties/edit.png" id="11_it16x"]
 [ext_resource type="PackedScene" uid="uid://bsq8103sgqhv1" path="res://scenes/transition/fade.tscn" id="12_00fns"]
 [ext_resource type="PackedScene" uid="uid://dia02rykt3sc" path="res://scenes/objects/chara.tscn" id="13_f8ry2"]
@@ -643,7 +642,6 @@ autoplay = true
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=1939828074]
 process_mode = 3
-stream = ExtResource("11_00fns")
 bus = &"Music"
 
 [node name="Fade" parent="." unique_id=2047374311 instance=ExtResource("12_00fns")]

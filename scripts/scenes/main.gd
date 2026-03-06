@@ -545,6 +545,7 @@ func _process(delta: float) -> void:
 	note_drawer.time = elapsed
 	note_drawer.draw_list = chart.draw_data
 	note_drawer.bemani_scroll = chart.flags & (TJAChartInfo.ChartFlags.BMSCROLL | TJAChartInfo.ChartFlags.HBSCROLL)
+	note_drawer.current_combo = taiko.combo
 	
 	%Chara.beat = beat
 	%Soul.beat = beat
@@ -731,22 +732,51 @@ func handle_lingering_notes():
 		var result: JudgeType = hit_note(type, time)
 		current_note_list.pop_back()
 		if result == JudgeType.ROLL: break
-		add_hit_to_gauge(result)
 		branch_condition_count -= 1
 		chart.draw_data.erase(note.get("cached_index", chart.draw_data.find_key(note)))
 
+var good_tween: Tween
+var bad_tween: Tween
+var ok_tween: Tween
 func add_hit_to_gauge(hit: JudgeType):
 	if hit == JudgeType.GOOD:
 		%Gauge.add_good()
 		good_hits += 1
+		%GoodLabel.text = str(good_hits)
+		%GoodLabel.pivot_offset_ratio = Vector2.ONE * 0.5
+		%GoodLabel.pivot_offset = %GoodLabel.size / 2.0
+		if good_tween:
+			good_tween.custom_step(9999)
+			good_tween.kill()
+		good_tween = create_tween()
+		good_tween.tween_property(%GoodLabel, "scale:y", 1.2, 0.1)
+		good_tween.tween_property(%GoodLabel, "scale:y", 1.0, 0.15)
 		branch_condition_count += 1
 	if hit == JudgeType.BAD:
 		%Gauge.add_bad()
 		bad_hits += 1
+		%BadLabel.text = str(bad_hits)
+		%BadLabel.pivot_offset_ratio = Vector2.ONE * 0.5
+		%BadLabel.pivot_offset = %BadLabel.size / 2.0
+		if bad_tween:
+			bad_tween.custom_step(9999)
+			bad_tween.kill()
+		bad_tween = create_tween()
+		bad_tween.tween_property(%BadLabel, "scale:y", 1.2, 0.1)
+		bad_tween.tween_property(%BadLabel, "scale:y", 1.0, 0.15)
 		# branch_condition_count -= 1
 	if hit == JudgeType.OK:
 		%Gauge.add_ok()
 		ok_hits += 1
+		%OkLabel.text = str(ok_hits)
+		%OkLabel.pivot_offset_ratio = Vector2.ONE * 0.5
+		%OkLabel.pivot_offset = %OkLabel.size / 2.0
+		if ok_tween:
+			ok_tween.custom_step(9999)
+			ok_tween.kill()
+		ok_tween = create_tween()
+		ok_tween.tween_property(%OkLabel, "scale:y", 1.2, 0.1)
+		ok_tween.tween_property(%OkLabel, "scale:y", 1.0, 0.15)
 		branch_condition_count += 0.5
 	branch_note_count += 1
 
