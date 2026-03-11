@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://cdridus52x07j"]
+
+[ext_resource type="Texture2D" uid="uid://c4qkeiijpip4q" path="res://assets/game/combo_balloons/drumroll.png" id="1_syoeo"]
+[ext_resource type="Script" uid="uid://dpljvt33bpmmi" path="res://scripts/obj/bubble_counter.gd" id="2_vu8gr"]
+[ext_resource type="Script" uid="uid://bhiur5e0pkavk" path="res://scripts/obj/mono_label.gd" id="3_psy3n"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="4_gg0ob"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_b4c1m"]
+font = ExtResource("4_gg0ob")
+font_size = 64
+outline_size = 16
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Bubble" type="TextureRect" unique_id=1010660350]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_syoeo")
+script = ExtResource("2_vu8gr")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1966562922]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Counter" type="Control" parent="CenterContainer" unique_id=591016629]
+layout_mode = 2
+script = ExtResource("3_psy3n")
+text = "0"
+label_settings = SubResource("LabelSettings_b4c1m")
+horizontal_alignment = 1
+vertical_alignment = 1
+spacing = 48
+visual_offset = Vector2(0, 56)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"

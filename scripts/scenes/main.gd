@@ -354,6 +354,16 @@ func handle_branch_timeline():
 		print(branch_params)
 		handle_branch_params(branch_params)
 
+@onready var _roll_bubble: TaikoBubbleCounter = $RollBubble
+var _roll_tween: Tween
+func roll_bubble(count: int):
+	if _roll_tween:
+		_roll_tween.kill()
+	_roll_bubble.modulate.a = 1.0
+	_roll_bubble.value = count
+	_roll_tween = create_tween()
+	_roll_tween.tween_property(_roll_bubble, "modulate:a", 0.0, 0.2).set_delay(1.5)
+
 var roll_cnt: int = 0
 var current_roll_note: Dictionary
 func auto_roll():
@@ -366,11 +376,13 @@ func auto_roll():
 			create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 			add_note_to_gauge(1, true)
 			drumroll_count += 1
+			roll_bubble(drumroll_count)
 			roll_hits += 1
 		elif current_roll_note.get("note", 0) == 6:
 			create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 			add_note_to_gauge(3, true)
 			drumroll_count += 1
+			roll_bubble(drumroll_count)
 			roll_hits += 1
 		elif current_roll_note.get("note", 0) == 7:
 			if current_roll_note.has("balloon_count"):
@@ -381,7 +393,7 @@ func auto_roll():
 					%Chara.pop_balloon()
 				else:
 					%Chara.start_balloon_animation()
-					%Chara.use_balloon()
+					%Chara.use_balloon(current_roll_note["balloon_count"])
 					create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
 	roll_cnt += 1
 
@@ -409,10 +421,10 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 		# Judge effect
 		var base: Sprite2D = Sprite2D.new()
 		var big_base: Sprite2D = null
-		base.texture = good_tex_effect[0]
-		base.material = add_mat
+		base.texture = effect_table[0]
+		if good:
+			base.material = add_mat
 		base.z_index = 1
-		base.modulate.a = 0.75
 		if big:
 			big_base = Sprite2D.new()
 			big_base.texture = effect_table[1]
@@ -428,7 +440,7 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 		var tween: Tween = create_tween()
 		tween.set_parallel(true)
 		if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
-		tween.tween_property(base, "modulate:a", 0, 0.02).set_delay(0.075)
+		tween.tween_property(base, "modulate:a", 0, 0.05).set_delay(0.1)
 		tween.tween_property(note, "modulate:a", 0, 0.3)
 		tween.set_parallel(false)
 		tween.tween_callback(func():
@@ -602,6 +614,7 @@ func auto_play():
 				roll_cnt = 0
 				current_roll_note = note
 			8:
+				drumroll_count = 0
 				if current_roll_note.get("note", 0) != 7:
 					roll = false
 				
@@ -721,6 +734,7 @@ func handle_lingering_notes():
 				# Still rolling????
 				drumroll_count = 0
 				if current_roll_note.get("note", 0) == 7 and roll:
+					%Chara.start_balloon_animation()
 					%Chara.fail_balloon()
 				roll = false
 				if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
@@ -804,11 +818,13 @@ func handle_note_input(player: int, event: InputEvent):
 				add_note_to_gauge(1, true)
 				roll_hits += 1
 				drumroll_count += 1
+				roll_bubble(drumroll_count)
 			elif current_roll_note.get("note", 0) == 6:
 				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 				add_note_to_gauge(3, true)
 				roll_hits += 1
 				drumroll_count += 1
+				roll_bubble(drumroll_count)
 			elif current_roll_note.get("note", 0) == 7:
 				if current_roll_note.has("balloon_count"):
 					current_roll_note["balloon_count"] -= 1
@@ -818,7 +834,7 @@ func handle_note_input(player: int, event: InputEvent):
 						%Chara.pop_balloon()
 					else:
 						%Chara.start_balloon_animation()
-						%Chara.use_balloon()
+						%Chara.use_balloon(current_roll_note["balloon_count"])
 						create_score_diff(score_handler.calc_balloon(score_real, 0, %Chara.gogo))
 		res = hit_kat(player, event)
 		if res != -1: 
@@ -827,10 +843,12 @@ func handle_note_input(player: int, event: InputEvent):
 				create_score_diff(score_handler.calc_roll(score_real, 1, %Chara.gogo))
 				add_note_to_gauge(2, true)
 				drumroll_count += 1
+				roll_bubble(drumroll_count)
 			elif current_roll_note.get("note", 0) == 6:
 				create_score_diff(score_handler.calc_roll(score_real, 3, %Chara.gogo))
 				add_note_to_gauge(4, true)
 				drumroll_count += 1
+				roll_bubble(drumroll_count)
 
 func _input(event: InputEvent) -> void:
 	if not chart: return

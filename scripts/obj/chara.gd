@@ -246,6 +246,7 @@ func set_alpha(alpha: float):
 	sh.set_shader_parameter("alpha", alpha)
 
 @onready var balloon_spr: Sprite2D = $Balloon
+@onready var _balloon_counter: TaikoBubbleCounter = $Balloon/Bubble
 var prev_z_index: int = -1
 func start_balloon_animation():
 	if state == State.BALLOON: return
@@ -261,11 +262,15 @@ func start_balloon_animation():
 	_cant_change_state = true
 	balloon_spr.frame = 0
 	balloon_spr.offset = balloon_offset
+	var sh: ShaderMaterial = _balloon_counter.material
+	sh.set_shader_parameter("offset", balloon_offset)
+	_balloon_counter.get_node("CenterContainer").position = balloon_offset
+	_balloon_counter.show()
 	balloon_spr.show()
 	frame = 0
 
 var _balloon_tween: Tween
-func use_balloon():
+func use_balloon(count: int = 0):
 	if state != State.BALLOON: return
 	if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
 	_balloon_tween = create_tween()
@@ -273,11 +278,13 @@ func use_balloon():
 	_balloon_tween.tween_property(self, "frame", 0, 0).set_delay(0.05)
 	balloon_spr.frame = clampi(balloon_spr.frame + 1, 0, balloon_spr.hframes - 3)
 	balloon_spr.position.y = 32
+	_balloon_counter.value = count
 
 func pop_balloon():
 	if state != State.BALLOON: return
 	if _balloon_tween: _balloon_tween.custom_step(9999); _balloon_tween.kill()
 	_cant_change_state = false
+	_balloon_counter.hide()
 	state = State.BALLOON_POP
 	frame = 1 # Second frame of MISC animation...
 	balloon_spr.frame = balloon_spr.hframes - 1
@@ -305,6 +312,7 @@ func fail_balloon():
 	if state != State.BALLOON: return
 	if _balloon_tween: _balloon_tween.kill()
 	_cant_change_state = false
+	_balloon_counter.hide()
 	state = State.BALLOON_FAIL
 	_cant_change_state = true
 	frame = 0

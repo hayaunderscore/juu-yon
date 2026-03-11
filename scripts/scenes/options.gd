@@ -143,6 +143,7 @@ func update_lang_toggle(control: Control, locale: String):
 	for child in control.get_children():
 		if child is not TextureRect: continue
 		child.texture.outline_color = Color.BLACK if child.name == rname else Color("#683A17")
+	TJAMeta.text_texture_cache.clear()
 	Globals.change_language(locale)
 
 func update_enum_toggle(control: Control, option: Dictionary, selected: int):

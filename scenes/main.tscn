@@ -32,6 +32,7 @@
 [ext_resource type="Texture2D" uid="uid://bv3mhdwnknuf5" path="res://assets/game/judge/judge_ok.png" id="26_tel4y"]
 [ext_resource type="Texture2D" uid="uid://htanu7exw36e" path="res://assets/game/judge/judge_bad.png" id="27_qkpxi"]
 [ext_resource type="Script" uid="uid://cxmw2hltjm0cn" path="res://scripts/obj/hiddenbyconfig.gd" id="28_qkpxi"]
+[ext_resource type="PackedScene" uid="uid://cdridus52x07j" path="res://scenes/objects/bubble_counter.tscn" id="33_5q0nq"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
 blend_mode = 2
@@ -682,6 +683,15 @@ texture = ExtResource("24_y6deb")
 [node name="Pause" parent="." unique_id=408960774 instance=ExtResource("26_2wyq8")]
 layout_mode = 1
 metadata/_edit_lock_ = true
+
+[node name="RollBubble" parent="." unique_id=1010660350 instance=ExtResource("33_5q0nq")]
+modulate = Color(1, 1, 1, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 228.0
+offset_top = -32.0
+offset_right = 532.0
+offset_bottom = 156.0
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]

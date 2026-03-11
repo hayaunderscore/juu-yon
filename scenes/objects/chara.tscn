@@ -12,10 +12,21 @@
 [ext_resource type="Texture2D" uid="uid://pme4x77r2sb5" path="res://assets/game/balloon.png" id="10_otn75"]
 [ext_resource type="Texture2D" uid="uid://dg062puykqjoe" path="res://assets/game/takane.png" id="11_em0tm"]
 [ext_resource type="Shader" uid="uid://c36p6kjpuf3bt" path="res://assets/shaders/note_yellow.gdshader" id="11_f7jsj"]
+[ext_resource type="PackedScene" uid="uid://cdridus52x07j" path="res://scenes/objects/bubble_counter.tscn" id="11_y8owl"]
+[ext_resource type="Texture2D" uid="uid://2dgb43b8ssk7" path="res://assets/game/combo_balloons/balloon.png" id="13_jtpgp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m0b5q"]
 atlas = ExtResource("1_elhpt")
 region = Rect2(0, 0, 384, 384)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywl84"]
+resource_local_to_scene = true
+shader = ExtResource("11_f7jsj")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/mixture = 0.0
+shader_parameter/lerp_to_add = 0.0
+shader_parameter/alpha = 1.0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmw4"]
 resource_local_to_scene = true
@@ -79,6 +90,15 @@ position = Vector2(168, 32)
 texture = ExtResource("10_otn75")
 centered = false
 hframes = 8
+
+[node name="Bubble" parent="Balloon" unique_id=1010660350 instance=ExtResource("11_y8owl")]
+material = SubResource("ShaderMaterial_ywl84")
+offset_left = 80.0
+offset_top = -8.0
+offset_right = 256.0
+offset_bottom = 152.0
+texture = ExtResource("13_jtpgp")
+bubble_type = 1
 
 [node name="Puchichara" type="Sprite2D" parent="." unique_id=503529880]
 material = SubResource("ShaderMaterial_jvmw4")
