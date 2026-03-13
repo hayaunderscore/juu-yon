@@ -47,8 +47,8 @@ const notes_300: Array[Texture2D] = [
 const se_notes: Array[Array] = [
 	[null], 															# Nothing
 	# Don
-	[preload("uid://gymxg3jdrtk2"), preload("uid://cef2angadifeb"), preload("uid://dlyh0oo3g1aco")],
-	[preload("uid://bwgkiy6kmrkom"), preload("uid://bvtmsp1wpsmry")], 	# Kat
+	[preload("uid://dlyh0oo3g1aco"), preload("uid://gymxg3jdrtk2"), preload("uid://cef2angadifeb")],
+	[preload("uid://bvtmsp1wpsmry"), preload("uid://bwgkiy6kmrkom")], 	# Kat
 	[preload("uid://6ofx77suax8l")], 									# Don (Big)
 	[preload("uid://bvi0rtwdu2f2k")],									# Kat (Big)
 	[preload("uid://dn74sol0vm563")],									# Roll head
@@ -157,7 +157,7 @@ func _draw() -> void:
 							graph = notes_300[type]
 					var graph_size: Vector2 = graph.get_size()
 					var roll_time: float =  note.get("roll_time", 0)
-					if type == 7 and roll_time < time: pos = pos.max(Vector2.ZERO)
+					if type == 7 and roll_time < time and note["time"] <= time: pos = pos.max(Vector2.ZERO)
 					draw_set_transform(pos - graph_size / 2)
 					draw_texture_rect(graph, Rect2(Vector2.ZERO, graph_size), false)
 					var se_graph: Texture2D = se_notes[type][se_note]

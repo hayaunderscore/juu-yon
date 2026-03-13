@@ -62,6 +62,8 @@ enum CommandType {
 	BRANCHEND,
 	GOGOSTART,
 	GOGOEND,
+	START,
+	END,
 }
 
 ## The course of this specific chart.

@@ -351,7 +351,7 @@ func _update_puchichara_position():
 		puchi_sh.set_shader_parameter("offset", Vector2(320, 24))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	_update_puchichara_position()
 	var state_key: String = (State.find_key(state) as String).to_lower()
@@ -365,7 +365,7 @@ func _physics_process(delta: float) -> void:
 	if state >= State.BALLOON:
 		offset = balloon_offset
 	_current_interval = floori(beat / ((1.0 / (max_frames)) * (1.0 / speed)))
-	if _current_interval != _last_interval:
+	if _current_interval != _last_interval and bpm > 0:
 		_last_interval = _current_interval
 		if state != State.MISC and state != State.IDLE_STILL and state != State.BALLOON and state != State.BALLOON_POP and state != State.BALLOON_FAIL:
 			if state != State.SPIN:
@@ -386,8 +386,7 @@ func _physics_process(delta: float) -> void:
 			var rprev: float = sh.get_shader_parameter("lerp_to_add")
 			var rtarget: float = 0.0
 			if state == State.GOGO:
-				if (frame / 4) % 2 == 0:
-					rtarget = 1.0
+				rtarget = 1.0
 			elif frame % 2 == 0:
 				rtarget = 1.0
 			sh.set_shader_parameter("lerp_to_add", lerpf(rprev, rtarget, delta*8))

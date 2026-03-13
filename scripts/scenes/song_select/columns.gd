@@ -133,7 +133,7 @@ func _ready() -> void:
 	back.back = true
 	
 	if songs.size() == 0:
-		OS.alert("No songs found!\nPlease check your song folder.")
+		OS.alert("No songs found! Please check your song folder and try again.\n\nBy default, the songs folder is at songs/\nwhich is searched in the executable directory.\n\nPlease make sure atleast 1 song or genre folder exists in this directory.")
 		get_tree().quit()
 		return
 	

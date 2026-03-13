@@ -3,6 +3,8 @@ extends ResourceFormatLoader
 ## Loads [code].tja[/code] files and returns a [TJA] resource.
 class_name TJAFormatLoader
 
+const END_TIME: float = 2.0
+
 #region Resource Identification
 func _get_recognized_extensions() -> PackedStringArray:
 	return PackedStringArray(["tja"])
@@ -345,6 +347,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				# Add dummy bpm changes to base next bpm changes
 				add_bpm_change.call(time, bpm, chart)
 				add_positive_delay.call(time, 0, chart)
+				# current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.START, "index": current_command_log.size()})
 			else:
 				read_metadata(line, tja)
 			continue
@@ -359,11 +362,14 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				current_barline_data = chart.barline_data
 				current_bpm_log = chart.bpm_log
 				current_positive_delay_log = chart.positive_delay_log
+			current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.END, "index": current_command_log.size()})
 			# More bpm and delay stuff
 			add_bpm_change.call(time, bpm, chart)
 			add_bpm_change.call(tja.wave.get_length(), bpm, chart)
+			add_bpm_change.call(time + END_TIME, bpm, chart)
 			add_positive_delay.call(time, 0, chart)
 			add_positive_delay.call(tja.wave.get_length(), 0, chart)
+			add_positive_delay.call(time + END_TIME, 0, chart)
 			# Calculate beat positions
 			for note in chart.notes:
 				note["beat_position"] = calculate_beat_from_ms(note["time"], chart.bpm_log)
@@ -466,6 +472,10 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 					"gogoend":
 						gogotime = false
 						current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.GOGOEND, "index": current_command_log.size()})
+						# Kidaruma 2000 (originally) ended directly at this point, immediately
+						# No 'FULL COMBO!', no delay, no nothing
+						if tja.title == "Kidaruma 2000":
+							current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.END, "index": current_command_log.size()})
 					# #BARLINEON and #BARLINEOFF
 					"barlineon":
 						barlines = true
@@ -642,7 +652,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 					nidx += 1
 					current_note_data.append(cur_note)
 					# Phonetizations may be incorrect in branches for now
-					get_se_note(current_note_data, 60 * meter / bpm, no, no["time"])
+					get_se_note(current_note_data, 60 * meter / bpm, no, time)
 				time += 60.0 * (meter / notes_in_measure) / bpm
 		
 		if notes_in_measure == 0:

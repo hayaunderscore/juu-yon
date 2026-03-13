@@ -309,6 +309,15 @@ var gogo_tween: Tween
 
 var command_log_offset: int = 0
 
+func end_chart():
+	# TODO 'Full combo!' sound
+	# Fun quirk: Kidaruma 2000 is a *very* special case
+	# The chart ends immediately instead of doing anything else
+	if last_tja_meta.title == "Kidaruma 2000":
+		_on_end_timer_timeout()
+		return
+	$EndTimer.start(TJAFormatLoader.END_TIME)
+
 func handle_play_events():
 	while chart.command_log.size() > 0 and chart.command_log[-1]["time"] < elapsed:
 		var command: Dictionary = chart.command_log.pop_back()
@@ -317,6 +326,8 @@ func handle_play_events():
 		var time: float = command.get("time")
 		if time >= elapsed: continue
 		match type:
+			TJAChartInfo.CommandType.END:
+				end_chart()
 			TJAChartInfo.CommandType.GOGOSTART:
 				if gogo_tween: gogo_tween.kill()
 				gogo_tween = create_tween()
@@ -368,7 +379,7 @@ var roll_cnt: int = 0
 var current_roll_note: Dictionary
 func auto_roll():
 	if not roll: return
-	if roll_cnt % 3 == 0:
+	if roll_cnt % 2 == 0:
 		taiko.taiko_input(0, 1 if auto_don_side else 0, 100, false)
 		auto_don_side = !auto_don_side
 		roll_cnt = 0
@@ -539,8 +550,13 @@ func _process(delta: float) -> void:
 	
 	update_top_back(delta)
 	
-	elapsed = audio.get_playback_position()
-	if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
+	if audio.playing:
+		elapsed = audio.get_playback_position()
+		if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
+	elif $Timer.is_stopped(): # Allow chart to go through even without music
+		elapsed += delta
+	else:
+		elapsed = 0
 	# Compensate for output latency.
 	elapsed -= _latency
 	elapsed -= $Timer.time_left
@@ -628,7 +644,9 @@ const judge_times: Dictionary[TJAChartInfo.CourseType, Array] = {
 	TJAChartInfo.CourseType.EASY: [0.125, 0.108333334, 0.041666667, 0],
 	TJAChartInfo.CourseType.NORMAL: [0.125, 0.108333334, 0.041666667, 0],
 	TJAChartInfo.CourseType.HARD: [0.108333334, 0.075, 0.025, 0],
-	TJAChartInfo.CourseType.ONI: [0.108333334, 0.075, 0.025, 0]
+	TJAChartInfo.CourseType.ONI: [0.108333334, 0.075, 0.025, 0],
+	TJAChartInfo.CourseType.EDIT: [0.108333334, 0.075, 0.025, 0],
+	TJAChartInfo.CourseType.TOWER: [0.108333334, 0.075, 0.025, 0]
 }
 
 var drumrolls: Array[bool] = [false, false, false, false, false, true, true, true, true, true, false, false, true, false]
@@ -875,7 +893,7 @@ func _on_timer_timeout() -> void:
 
 func _on_music_finished() -> void:
 	# TODO results screen
-	SongLoadHandler.results(last_tja_meta, last_true_diff, good_hits + ok_hits, score_real, %Gauge.value, good_hits, ok_hits, bad_hits, roll_hits)
+	pass
 
 func _on_gauge_filled_soul() -> void:
 	%Chara.clear = true
@@ -897,3 +915,6 @@ func _on_gauge_unrainbow_soul() -> void:
 func _on_taiko_combo_callout(combo: int) -> void:
 	%Chara.do_combo_animation()
 	$CalloutBalloon.show_combo(combo)
+
+func _on_end_timer_timeout() -> void:
+	SongLoadHandler.results(last_tja_meta, last_true_diff, good_hits + ok_hits, score_real, %Gauge.value, good_hits, ok_hits, bad_hits, roll_hits)

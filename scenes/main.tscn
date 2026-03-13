@@ -693,6 +693,10 @@ offset_top = -32.0
 offset_right = 532.0
 offset_bottom = 156.0
 
+[node name="EndTimer" type="Timer" parent="." unique_id=2140970583]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]
 [connection signal="rainbow_soul" from="Gauge" to="." method="_on_gauge_rainbow_soul"]
@@ -700,3 +704,4 @@ offset_bottom = 156.0
 [connection signal="unrainbow_soul" from="Gauge" to="." method="_on_gauge_unrainbow_soul"]
 [connection signal="combo_callout" from="TaikoArea/Taiko" to="." method="_on_taiko_combo_callout"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="EndTimer" to="." method="_on_end_timer_timeout"]
