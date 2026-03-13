@@ -35,7 +35,8 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         generateReleaseNotes: true
-        name: Nightly Build
+        allowUpdates: true
+        name: Nightly build
         body: Updated every time a new commit is made on the repository. Will have bugs!
         tag: nightly
         artifacts: ${{ steps.export.outputs.archive_directory }}/*
