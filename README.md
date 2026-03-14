@@ -11,10 +11,13 @@ Cross platform Gen-2 based TJA player and Taiko simulator powered by [Godot](htt
 
 # Features
 
-- Cross platform (supports anything that Godot can run on)
-- Probably performant?
-- Can run (most) 太鼓さん次郎 charts (including gimmick charts)
+- Cross platform (Windows, Linux, Mac, basically supports anything that Godot can run on)
+- High-performance and should run on a shitty iGPU with Vulkan support (like mine!)
+- Low latency input
+- Can run (most) 太鼓さん次郎 charts (including gimmick charts[^1])
 - 4:3 720p, with an aesthetic similar to Gen 2 Taiko (7-14), the Wii and Portable games
+
+[^1]: Gimmick charts that abuse certain TaikoJiro quirks aren't supported yet and don't play properly.
 
 # Controls
 
@@ -22,6 +25,7 @@ Currently only supports keyboard...
 
 - DFJK for the Taiko itself (P1) (left kat, left don, right don, right kat)
 - ERUI for the Player 2 Taiko (WIP; will crash when selected on the entry screen!)
+- SPACE to pause the game and start the game after the notice screen
 
 # FAQ
 
