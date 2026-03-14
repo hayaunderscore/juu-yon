@@ -15,6 +15,12 @@ func _ready() -> void:
 	Globals.control_banner.player_entry.connect(_on_control_banner_player_entry)
 	Globals.control_banner.don_pressed.connect(_on_control_banner_don_pressed)
 	Globals.control_banner.entry_mode = true
+	$BumperP1.scale.y = 0.0
+	$BumperP2.scale.y = 0.0
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property($BumperP1, "scale:y", 1.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_property($BumperP2, "scale:y", 1.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 func _exit_tree() -> void:
 	Globals.control_banner.player_entry.disconnect(_on_control_banner_player_entry)

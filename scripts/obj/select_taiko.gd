@@ -61,7 +61,7 @@ var orig_pos: Vector2
 var did_indicator: bool = false
 
 func _ready() -> void:
-	orig_pos = global_position
+	orig_pos = position
 	anim.play("Default")
 	visible = Globals.players_entered[player]
 	
@@ -88,12 +88,12 @@ func taiko_input(note: int, side: int, volume: int = 100):
 	elif note == 0 and side == 0:
 		don_pressed.emit(player)
 	tween.tween_property(tex, "modulate:a", 0, 0.1).set_delay(0.25)
-	global_position.y = orig_pos.y + 8
+	position.y = orig_pos.y + 8
 	anim.play("RESET")
 	$Timer.start()
 
 func _process(delta: float) -> void:
-	global_position.y = move_toward(global_position.y, orig_pos.y, delta*64)
+	position.y = move_toward(position.y, orig_pos.y, delta*64)
 	
 	var t: String = tr($ControlLabels/Decide.text)
 	if len(t) > 2:

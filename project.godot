@@ -18,8 +18,10 @@ config/name="Juuyon"
 config/name_localized={
 "ja": "太鼓さん十四"
 }
-run/main_scene="uid://vxy0gpt3o0c8"
+run/main_scene="uid://bdden8q0phbya"
 config/features=PackedStringArray("4.6", "Mobile")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [audio]

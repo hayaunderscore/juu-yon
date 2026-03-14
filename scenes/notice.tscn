@@ -1,0 +1,314 @@
+[gd_scene format=3 uid="uid://bdden8q0phbya"]
+
+[ext_resource type="FontFile" uid="uid://cd45agtyt8161" path="res://assets/fonts/ipag.ttf" id="1_plu5e"]
+[ext_resource type="Script" uid="uid://bp3eakx03plw7" path="res://scripts/scenes/notice.gd" id="1_ymp4j"]
+[ext_resource type="Script" uid="uid://bx3a6gprpnff0" path="res://scripts/obj/taiko_text.gd" id="3_tpe07"]
+[ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="4_vwr2p"]
+[ext_resource type="Texture2D" uid="uid://cbij4pljpebjo" path="res://assets/entry/hole.svg" id="5_o5ske"]
+[ext_resource type="Texture2D" uid="uid://bri744ujen0v8" path="res://assets/entry/hole_bottom.svg" id="6_jrudt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ymp4j"]
+font = ExtResource("1_plu5e")
+font_size = 32
+font_color = Color(1, 1, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4rcck"]
+font = ExtResource("1_plu5e")
+font_size = 32
+
+[sub_resource type="FontVariation" id="FontVariation_3dbho"]
+base_font = ExtResource("1_plu5e")
+variation_embolden = 1.0
+
+[sub_resource type="Animation" id="Animation_k6nax"]
+resource_name = "Enter"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BannerTop:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -84), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Bar:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(-480, 0), Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Bar2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(960, 0), Vector2(480, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BigDons:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, 360), Vector2(0, 40)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MarginContainer:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_k4n8u"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BannerTop:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -84)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Bar:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-480, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Bar2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(960, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BigDons:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 360)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MarginContainer:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n8nib"]
+_data = {
+&"Enter": SubResource("Animation_k6nax"),
+&"RESET": SubResource("Animation_k4n8u")
+}
+
+[node name="Control" type="Control" unique_id=952564776]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ymp4j")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=336877719]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=883872426]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1621141850]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=222722183]
+layout_mode = 2
+text = "NOTICE"
+label_settings = SubResource("LabelSettings_ymp4j")
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer" unique_id=409773414]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_ymp4j")
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1225629768]
+layout_mode = 2
+text = "This simulator is not official Taiko no Tatsujin
+material. Please support the official releases.
+
+If you somehow paid for this, you got scammed!
+
+Juuyon is created by Haya. Some assets belong
+to Bandai Namco.
+
+The official repo is always at:
+https://github.com/hayaunderscore/juu-yon"
+label_settings = SubResource("LabelSettings_4rcck")
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer" unique_id=102503141]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_ymp4j")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer" unique_id=1948956983]
+layout_mode = 2
+alignment = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer2" unique_id=808051895]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_plu5e")
+theme_override_fonts/bold_font = SubResource("FontVariation_3dbho")
+theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/bold_font_size = 32
+bbcode_enabled = true
+text = "[center][b][color=blue]Press [/color][color=red]Space [/color][color=blue]to continue[/color][/b][/center]"
+fit_content = true
+scroll_active = false
+
+[node name="Bar" type="ColorRect" parent="." unique_id=2126280759]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_right = -959.99976
+color = Color(0.65882355, 0.08235294, 0, 1)
+
+[node name="Bar2" type="ColorRect" parent="." unique_id=115189585]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 960.0
+offset_right = 479.9995
+color = Color(0.65882355, 0.08235294, 0, 1)
+
+[node name="BannerTop" type="ColorRect" parent="." unique_id=100784172]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.056
+offset_top = -84.0
+offset_bottom = -84.31999
+color = Color(0.10747974, 0.10747973, 0.107479684, 1)
+
+[node name="TaikoText" type="Control" parent="BannerTop" unique_id=1656182633]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 240.0
+offset_bottom = 80.0
+script = ExtResource("3_tpe07")
+font = ExtResource("4_vwr2p")
+text = "Player Entry"
+first_outline_color = Color(0.972549, 0.28235295, 0.15686275, 1)
+second_outline_color = Color(0.105882354, 0.105882354, 0.105882354, 1)
+text_size = 42
+first_outline_size = 28
+second_outline_size = 42
+metadata/_custom_type_script = "uid://bx3a6gprpnff0"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1030272141]
+libraries/ = SubResource("AnimationLibrary_n8nib")
+
+[node name="BigDons" type="Control" parent="." unique_id=439627033]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 360.0
+offset_bottom = 360.00012
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1" type="TextureRect" parent="BigDons" unique_id=1159309995]
+layout_mode = 0
+offset_top = 384.0
+offset_right = 480.0
+offset_bottom = 660.0
+texture = ExtResource("5_o5ske")
+
+[node name="HoleBottom" type="TextureRect" parent="BigDons/Player1" unique_id=2055810147]
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 276.0
+texture = ExtResource("6_jrudt")
+
+[node name="Player2" type="TextureRect" parent="BigDons" unique_id=4223660]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 384.0
+offset_right = 960.0
+offset_bottom = 660.0
+texture = ExtResource("5_o5ske")
+
+[node name="HoleBottom" type="TextureRect" parent="BigDons/Player2" unique_id=83226983]
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 276.0
+texture = ExtResource("6_jrudt")
