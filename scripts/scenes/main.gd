@@ -5,6 +5,7 @@ var chart: TJAChartInfo
 var current_note_list: Array[Dictionary]
 var roll: bool = false
 var score_delay: bool = true
+var runner_type: TaikoRunner.RunnerType = randi_range(TaikoRunner.RunnerType.BIRDS, TaikoRunner.RunnerType.MAX - 1)
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -355,6 +356,7 @@ func handle_play_events():
 				if state != %Chara.State.COMBO:
 					%Chara.state = %Chara.State.IDLE
 			TJAChartInfo.CommandType.BPMCHANGE:
+				bpm = command.get("val1")
 				%Chara.bpm = command.get("val1")
 
 func handle_branch_timeline():
@@ -476,9 +478,22 @@ var ok_hits: int = 0
 var bad_hits: int = 0
 var roll_hits: int = 0
 
+var runner: PackedScene = load("uid://df4qsuaq2603f")
+@onready var runner_spot: Marker2D = $RunnerSpot
+
+func create_runner(tadpole: bool):
+	var type: TaikoRunner.RunnerType = runner_type if not tadpole else TaikoRunner.RunnerType.TADPOLE
+	var runner_node: TaikoRunner = runner.instantiate()
+	runner_node.runner_type = type
+	runner_node.variation = randi_range(0, runner_node.vframes - 1)
+	runner_node.spawned_beat = beat
+	runner_spot.add_child(runner_node)
+	runner_node.jump(bpm)
+
 func judge_create(type: JudgeType):
 	var var_name: String = "%s_hits" % [(JudgeType.find_key(type) as String).to_lower()]
 	add_hit_to_gauge(type)
+	create_runner(type == JudgeType.BAD)
 	var judge: Sprite2D = Sprite2D.new()
 	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
 	judge.modulate.a = 0.0
@@ -545,6 +560,11 @@ func update_top_back(delta: float):
 	if %Chara.idiot: target_clear = 1.0
 	top_back_fail.modulate.a = move_toward(top_back_fail.modulate.a, target_clear, delta * 4)
 
+func update_runners():
+	for child in runner_spot.get_children():
+		if child is TaikoRunner:
+			child.beat = beat
+
 func _process(delta: float) -> void:
 	if not chart: return
 	
@@ -577,7 +597,10 @@ func _process(delta: float) -> void:
 	
 	%Chara.beat = beat
 	%Soul.beat = beat
+	$Mob.beat = beat
 	%SongBorder.size.x = get_viewport_rect().size.x
+	
+	update_runners()
 
 func pop_balloon(note: Dictionary):
 	if note.has("roll_note") and note["roll_note"].has("note") and note["roll_note"]["note"] == 7:
@@ -908,9 +931,11 @@ func _on_gauge_unfilled_soul() -> void:
 func _on_gauge_rainbow_soul() -> void:
 	%Chara.state = %Chara.State.SPIN
 	%Chara.rainbow = true
+	$Mob.enter()
 
 func _on_gauge_unrainbow_soul() -> void:
 	%Chara.rainbow = false
+	$Mob.exit()
 
 func _on_taiko_combo_callout(combo: int) -> void:
 	%Chara.do_combo_animation()

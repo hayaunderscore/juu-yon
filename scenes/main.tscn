@@ -33,6 +33,8 @@
 [ext_resource type="Texture2D" uid="uid://htanu7exw36e" path="res://assets/game/judge/judge_bad.png" id="27_qkpxi"]
 [ext_resource type="Script" uid="uid://cxmw2hltjm0cn" path="res://scripts/obj/hiddenbyconfig.gd" id="28_qkpxi"]
 [ext_resource type="PackedScene" uid="uid://cdridus52x07j" path="res://scenes/objects/bubble_counter.tscn" id="33_5q0nq"]
+[ext_resource type="Texture2D" uid="uid://h3nsnq5cscbm" path="res://assets/game/mob/default.png" id="34_j8jky"]
+[ext_resource type="Script" uid="uid://3xkbrv8bitif" path="res://scripts/obj/mob.gd" id="35_kmb1v"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
 blend_mode = 2
@@ -58,6 +60,19 @@ shader_parameter/offset = Vector2(0, 0)
 [sub_resource type="AtlasTexture" id="AtlasTexture_gqmmt"]
 atlas = ExtResource("4_jbj1t")
 region = Rect2(0, 0, 384, 384)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5q0nq"]
+bg_color = Color(1, 1, 1, 0.15686275)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_dgi5k"]
+font = ExtResource("13_trceg")
+font_size = 20
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Gradient" id="Gradient_y6deb"]
 interpolation_mode = 2
@@ -103,19 +118,6 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5q0nq"]
-bg_color = Color(1, 1, 1, 0.15686275)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-
-[sub_resource type="LabelSettings" id="LabelSettings_dgi5k"]
-font = ExtResource("13_trceg")
-font_size = 20
-outline_size = 12
-outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Curve2D" id="Curve2D_dp3eg"]
 _data = {
@@ -221,6 +223,10 @@ offset_left = 380.0
 offset_top = 12.0
 offset_right = 920.0
 offset_bottom = 108.0
+
+[node name="RunnerSpot" type="Marker2D" parent="." unique_id=1268906237]
+z_index = -1
+position = Vector2(224, 96)
 
 [node name="TaikoArea" type="TextureRect" parent="." unique_id=1702649646]
 layout_mode = 0
@@ -340,6 +346,130 @@ scaling_pivot = Vector2(30, 60)
 scaling_add = Vector2(0, 0.225)
 scaling_speed = 0.05
 return_speed = 0.15
+
+[node name="Stats" type="ColorRect" parent="TaikoArea" unique_id=932039031]
+z_index = -1
+layout_mode = 0
+offset_left = 16.0
+offset_top = 228.0
+offset_right = 464.0
+offset_bottom = 260.0
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats" unique_id=99957940]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer" unique_id=1194916898]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=584204589]
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
+
+[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer" unique_id=1357478706]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1099127153]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1635841479]
+layout_mode = 2
+texture = ExtResource("24_fv21b")
+expand_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1535058915]
+layout_mode = 2
+alignment = 2
+
+[node name="GoodLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer2" unique_id=2141006155]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("25_tel4y")
+text = "0"
+label_settings = SubResource("LabelSettings_dgi5k")
+visual_offset = Vector2(0, 20)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
+
+[node name="PanelContainer2" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=1022428153]
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
+
+[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2" unique_id=1187404772]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer" unique_id=1071423186]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=1863772294]
+layout_mode = 2
+texture = ExtResource("26_tel4y")
+expand_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer" unique_id=1733721146]
+layout_mode = 2
+alignment = 2
+
+[node name="OkLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer/HBoxContainer2" unique_id=24270818]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("25_tel4y")
+text = "0"
+label_settings = SubResource("LabelSettings_dgi5k")
+visual_offset = Vector2(0, 20)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
+
+[node name="PanelContainer3" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=1817181875]
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
+
+[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3" unique_id=1353828213]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer" unique_id=1472089197]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=1573191713]
+layout_mode = 2
+texture = ExtResource("27_qkpxi")
+expand_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer" unique_id=715852269]
+layout_mode = 2
+alignment = 2
+
+[node name="BadLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer/HBoxContainer2" unique_id=75483972]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("25_tel4y")
+text = "0"
+label_settings = SubResource("LabelSettings_dgi5k")
+visual_offset = Vector2(0, 20)
+metadata/_custom_type_script = "uid://bhiur5e0pkavk"
+
+[node name="HiddenByConfig" type="Node" parent="TaikoArea/Stats" unique_id=1383714936]
+script = ExtResource("28_qkpxi")
+target_value = true
+config_name = "display_stats"
+config_section = "Game"
+metadata/_custom_type_script = "uid://cxmw2hltjm0cn"
 
 [node name="Lane" type="TextureRect" parent="TaikoArea" unique_id=252513849]
 z_index = -1
@@ -504,129 +634,6 @@ text = "Don-chan"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Stats" type="ColorRect" parent="TaikoArea" unique_id=932039031]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 228.0
-offset_right = 464.0
-offset_bottom = 260.0
-color = Color(0, 0, 0, 1)
-
-[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats" unique_id=99957940]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer" unique_id=1194916898]
-layout_mode = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=584204589]
-custom_minimum_size = Vector2(144, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
-
-[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer" unique_id=1357478706]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 20
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1099127153]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1635841479]
-layout_mode = 2
-texture = ExtResource("24_fv21b")
-expand_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1535058915]
-layout_mode = 2
-alignment = 2
-
-[node name="GoodLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer2" unique_id=2141006155]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("25_tel4y")
-text = "0"
-label_settings = SubResource("LabelSettings_dgi5k")
-visual_offset = Vector2(0, 20)
-metadata/_custom_type_script = "uid://bhiur5e0pkavk"
-
-[node name="PanelContainer2" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=1022428153]
-custom_minimum_size = Vector2(144, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
-
-[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2" unique_id=1187404772]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 20
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer" unique_id=1071423186]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=1863772294]
-layout_mode = 2
-texture = ExtResource("26_tel4y")
-expand_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer" unique_id=1733721146]
-layout_mode = 2
-alignment = 2
-
-[node name="OkLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer/HBoxContainer2" unique_id=24270818]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("25_tel4y")
-text = "0"
-label_settings = SubResource("LabelSettings_dgi5k")
-visual_offset = Vector2(0, 20)
-metadata/_custom_type_script = "uid://bhiur5e0pkavk"
-
-[node name="PanelContainer3" type="PanelContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer" unique_id=1817181875]
-custom_minimum_size = Vector2(144, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5q0nq")
-
-[node name="MarginContainer" type="MarginContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3" unique_id=1353828213]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 20
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer" unique_id=1472089197]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=1573191713]
-layout_mode = 2
-texture = ExtResource("27_qkpxi")
-expand_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer" unique_id=715852269]
-layout_mode = 2
-alignment = 2
-
-[node name="BadLabel" type="Control" parent="TaikoArea/Stats/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer/HBoxContainer2" unique_id=75483972]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("25_tel4y")
-text = "0"
-label_settings = SubResource("LabelSettings_dgi5k")
-visual_offset = Vector2(0, 20)
-metadata/_custom_type_script = "uid://bhiur5e0pkavk"
-
-[node name="HiddenByConfig" type="Node" parent="TaikoArea/Stats" unique_id=1383714936]
-script = ExtResource("28_qkpxi")
-target_value = true
-config_name = "display_stats"
-config_section = "Game"
-metadata/_custom_type_script = "uid://cxmw2hltjm0cn"
-
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 2.0
 one_shot = true
@@ -696,6 +703,12 @@ offset_bottom = 156.0
 [node name="EndTimer" type="Timer" parent="." unique_id=2140970583]
 wait_time = 2.0
 one_shot = true
+
+[node name="Mob" type="Sprite2D" parent="." unique_id=1029649261]
+position = Vector2(0, 784)
+texture = ExtResource("34_j8jky")
+centered = false
+script = ExtResource("35_kmb1v")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]

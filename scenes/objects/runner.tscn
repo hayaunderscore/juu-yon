@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://df4qsuaq2603f"]
+
+[ext_resource type="Texture2D" uid="uid://bk0vjak1lc7ra" path="res://assets/game/runners/birds.png" id="1_3c2kj"]
+[ext_resource type="Script" uid="uid://dmyfaxh6lc7fd" path="res://scripts/obj/runner.gd" id="1_v1s2o"]
+
+[node name="Runner" type="Sprite2D" unique_id=48587612]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_3c2kj")
+hframes = 7
+vframes = 4
+script = ExtResource("1_v1s2o")
+runner_type = 1
