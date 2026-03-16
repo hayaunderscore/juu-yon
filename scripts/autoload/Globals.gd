@@ -100,6 +100,11 @@ func apply_controls():
 				var side: String = sides[i]
 				var action: String = "%s_%s_%s" % [type, side, idx]
 				var key: String = "%s_%s" % [idx, type]
+				var key_array: Array = Configuration.get_section_key("ControlsKeyboard", key)
+				# Make sure the key array has exactly 2 elements
+				if key_array.size() != 2:
+					Globals.log("CONTROLS", "Error! Too many or too little keys provided in array! (%d)" % key_array.size())
+					return
 				InputMap.action_erase_events(action)
 				# Key event
 				var key_event: InputEventKey = InputEventKey.new()

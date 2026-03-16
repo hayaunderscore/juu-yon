@@ -8,6 +8,10 @@
 
 config_version=5
 
+[addons]
+
+translations_plugin/entry_width=480
+
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true

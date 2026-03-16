@@ -51,3 +51,23 @@ Results,成績発表,Results
 Notes Hit,最大コンボ数,Notes Hit
 Percentage,ただけた率,Percentage
 o_opt_stats,ステータス表示,Stat Display
+notice_description,"このシミュレーターは『太鼓の達人』の公式製品
+ではありません。公式製品をご支援ください。
+
+もし何らかの形で代金を支払った場合は、
+詐欺の被害に遭っています！
+
+『Juuyon』はHayaによって制作されました。
+一部のアセットはバンダイナムコに帰属します。
+
+公式リポジトリはこちらです：
+https://github.com/hayaunderscore/juu-yon","This simulator is not official Taiko no Tatsujin
+material. Please support the official releases.
+
+If you somehow paid for this, you got scammed!
+
+Juuyon is created by Haya. Some assets belong
+to Bandai Namco.
+
+The official repo is always at:
+https://github.com/hayaunderscore/juu-yon"

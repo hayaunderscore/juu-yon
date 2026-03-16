@@ -78,10 +78,10 @@ tracks/4/path = NodePath("MarginContainer:scale")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.2),
+"times": PackedFloat32Array(0, 0.26666668),
 "transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(1, 1), Vector2(2, 1e-05)]
+"values": [Vector2(1, 1), Vector2(0, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_k4n8u"]
@@ -197,18 +197,10 @@ label_settings = SubResource("LabelSettings_ymp4j")
 layout_mode = 2
 label_settings = SubResource("LabelSettings_ymp4j")
 
-[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1225629768]
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1225629768]
+auto_translate_mode = 1
 layout_mode = 2
-text = "This simulator is not official Taiko no Tatsujin
-material. Please support the official releases.
-
-If you somehow paid for this, you got scammed!
-
-Juuyon is created by Haya. Some assets belong
-to Bandai Namco.
-
-The official repo is always at:
-https://github.com/hayaunderscore/juu-yon"
+text = "notice_description"
 label_settings = SubResource("LabelSettings_4rcck")
 
 [node name="Label4" type="Label" parent="MarginContainer/VBoxContainer" unique_id=102503141]
@@ -236,7 +228,7 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -480.0
-offset_right = -959.99976
+offset_right = -959.9996
 color = Color(0.65882355, 0.08235294, 0, 1)
 
 [node name="Bar2" type="ColorRect" parent="." unique_id=115189585]
@@ -245,7 +237,7 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 960.0
-offset_right = 479.9995
+offset_right = 479.99976
 color = Color(0.65882355, 0.08235294, 0, 1)
 
 [node name="BannerTop" type="ColorRect" parent="." unique_id=100784172]
@@ -282,7 +274,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 360.0
-offset_bottom = 360.00012
+offset_bottom = 360.00024
 grow_horizontal = 2
 grow_vertical = 2
 
