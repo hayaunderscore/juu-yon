@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cs0tdie35o5om"]
+
+[ext_resource type="Texture2D" uid="uid://c86n6aob3080k" path="res://assets/game/fireworks/red.png" id="1_remuj"]
+[ext_resource type="Script" uid="uid://3j555q8wq4qa" path="res://scripts/obj/firework.gd" id="2_cg3s4"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_v7gu5"]
+blend_mode = 1
+
+[node name="Firework" type="Sprite2D" unique_id=1307761099]
+material = SubResource("CanvasItemMaterial_v7gu5")
+texture = ExtResource("1_remuj")
+hframes = 16
+script = ExtResource("2_cg3s4")

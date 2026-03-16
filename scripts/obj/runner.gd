@@ -46,7 +46,7 @@ const RUNNER_DICT: Dictionary[RunnerType, Dictionary] = {
 		"frames": 5,
 		"speed": 1.0,
 		"vtype": VerticalAnimType.BOUNCE,
-		"offset": Vector2(0, 48),
+		"offset": Vector2(0, 32),
 	},
 	RunnerType.BALLOONS: {
 		"count": 4,
@@ -93,7 +93,7 @@ func _ready() -> void:
 
 func jump(bpm: float):
 	var tween: Tween = create_tween()
-	tween.tween_property(self, "position:y", -48, minf(15 / bpm, 1.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(self, "position:y", -56, minf(15 / bpm, 1.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	tween.tween_property(self, "position:y", 0, minf(15 / bpm, 1.0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

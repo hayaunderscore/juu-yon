@@ -3,7 +3,7 @@ extends ResourceFormatLoader
 ## Loads [code].tja[/code] files and returns a [TJA] resource.
 class_name TJAFormatLoader
 
-const END_TIME: float = 2.0
+const END_TIME: float = 4.0
 
 #region Resource Identification
 func _get_recognized_extensions() -> PackedStringArray:
@@ -362,7 +362,8 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 				current_barline_data = chart.barline_data
 				current_bpm_log = chart.bpm_log
 				current_positive_delay_log = chart.positive_delay_log
-			current_command_log.append({"time": time, "com": TJAChartInfo.CommandType.END, "index": current_command_log.size()})
+			chart.command_log.append({"time": time, "com": TJAChartInfo.CommandType.END, "index": current_command_log.size()})
+			print(chart.command_log.back())
 			# More bpm and delay stuff
 			add_bpm_change.call(time, bpm, chart)
 			add_bpm_change.call(tja.wave.get_length(), bpm, chart)

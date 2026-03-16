@@ -36,6 +36,11 @@
 [ext_resource type="Texture2D" uid="uid://h3nsnq5cscbm" path="res://assets/game/mob/default.png" id="34_j8jky"]
 [ext_resource type="Script" uid="uid://3xkbrv8bitif" path="res://scripts/obj/mob.gd" id="35_kmb1v"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_j8jky"]
+frequency = 0.0324
+fractal_octaves = 4
+metadata/_preview_in_3d_space_ = true
+
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yc10j"]
 blend_mode = 2
 
@@ -48,7 +53,7 @@ gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5q0nq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j8jky"]
 resource_local_to_scene = true
 shader = ExtResource("7_yq6so")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -134,6 +139,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("1_o5qli")
+firework_noise = SubResource("FastNoiseLite_j8jky")
 metadata/_edit_use_anchors_ = true
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=2006869510]
@@ -199,7 +205,7 @@ region_rect = Rect2(512, 0, 256, 256)
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
-material = SubResource("ShaderMaterial_5q0nq")
+material = SubResource("ShaderMaterial_j8jky")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.042000003
@@ -346,6 +352,9 @@ scaling_pivot = Vector2(30, 60)
 scaling_add = Vector2(0, 0.225)
 scaling_speed = 0.05
 return_speed = 0.15
+niceties_wave_frequency = null
+niceties_wave_amplitude = null
+niceties_wave_phase = null
 
 [node name="Stats" type="ColorRect" parent="TaikoArea" unique_id=932039031]
 z_index = -1
@@ -634,6 +643,13 @@ text = "Don-chan"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="GogoFireworks" type="Control" parent="." unique_id=1684632067]
+anchors_preset = 0
+offset_left = 352.0
+offset_top = 16.0
+offset_right = 944.0
+offset_bottom = 136.0
+
 [node name="Timer" type="Timer" parent="." unique_id=1631690980]
 wait_time = 2.0
 one_shot = true
@@ -671,6 +687,9 @@ scaling_ignore = 2
 scaling_add = Vector2(0, 0.2)
 scaling_speed = 0.05
 return_speed = 0.1
+niceties_wave_frequency = null
+niceties_wave_amplitude = null
+niceties_wave_phase = null
 metadata/_custom_type_script = "uid://c6ihd62tvky4e"
 
 [node name="Footer" type="TextureRect" parent="." unique_id=1953270415]

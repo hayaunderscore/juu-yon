@@ -20,6 +20,26 @@ class_name TaikoNumber
 @export var scaling_speed: float = 0.15
 @export var return_speed: float = 0.2
 
+@export_group("Odd Niceties", "niceties_")
+@export var niceties_wave_frequency: float = 1.0:
+	set(value):
+		if value == niceties_wave_frequency: return
+		niceties_wave_frequency = value
+		if scaling_add.length() > 0: return
+		queue_redraw()
+@export var niceties_wave_amplitude: float = 0.0:
+	set(value):
+		if value == niceties_wave_amplitude: return
+		niceties_wave_amplitude = value
+		if scaling_add.length() > 0: return
+		queue_redraw()
+@export var niceties_wave_phase: float = 0.0:
+	set(value):
+		if value == niceties_wave_phase: return
+		niceties_wave_phase = value
+		if scaling_add.length() > 0: return
+		queue_redraw()
+
 var letters_scale: Array[Vector2]
 var letters_tween: Array[Tween]
 var last_len: int
@@ -93,6 +113,7 @@ func _draw() -> void:
 		var scal: Vector2 = letters_scale[i] if i < letters_scale.size() else Vector2.ONE
 		# scal = scal.max(Vector2.ONE)
 		if not chr.is_valid_int(): continue
+		pos.y = (size.y - font_size.y) + (sin((niceties_wave_phase + ((i + 1) * 0.1)) * niceties_wave_frequency) * niceties_wave_amplitude)
 		draw_set_transform(pos + scaling_pivot, 0, scal)
 		draw_texture_rect_region(font, Rect2(-scaling_pivot, font_size), Rect2(Vector2(chr.to_int() * font_size.x, 0.0), font_size))
 		pos.x += font_size.x + glyph_offset

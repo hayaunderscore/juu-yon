@@ -32,6 +32,8 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	randomize()
+	firework_noise.seed = randi()
 	pick_random_bg()
 	pick_random_footer()
 	%Nametag.text = Configuration.get_section_key_from_string("Player1:name") if not Globals.players_auto[0] else tr("game_mod_auto")
@@ -509,7 +511,11 @@ func judge_create(type: JudgeType):
 	
 var note_follow: PackedScene = preload("uid://bpksjoo45newj")
 var note_rainbow: PackedScene = preload("uid://mfmyctup3c1t")
+var gogo_firework: PackedScene = preload("uid://cs0tdie35o5om")
 @onready var note_curve: Path2D = $NoteCurvePath
+@onready var firework_rect: Control = $GogoFireworks
+@export var firework_noise: FastNoiseLite
+var noise_y: float = 0.0
 func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType = JudgeType.GOOD):
 	var balloon: bool = false
 	var balloon_tex: AtlasTexture
@@ -528,6 +534,7 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 	var spr: Sprite2D = note.get_child(0)
 	var anim: AnimationPlayer = note.get_node("AnimationPlayer")
 	spr.texture = TaikoNoteDrawer.notes[type]
+	note.type = type
 	note_curve.add_child(note)
 	# Create judge effect
 	if not skip_judge: 
@@ -537,6 +544,16 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 			j += 1
 		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
 		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
+	# Gogo fireworks lmao
+	if %Chara.gogo and (type == 3 or type == 4) and %Gauge.value >= %Gauge.clear_start:
+		for i in range(4):
+			noise_y += 1
+			var firework: TaikoFirework = gogo_firework.instantiate()
+			firework.type = randi_range(TaikoFirework.FireworkType.GOGO_BLUE as int, TaikoFirework.FireworkType.GOGO_RED as int) as TaikoFirework.FireworkType
+			firework_rect.add_child(firework)
+			firework.scale = Vector2.ONE * randf_range(1.0, 1.5)
+			firework.position.x = randf_range(0.0, firework_rect.size.x)
+			firework.position.y = randf_range(0.0, firework_rect.size.y)
 	# TODO transition
 	var tween: Tween = create_tween()
 	tween.tween_property(note, "progress_ratio", 1.0, 0.35)
