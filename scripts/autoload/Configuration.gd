@@ -22,7 +22,15 @@ var config: Dictionary = {
 	"Audio": {
 		"music": 100,
 		"sound": 100,
-	}
+	},
+	"ControlsKeyboard": {
+		"p1_kat": ['D', 'K'],
+		"p1_don": ['F', 'J'],
+		"p2_kat": ['E', 'I'],
+		"p2_don": ['R', 'U'],
+		"pause": "Space"
+	},
+	# TODO gamepad controls
 }
 var config_path: String = "user://config.cfg"
 
@@ -69,6 +77,7 @@ func _ready() -> void:
 	
 	TranslationServer.set_locale(get_section_key("Game", "language"))
 	Globals.change_free_play(get_section_key("Game", "free_play"))
+	Globals.apply_controls()
 	Globals.player_skins[0] = get_section_key("Player1", "chara")
 	Globals.player_skins[1] = get_section_key("Player2", "chara")
 	Globals.player_puchi[0] = get_section_key("Player1", "puchichara")

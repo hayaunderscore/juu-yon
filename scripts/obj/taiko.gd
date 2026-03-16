@@ -15,6 +15,7 @@ class_name TaikoDrum
 	"dong.wav", "ka.wav"
 ]
 @onready var combo_numbers: TaikoNumber = $ComboText
+@onready var flower: Sprite2D = $Flower
 var counter_atlas: Texture2D = preload("res://assets/game/combo/taiko/counter.png")
 var counter_100_atlas: Texture2D = preload("res://assets/game/combo/taiko/counter_100.png")
 var last_tweens: Array[Array] = [
@@ -25,6 +26,7 @@ var last_ids: Array[Array] = [
 	[-1, -1],
 	[-1, -1]
 ]
+var flower_tween: Tween
 var combo: int = 0:
 	set(n_combo):
 		combo = n_combo
@@ -42,6 +44,17 @@ var combo: int = 0:
 		# combo_numbers.scale.y = 1.2
 		if combo % combo_callout_min == 0 and combo > 0:
 			combo_callout.emit(combo)
+		# Handle flower stuff
+		if combo % 100 == 0 and combo > 0:
+			if flower_tween: flower_tween.kill()
+			flower_tween = create_tween()
+			if combo == 100:
+				flower.modulate.a = 1.0
+				flower.scale = Vector2.ZERO
+				flower_tween.tween_property(flower, "scale", Vector2.ONE, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+			else:
+				flower_tween.tween_property(flower, "modulate:a", 1.0, 0.1)
+			flower_tween.tween_property(flower, "modulate:a", 0.0, 0.1).set_delay(4.7)
 
 signal combo_callout(combo: int)
 

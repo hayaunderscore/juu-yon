@@ -18,6 +18,7 @@ func change_scene_to_file(path: String, song_select: bool = false, color: Color 
 	Globals.control_banner.visible = song_select
 	if song_select:
 		Globals.song_name = ""
+		Globals.song_difficulty = ""
 	get_tree().change_scene_to_file(path)
 	await get_tree().scene_changed
 	if song_select: anim.play("MoveOut")

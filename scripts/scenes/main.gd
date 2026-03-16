@@ -262,6 +262,21 @@ func load_tja(new_tja: TJAMeta, diff: int):
 	audio.stream = tja.wave
 	%SongTitle.text = tja.title_localized.get(TranslationServer.get_locale(), tja.title)
 	Globals.song_name = %SongTitle.text
+	Globals.song_difficulty = tr((TJAChartInfo.CourseType.find_key(chart.course) as String).to_pascal_case())
+	Globals.song_stars = chart.level
+	var max_stars: int = 0
+	match chart.course:
+		TJAChartInfo.CourseType.EASY:
+			max_stars = 5
+		TJAChartInfo.CourseType.NORMAL:
+			max_stars = 7
+		TJAChartInfo.CourseType.HARD:
+			max_stars = 8
+		TJAChartInfo.CourseType.ONI:
+			max_stars = 10
+		TJAChartInfo.CourseType.EDIT:
+			max_stars = 10
+	Globals.max_stars = max_stars
 	audio.volume_linear = tja.song_volume / 100.0
 	%Chara.bpm = tja.start_bpm
 	$Symbol.texture = difficulty_icons[chart.course]

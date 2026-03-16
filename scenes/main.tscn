@@ -17,10 +17,12 @@
 [ext_resource type="Texture2D" uid="uid://b1w8cy2l6dj4f" path="res://assets/game/lane/lane.png" id="10_a8y0u"]
 [ext_resource type="Script" uid="uid://c6ihd62tvky4e" path="res://scripts/obj/taiko_number.gd" id="10_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://bcfj0snnteyw7" path="res://assets/game/combo/taiko/counter_100.png" id="11_jkv2x"]
+[ext_resource type="Script" uid="uid://11s6n8elyvuc" path="res://scripts/obj/player_lane.gd" id="11_kmb1v"]
 [ext_resource type="Texture2D" uid="uid://d1oi5rdfqby8" path="res://assets/game/lane/judge.png" id="11_trceg"]
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
+[ext_resource type="Texture2D" uid="uid://dljrgp74jl37o" path="res://assets/game/taiko/flower.png" id="17_fuf3a"]
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
 [ext_resource type="Texture2D" uid="uid://c18t0odfy2g45" path="res://assets/game/lane/branch_indicator/normal.png" id="18_og1vs"]
 [ext_resource type="PackedScene" uid="uid://de7ff4q8ai73x" path="res://scenes/objects/callout_balloon.tscn" id="22_jscy8"]
@@ -241,6 +243,7 @@ offset_top = 156.0
 offset_right = 176.0
 offset_bottom = 348.0
 texture = ExtResource("3_85g3d")
+script = ExtResource("11_kmb1v")
 
 [node name="SongBorder" type="ColorRect" parent="TaikoArea" unique_id=393156074]
 unique_name_in_owner = true
@@ -333,6 +336,11 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("8_trceg")
 flip_h = true
+
+[node name="Flower" type="Sprite2D" parent="TaikoArea/Taiko" unique_id=469273646]
+position = Vector2(96, 76)
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("17_fuf3a")
 
 [node name="ComboText" type="Control" parent="TaikoArea/Taiko" unique_id=592098379]
 visible = false

@@ -1,6 +1,25 @@
 extends Node
 
-var song_name: String
+var song_name: String:
+	set(value):
+		if value == song_name: return
+		song_name = value
+		_update_song_window_title()
+var song_difficulty: String:
+	set(value):
+		if value == song_difficulty: return
+		song_difficulty = value
+		_update_song_window_title()
+var song_stars: int:
+	set(value):
+		if value == song_stars: return
+		song_stars = value
+		_update_song_window_title()
+var max_stars: int:
+	set(value):
+		if value == max_stars: return
+		max_stars = value
+		_update_song_window_title()
 var app_title: String = ProjectSettings.get("application/config/name")
 var players_entered: Array[bool] = [false, false]
 var players_auto: Array[bool] = [false, false]
@@ -13,6 +32,29 @@ var banner_scene: PackedScene = preload("res://scenes/objects/control_banner.tsc
 var control_banner: TaikoControlBanner
 
 signal language_changed(locale: String)
+
+var _song_window_title: String = ""
+var _updating: bool = false
+func _update_song_window_title():
+	if not _updating:
+		_update_song_window_title_deferred.call_deferred()
+		_updating = true
+
+func _update_song_window_title_deferred():
+	var title: String = song_name
+	if not song_difficulty.is_empty():
+		title += " (%s " % [song_difficulty]
+		var star_count: int = maxi(song_stars, max_stars)
+		for i in range(star_count):
+			if i >= song_stars:
+				title += "☆"
+			else:
+				title += "★"
+		title += ")"
+	if not title.is_empty():
+		title = " - " + title
+	_song_window_title = title
+	_updating = false
 
 func _ready() -> void:
 	# Disable input accumulation, you dunce
@@ -39,6 +81,31 @@ func change_language(locale: String):
 	Configuration.set_section_key_from_string("Game:language", locale)
 	language_changed.emit(locale)
 
+const MISC_KEYS: PackedStringArray = ["pause"]
+
+func apply_controls():
+	# Miscellaneous keys first
+	for action in []:
+		InputMap.action_erase_events(action)
+		# Key event
+		var key_event: InputEventKey = InputEventKey.new()
+		key_event.keycode = OS.find_keycode_from_string(Configuration.get_section_key("ControlsKeyboard", action))
+		InputMap.action_add_event(action, key_event)
+	# Don and Kat
+	for player in range(2):
+		var idx: String = "p%d" % [player + 1]
+		for type in ["don", "kat"]:
+			var sides: PackedStringArray = ["left", "right"]
+			for i in range(sides.size()):
+				var side: String = sides[i]
+				var action: String = "%s_%s_%s" % [type, side, idx]
+				var key: String = "%s_%s" % [idx, type]
+				InputMap.action_erase_events(action)
+				# Key event
+				var key_event: InputEventKey = InputEventKey.new()
+				key_event.keycode = OS.find_keycode_from_string(Configuration.get_section_key("ControlsKeyboard", key)[i])
+				InputMap.action_add_event(action, key_event)
+
 func sort_notes(a: Dictionary, b: Dictionary):
 	if a["time"] == b["time"]:
 		# Use index as a tie breaker
@@ -53,11 +120,8 @@ func unsort_notes(a: Dictionary, b: Dictionary):
 
 func _process(_delta: float) -> void:
 	var window: Window = get_window()
-	var title: String = song_name
-	if not title.is_empty():
-		title = " - " + title
-	title += " - %d FPS" % [Engine.get_frames_per_second()]
-	window.title = app_title + title
+	var title: String = " - %d FPS" % [Engine.get_frames_per_second()]
+	window.title = app_title + _song_window_title + title
 
 func log(category: String, msg: String):
 	print_rich("[color=green][b]%s[/b][color=white]: %s" % [category, msg])

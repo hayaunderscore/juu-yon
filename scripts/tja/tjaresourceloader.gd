@@ -202,9 +202,9 @@ func get_se_note(list: Array[Dictionary], measure_ms: float, note: Dictionary, m
 			last_note["se_note"] = 0
 		if list.size() > 3:
 			if list[-4]["note"] == 1 and list[-3]["note"] == 1 and list[-2]["note"] == 1:
-				if (list[-3]["time"] - list[-4]["time"] < (measure_ms/8)) and (list[-2]["time"] - list[-3]["time"] < (measure_ms/8)):
+				if (list[-3]["time"] - list[-4]["time"] < (measure_ms/8.0)) and (list[-2]["time"] - list[-3]["time"] < (measure_ms/8.0)):
 					if list.size() > 5:
-						if (list[-4]["time"] - list[-5]["time"] >= (measure_ms/8)) and (list[-1]["time"] - list[-2]["time"] >= (measure_ms/8)):
+						if (list[-4]["time"] - list[-5]["time"] >= (measure_ms/8.0)) and (list[-1]["time"] - list[-2]["time"] >= (measure_ms/8.0)):
 							list[-3]["se_note"] = 2
 					else:
 						list[-3]["se_note"] = 2
