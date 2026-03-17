@@ -61,6 +61,10 @@ func read_metadata(line: String, tja: TJA):
 			tja.song_volume = header_value.to_int()
 		"sevol":
 			tja.se_volume = header_value.to_int()
+		"bgmovie":
+			tja.movie_path = header_value
+		"movieoffset":
+			tja.movie_offset = header_value.to_float()
 		# Handle chart values
 		"course", "level", "balloon", "scoremode", "scoreinit", "scorediff":
 			tja.chart_meta[header_name.to_lower()] = header_value

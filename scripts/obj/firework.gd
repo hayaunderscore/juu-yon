@@ -35,7 +35,7 @@ func _update_type(val: FireworkType):
 	type = val
 	texture = TEXTURES[type]
 	hframes = TEXTURES_HFRAMES[type]
-	_target_interval = 2 if type <= FireworkType.BLUE else 8
+	_target_interval = 2 if type <= FireworkType.BLUE else 4
 
 var increased: bool = false
 var interval: int = 0

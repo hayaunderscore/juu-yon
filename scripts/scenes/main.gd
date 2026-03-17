@@ -30,6 +30,8 @@ func calculate_beat_from_ms(ms: float, bpmevents: Array[Dictionary]):
 		break
 	return current_beat
 
+@onready var video_player: VideoStreamPlayer = $Video
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	randomize()
@@ -39,6 +41,7 @@ func _ready() -> void:
 	%Nametag.text = Configuration.get_section_key_from_string("Player1:name") if not Globals.players_auto[0] else tr("game_mod_auto")
 	if len(%Nametag.text) > 8:
 		%Nametag.scale.x = 8.0 / len(%Nametag.text)
+	video_player.volume = 0.0
 
 # TODO 2P
 var bg_path: String = "res://assets/game/top_bg/p1/"
@@ -249,6 +252,7 @@ func reload_tja():
 	load_tja(last_tja_meta, last_diff)
 	%Chara.reset()
 
+var movie_offset: float = 0.0
 func load_tja(new_tja: TJAMeta, diff: int):
 	last_tja_meta = new_tja
 	last_diff = diff
@@ -278,6 +282,14 @@ func load_tja(new_tja: TJAMeta, diff: int):
 			max_stars = 10
 	Globals.max_stars = max_stars
 	audio.volume_linear = tja.song_volume / 100.0
+	if not tja.movie_path.is_empty() and FileAccess.file_exists(tja.path + tja.movie_path):
+		movie_offset = tja.movie_offset
+		var stream: FFmpegVideoStream = FFmpegVideoStream.new()
+		stream.file = tja.path + tja.movie_path
+		video_player.stream = stream
+		video_player.play()
+		video_player.stream_position = -movie_offset - $Timer.wait_time - tja.offset
+		video_player.stream_position -= AudioServer.get_time_to_next_mix() + _latency
 	%Chara.bpm = tja.start_bpm
 	$Symbol.texture = difficulty_icons[chart.course]
 	$Symbol/SymbolHighlight.texture = difficulty_icons[chart.course]
@@ -560,7 +572,7 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
 		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
 	# Gogo fireworks lmao
-	if %Chara.gogo and (type == 3 or type == 4) and %Gauge.value >= %Gauge.clear_start:
+	if %Chara.gogo and %Gauge.value >= %Gauge.clear_start:
 		for i in range(4):
 			noise_y += 1
 			var firework: TaikoFirework = gogo_firework.instantiate()

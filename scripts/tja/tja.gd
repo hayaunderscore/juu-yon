@@ -37,6 +37,11 @@ class_name TJA
 ## Sound effect volume.
 @export var se_volume: int = 100
 
+## Movie path.
+@export var movie_path: String
+## Movie offset.
+@export var movie_offset: float = 0.0
+
 ## Chart info temp values
 @export var chart_meta: Dictionary[String, String]
 

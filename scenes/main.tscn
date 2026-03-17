@@ -55,7 +55,7 @@ gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_j8jky"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fuf3a"]
 resource_local_to_scene = true
 shader = ExtResource("7_yq6so")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -147,6 +147,15 @@ metadata/_edit_use_anchors_ = true
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=2006869510]
 bus = &"Music"
 
+[node name="Video" type="VideoStreamPlayer" parent="." unique_id=1535766552]
+z_index = -512
+layout_mode = 0
+offset_top = 384.0
+offset_right = 960.0
+offset_bottom = 648.0
+volume_db = -80.0
+expand = true
+
 [node name="Parallax2D" type="Parallax2D" parent="." unique_id=1398433241]
 z_index = -50
 repeat_size = Vector2(384, 0)
@@ -207,7 +216,7 @@ region_rect = Rect2(512, 0, 256, 256)
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
-material = SubResource("ShaderMaterial_j8jky")
+material = SubResource("ShaderMaterial_fuf3a")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.042000003
@@ -360,9 +369,6 @@ scaling_pivot = Vector2(30, 60)
 scaling_add = Vector2(0, 0.225)
 scaling_speed = 0.05
 return_speed = 0.15
-niceties_wave_frequency = null
-niceties_wave_amplitude = null
-niceties_wave_phase = null
 
 [node name="Stats" type="ColorRect" parent="TaikoArea" unique_id=932039031]
 z_index = -1
@@ -652,6 +658,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GogoFireworks" type="Control" parent="." unique_id=1684632067]
+z_index = -1
 anchors_preset = 0
 offset_left = 352.0
 offset_top = 16.0
@@ -695,9 +702,6 @@ scaling_ignore = 2
 scaling_add = Vector2(0, 0.2)
 scaling_speed = 0.05
 return_speed = 0.1
-niceties_wave_frequency = null
-niceties_wave_amplitude = null
-niceties_wave_phase = null
 metadata/_custom_type_script = "uid://c6ihd62tvky4e"
 
 [node name="Footer" type="TextureRect" parent="." unique_id=1953270415]
