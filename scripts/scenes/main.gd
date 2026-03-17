@@ -6,6 +6,7 @@ var current_note_list: Array[Dictionary]
 var roll: bool = false
 var score_delay: bool = true
 var runner_type: TaikoRunner.RunnerType = randi_range(TaikoRunner.RunnerType.BIRDS, TaikoRunner.RunnerType.MAX - 1)
+var _filter: OneEuroFilter
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -42,6 +43,8 @@ func _ready() -> void:
 	if len(%Nametag.text) > 8:
 		%Nametag.scale.x = 8.0 / len(%Nametag.text)
 	video_player.volume = 0.0
+	# Init filter, obviously
+	_filter = OneEuroFilter.new({"cutoff": 0.1, "beta": 5})
 
 # TODO 2P
 var bg_path: String = "res://assets/game/top_bg/p1/"
@@ -247,6 +250,7 @@ func handle_branch_params(command: Dictionary):
 var last_tja_meta: TJAMeta
 var last_diff: int
 var last_true_diff: int
+var _song_system_start: float = 0.0
 
 func reload_tja():
 	load_tja(last_tja_meta, last_diff)
@@ -290,6 +294,13 @@ func load_tja(new_tja: TJAMeta, diff: int):
 		video_player.play()
 		video_player.stream_position = -movie_offset - $Timer.wait_time - tja.offset
 		video_player.stream_position -= AudioServer.get_time_to_next_mix() + _latency
+	# Aha!
+	_song_system_start = (
+		Time.get_ticks_usec() / 1000000.0
+		+ AudioServer.get_time_to_next_mix()
+		+ _latency
+	)
+	
 	%Chara.bpm = tja.start_bpm
 	$Symbol.texture = difficulty_icons[chart.course]
 	$Symbol/SymbolHighlight.texture = difficulty_icons[chart.course]
@@ -327,6 +338,9 @@ func create_score_diff(val: int):
 	%Score.value += diff
 
 var elapsed: float = 0.0
+var _song_audio_elapsed: float = 0.0
+var _song_system_elapsed: float = 0.0
+var _filtered_elapsed: float = 0.0
 var beat: float = 0.0
 var bpm: float = 120.0
 
@@ -611,21 +625,38 @@ func update_runners():
 		if child is TaikoRunner:
 			child.beat = beat
 
+func update_elapsed(delta):
+	if not Configuration.get_section_key("Game", "one_euro"):
+		if audio.playing:
+			elapsed = audio.get_playback_position()
+			if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
+		elif $Timer.is_stopped(): # Allow chart to go through even without music
+			elapsed += delta
+		else:
+			elapsed = 0
+		# Compensate for output latency.
+		elapsed -= _latency
+		elapsed -= $Timer.time_left
+		return
+	
+	# _song_audio_elapsed
+	if audio.playing:
+		_song_audio_elapsed = audio.get_playback_position()
+		if !audio.stream_paused: _song_audio_elapsed += AudioServer.get_time_since_last_mix()
+	elif $Timer.is_stopped(): # Allow chart to go through even without music
+		_song_audio_elapsed += delta
+	else:
+		_song_audio_elapsed = 0
+	
+	# _song_system_elapsed
+	_song_system_elapsed = (Time.get_ticks_usec() / 1000000.0) - _song_system_start
+	_song_system_elapsed *= audio.pitch_scale
+
 func _process(delta: float) -> void:
 	if not chart: return
 	
 	update_top_back(delta)
-	
-	if audio.playing:
-		elapsed = audio.get_playback_position()
-		if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
-	elif $Timer.is_stopped(): # Allow chart to go through even without music
-		elapsed += delta
-	else:
-		elapsed = 0
-	# Compensate for output latency.
-	elapsed -= _latency
-	elapsed -= $Timer.time_left
+	update_elapsed(delta)
 	
 	beat = calculate_beat_from_ms(elapsed, chart.bpm_log)
 	var min: float = floor(elapsed / 60.0)
@@ -945,6 +976,12 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if not chart: return
+	
+	if Configuration.get_section_key("Game", "one_euro"):
+		var audio_system_delta: float = _song_audio_elapsed - _song_system_elapsed
+		_filtered_elapsed = _filter.filter(audio_system_delta, delta)
+		elapsed = _song_system_elapsed + _filtered_elapsed
+		elapsed -= $Timer.time_left
 	
 	if Input.is_action_just_pressed("pause") and elapsed > -1:
 		$Pause.open()

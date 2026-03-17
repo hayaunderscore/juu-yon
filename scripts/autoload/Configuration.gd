@@ -7,7 +7,9 @@ var config: Dictionary = {
 		"language": "ja",
 		"score_delay": true,
 		"default_score_mode": ScoreHandler.ScoreType.AC14 as int,
-		"display_stats": false
+		"display_stats": false,
+		"one_euro": false,
+		"max_fps": 60,
 	},
 	"Player1": {
 		"chara": "default",
@@ -78,6 +80,7 @@ func _ready() -> void:
 	TranslationServer.set_locale(get_section_key("Game", "language"))
 	Globals.change_free_play(get_section_key("Game", "free_play"))
 	Globals.apply_controls()
+	Engine.max_fps = get_section_key("Game", "max_fps")
 	Globals.player_skins[0] = get_section_key("Player1", "chara")
 	Globals.player_skins[1] = get_section_key("Player2", "chara")
 	Globals.player_puchi[0] = get_section_key("Player1", "puchichara")
