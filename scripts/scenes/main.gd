@@ -467,6 +467,7 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 		if good:
 			base.material = add_mat
 		base.z_index = 1
+		base.scale = Vector2.ZERO
 		if big:
 			big_base = Sprite2D.new()
 			big_base.texture = effect_table[1]
@@ -481,6 +482,7 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 		# Tween both of these together
 		var tween: Tween = create_tween()
 		tween.set_parallel(true)
+		tween.tween_property(base, "scale", Vector2.ONE, 0.05)
 		if is_instance_valid(big_base): tween.tween_property(big_base, "scale", Vector2.ONE, 0.1)
 		tween.tween_property(base, "modulate:a", 0, 0.05).set_delay(0.1)
 		tween.tween_property(note, "modulate:a", 0, 0.3)
