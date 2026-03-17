@@ -7,6 +7,7 @@ var roll: bool = false
 var score_delay: bool = true
 var runner_type: TaikoRunner.RunnerType = randi_range(TaikoRunner.RunnerType.BIRDS, TaikoRunner.RunnerType.MAX - 1)
 var _filter: OneEuroFilter
+@onready var _pause_time: PauseTimeHandle = $PauseTime
 
 @onready var audio: AudioStreamPlayer = $Music
 @onready var taiko: TaikoDrum = $TaikoArea/Taiko
@@ -649,8 +650,10 @@ func update_elapsed(delta):
 		_song_audio_elapsed = 0
 	
 	# _song_system_elapsed
-	_song_system_elapsed = (Time.get_ticks_usec() / 1000000.0) - _song_system_start
+	_song_system_elapsed = (Time.get_ticks_usec() / 1000000.0) - _song_system_start - $Timer.wait_time
 	_song_system_elapsed *= audio.pitch_scale
+	# Handle pausing properly...
+	_song_system_elapsed -= _pause_time.time
 
 func _process(delta: float) -> void:
 	if not chart: return
@@ -982,6 +985,7 @@ func _physics_process(delta: float) -> void:
 		_filtered_elapsed = _filter.filter(audio_system_delta, delta)
 		elapsed = _song_system_elapsed + _filtered_elapsed
 		elapsed -= $Timer.time_left
+		# print("delta: %.2f, filtered: %.2f, system: %.2f, audio: %.2f,, final %.2f" % [audio_system_delta, _filtered_elapsed, _song_system_elapsed, _song_audio_elapsed, elapsed])
 	
 	if Input.is_action_just_pressed("pause") and elapsed > -1:
 		$Pause.open()

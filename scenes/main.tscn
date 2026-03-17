@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://cdridus52x07j" path="res://scenes/objects/bubble_counter.tscn" id="33_5q0nq"]
 [ext_resource type="Texture2D" uid="uid://h3nsnq5cscbm" path="res://assets/game/mob/default.png" id="34_j8jky"]
 [ext_resource type="Script" uid="uid://3xkbrv8bitif" path="res://scripts/obj/mob.gd" id="35_kmb1v"]
+[ext_resource type="Script" uid="uid://co1dpc8rpsbnr" path="res://scripts/obj/pause_time.gd" id="38_pibwh"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_j8jky"]
 frequency = 0.0324
@@ -740,6 +741,10 @@ position = Vector2(0, 784)
 texture = ExtResource("34_j8jky")
 centered = false
 script = ExtResource("35_kmb1v")
+
+[node name="PauseTime" type="Node" parent="." unique_id=1078082304]
+process_mode = 3
+script = ExtResource("38_pibwh")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]

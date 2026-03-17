@@ -52,7 +52,7 @@ func _update_song_window_title_deferred():
 				title += "★"
 		title += ")"
 	if not title.is_empty():
-		title = " - " + title
+		title = " >> " + title
 	_song_window_title = title
 	_updating = false
 
