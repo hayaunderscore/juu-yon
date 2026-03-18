@@ -56,7 +56,7 @@ gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fuf3a"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pibwh"]
 resource_local_to_scene = true
 shader = ExtResource("7_yq6so")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -217,7 +217,7 @@ region_rect = Rect2(512, 0, 256, 256)
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
-material = SubResource("ShaderMaterial_fuf3a")
+material = SubResource("ShaderMaterial_pibwh")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.042000003

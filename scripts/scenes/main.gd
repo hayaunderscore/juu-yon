@@ -339,6 +339,7 @@ func create_score_diff(val: int):
 	%Score.value += diff
 
 var elapsed: float = 0.0
+var game_elapsed: float = 0.0 # Compared to elapsed, this is always mapped to the music!
 var _song_audio_elapsed: float = 0.0
 var _song_system_elapsed: float = 0.0
 var _filtered_elapsed: float = 0.0
@@ -627,17 +628,20 @@ func update_runners():
 			child.beat = beat
 
 func update_elapsed(delta):
+	if audio.playing:
+		game_elapsed = audio.get_playback_position()
+		if !audio.stream_paused: game_elapsed += AudioServer.get_time_since_last_mix()
+	elif $Timer.is_stopped(): # Allow chart to go through even without music
+		game_elapsed += delta
+	else:
+		game_elapsed = 0
+	# Compensate for output latency.
+	game_elapsed -= _latency
+	game_elapsed -= $Timer.time_left
+	
+	# One euro filter manually filters out these
 	if not Configuration.get_section_key("Game", "one_euro"):
-		if audio.playing:
-			elapsed = audio.get_playback_position()
-			if !audio.stream_paused: elapsed += AudioServer.get_time_since_last_mix()
-		elif $Timer.is_stopped(): # Allow chart to go through even without music
-			elapsed += delta
-		else:
-			elapsed = 0
-		# Compensate for output latency.
-		elapsed -= _latency
-		elapsed -= $Timer.time_left
+		elapsed = game_elapsed
 		return
 	
 	# _song_audio_elapsed
@@ -757,9 +761,9 @@ var drumrolls: Array[bool] = [false, false, false, false, false, true, true, tru
 func hit_note(type: int, time: float) -> JudgeType:
 	if drumrolls[type]: return JudgeType.ROLL
 	var judgetype: int = JudgeType.BAD
-	if time - judge_times[chart.course][JudgeType.GOOD] <= elapsed and elapsed <= (time + judge_times[chart.course][JudgeType.GOOD]):
+	if time - judge_times[chart.course][JudgeType.GOOD] <= game_elapsed and game_elapsed <= (time + judge_times[chart.course][JudgeType.GOOD]):
 		judgetype = JudgeType.GOOD
-	elif time - judge_times[chart.course][JudgeType.OK] <= elapsed and elapsed <= (time + judge_times[chart.course][JudgeType.OK]):
+	elif time - judge_times[chart.course][JudgeType.OK] <= game_elapsed and game_elapsed <= (time + judge_times[chart.course][JudgeType.OK]):
 		judgetype = JudgeType.OK
 	# Change score!
 	if judgetype != JudgeType.BAD:
@@ -780,7 +784,7 @@ func check_note(check_type: int) -> JudgeType:
 	var hit: JudgeType = JudgeType.BAD
 	if current_note_list.size() <= 0: return hit
 	var offset: int = 0
-	while current_note_list.size() > 0 and not (current_note_list[-1-offset]["time"] > elapsed + judge_times[chart.course][JudgeType.BAD]):
+	while current_note_list.size() > 0 and not (current_note_list[-1-offset]["time"] > game_elapsed + judge_times[chart.course][JudgeType.BAD]):
 		var note: Dictionary = current_note_list[-1-offset]
 		var type: int = note["note"]
 		var time: float = note["time"]
