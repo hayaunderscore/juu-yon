@@ -75,10 +75,12 @@ func play_voice_line(voice_line: String):
 	voice.play()
 
 var box_stack: Array[TJAMeta]
+var current_box_path: String
 var box_prev_positions: PackedInt64Array
 var deep: int = 0
 var prev_box: TJAMeta
 var pref_box: TJAMeta
+var saved_pref_box: TJAMeta
 
 func find_tjas(path: String, skip_box: bool = false):
 	var dir: DirAccess = DirAccess.open(path)
@@ -121,7 +123,18 @@ func _ready() -> void:
 	Globals.control_banner.kat_pressed.connect(kat_pressed)
 	for bvoice in ResourceLoader.list_directory("res://assets/snd/songselect/"):
 		voice_lines.set(bvoice.replace("voice_", "").get_basename(), load("res://assets/snd/songselect/" + bvoice))
-	find_tjas(Globals.get_song_folder())
+	
+	current_box_path = Globals.get_song_folder()
+	if not SongLoadHandler.box_path.is_empty():
+		current_box_path = SongLoadHandler.box_path
+		box_stack = SongLoadHandler.box_stack
+		box_prev_positions = SongLoadHandler.box_prev_positions
+		selected_index = SongLoadHandler.selected_index
+		smoothed_selected_index = selected_index
+		pref_box = SongLoadHandler.pref_box
+		genre_text.text = pref_box.title_localized.get(TranslationServer.get_locale(), pref_box.title)
+	var main_folder: bool = current_box_path == Globals.get_song_folder()
+	find_tjas(current_box_path, not main_folder)
 	
 	var back: TJAMeta = TJAMeta.new()
 	back.title = tr("Back")
@@ -129,8 +142,11 @@ func _ready() -> void:
 	back.box = true
 	back.set_style_box()
 	back.set_text()
-	back.path = ""
+	back.path = "" if box_stack.size() == 0 else box_stack.back().path
+	back.from_box = box_stack.back() if box_stack.size() > 0 else null
 	back.back = true
+	
+	pref_box = null
 	
 	if songs.size() == 0:
 		OS.alert("No songs found! Please check your song folder and try again.\n\nBy default, the songs folder is at songs/\nwhich is searched in the executable directory.\n\nPlease make sure atleast 1 song or genre folder exists in this directory.")
@@ -172,6 +188,13 @@ func start_music():
 	music.call_deferred_thread_group("play", song.demo_start)
 
 func select_song():
+	SongLoadHandler.save_current_box_position(
+		current_box_path,
+		box_stack,
+		box_prev_positions,
+		selected_index,
+		saved_pref_box
+	)
 	Globals.control_banner.deactivate_side()
 	play_voice_line("start_song_1p")
 	var song: TJAMeta = songs[selected_index]
@@ -244,6 +267,8 @@ func box_select():
 	back.from_box = prev if box.back else box
 	back.path = prev.path if prev and prev.box else Globals.get_song_folder()
 	
+	current_box_path = box.path
+	
 	songs.clear()
 	
 	pref_box = box
@@ -254,6 +279,7 @@ func box_select():
 	if box.path == Globals.get_song_folder():
 		back.path = ""
 	songs.push_back(back)
+	saved_pref_box = pref_box
 	pref_box = null
 	entry_retransition = false
 	entry_transition = 0
@@ -316,6 +342,7 @@ func diff_select_to_song_select():
 func don_pressed(_id):
 	if songs[selected_index].box:
 		if songs[selected_index].path == "":
+			SongLoadHandler.clear_current_box_position()
 			TransitionHandler.change_scene_to_file("uid://dyvmwrm570eh6", true, Color("e35f2d"), true)
 		else:
 			box_select()

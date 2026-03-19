@@ -1,6 +1,25 @@
 extends Node
 
 var last_clr: Color
+var box_path: String
+var box_stack: Array[TJAMeta]
+var box_prev_positions: PackedInt64Array
+var pref_box: TJAMeta
+var selected_index: int = 0
+
+func save_current_box_position(path: String, stack: Array[TJAMeta], positions: PackedInt64Array, index: int, pref: TJAMeta):
+	box_path = path
+	box_stack = stack
+	box_prev_positions = positions
+	selected_index = index
+	pref_box = pref
+
+func clear_current_box_position():
+	box_path = ""
+	box_stack.clear()
+	box_prev_positions.clear()
+	selected_index = 0
+	pref_box = null
 
 func select_song(tja: TJAMeta, diff: int):
 	var clr: Color = tja.from_box.box_back_color if tja.from_box else Color.WHITE
