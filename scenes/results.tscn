@@ -296,6 +296,37 @@ font_size = 24
 outline_size = 16
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Shader" id="Shader_it16x"]
+code = "shader_type canvas_item;
+
+uniform float rotate = 0.0;
+uniform vec2 rotate_pivot = vec2(0.0);
+
+vec2 rotateUV(vec2 uv, vec2 pivot, float rotation) {
+	float cosa = cos(rotation);
+	float sina = sin(rotation);
+	uv -= pivot;
+	return vec2(
+		cosa * uv.x - sina * uv.y,
+		cosa * uv.y + sina * uv.x 
+	) + pivot;
+}
+
+void vertex() {
+	VERTEX = rotateUV(VERTEX, rotate_pivot / TEXTURE_PIXEL_SIZE, rotate);
+}
+
+//void light() {
+//	// Called for every pixel for every light affecting the CanvasItem.
+//	// Uncomment to replace the default light processing function with this one.
+//}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_odafc"]
+shader = SubResource("Shader_it16x")
+shader_parameter/rotate = 0.0
+shader_parameter/rotate_pivot = Vector2(0.5, 0.5)
+
 [node name="Results" type="Control" unique_id=434217777]
 layout_mode = 3
 anchors_preset = 15
@@ -707,5 +738,6 @@ layout_mode = 2
 
 [node name="P2TurnImage" type="TextureRect" parent="HBoxContainer2/P2Turn" unique_id=1784032151]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_odafc")
 layout_mode = 2
 texture = ExtResource("17_bpdww")

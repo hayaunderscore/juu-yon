@@ -167,7 +167,7 @@ func increase_value(player: int, varname: StringName, labelname: StringName, amo
 func _physics_process(delta: float) -> void:
 	for turny_thing in turning_things:
 		turny_thing.pivot_offset_ratio = Vector2.ONE * 0.5
-		turny_thing.rotation_degrees = Engine.get_process_frames() / 10.0
+		turny_thing.rotation_degrees = Time.get_ticks_usec() / 10000.0
 	
 	var elapsed: float = $Music.get_playback_position() + AudioServer.get_time_since_last_mix()
 	if not $Music.stream: elapsed = 0.0
