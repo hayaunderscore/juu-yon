@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bbd56m4uda8ds"]
+
+[ext_resource type="Script" uid="uid://bu1jvw1qqqd24" path="res://scripts/obj/dancer.gd" id="1_iwyol"]
+[ext_resource type="Texture2D" uid="uid://ycw851c3nmdl" path="res://assets/game/dancers/tetsuo/0_loop.png" id="2_xn6do"]
+
+[node name="Dancer" type="Control" unique_id=346037729]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_iwyol")
+state = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=222301807]
+texture = ExtResource("2_xn6do")
+hframes = 4
+vframes = 4

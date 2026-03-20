@@ -362,6 +362,9 @@ func end_chart():
 	if last_tja_meta.title == "Kidaruma 2000":
 		_on_end_timer_timeout()
 		return
+	var note_count: int = good_hits + ok_hits + bad_hits
+	if (good_hits + ok_hits) == note_count:
+		SoundHandler.play_sound("combo/combo_voice_fullcombo_p1.wav")
 	$EndTimer.start(TJAFormatLoader.END_TIME)
 
 func handle_play_events():
