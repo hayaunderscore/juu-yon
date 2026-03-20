@@ -16,7 +16,7 @@ class_name SongSelectColumns
 @onready var folder_box: StyleBoxTexture = preload("res://assets/songselect/song_box.tres")
 @onready var box_selected: StyleBoxTexture = preload("res://assets/songselect/box_selected.tres")
 @onready var font: Font = preload("uid://cpafoyo5od38s")
-@onready var index_font: Font = preload("uid://cd45agtyt8161")
+@onready var index_font: Font = preload("uid://boxwxwx06tcl5")
 @onready var box_index: StyleBoxFlat = preload("uid://bedug0hi2tv7y")
 @onready var box_difficulty: StyleBox = preload("uid://d2bbohpu08pon")
 @onready var star_tex: Texture2D = preload("uid://diije4rcsic5f")
@@ -127,12 +127,15 @@ func _ready() -> void:
 	current_box_path = Globals.get_song_folder()
 	if not SongLoadHandler.box_path.is_empty():
 		current_box_path = SongLoadHandler.box_path
-		box_stack = SongLoadHandler.box_stack
-		box_prev_positions = SongLoadHandler.box_prev_positions
+		box_stack = SongLoadHandler.box_stack.duplicate()
+		box_prev_positions = SongLoadHandler.box_prev_positions.duplicate()
 		selected_index = SongLoadHandler.selected_index
 		smoothed_selected_index = selected_index
 		pref_box = SongLoadHandler.pref_box
-		genre_text.text = pref_box.title_localized.get(TranslationServer.get_locale(), pref_box.title)
+		if pref_box:
+			genre_text.text = pref_box.title_localized.get(TranslationServer.get_locale(), pref_box.title)
+		saved_pref_box = pref_box
+		SongLoadHandler.clear_current_box_position()
 	var main_folder: bool = current_box_path == Globals.get_song_folder()
 	find_tjas(current_box_path, not main_folder)
 	
@@ -444,6 +447,7 @@ func _draw() -> void:
 	draw_set_transform(Vector2.RIGHT * x)
 	var min_size: int = selected_index - 5
 	var max_size: int = selected_index + 6
+	var song_list_size: int = songs.size() - 1
 	for i in range(min_size, max_size):
 		var wrapped_i: int = wrapi(i, 0, songs.size())
 		var song: TJAMeta = songs[wrapped_i]
@@ -496,8 +500,21 @@ func _draw() -> void:
 			box.bg_color.a = alpha
 			draw_style_box(box, Rect2(Vector2(0, -bsize.y), bsize))
 			var count_str: String = "%d" % [wrapped_i + 1]
-			var str_width: float = font.get_string_size(count_str, HORIZONTAL_ALIGNMENT_CENTER).x
-			draw_string(font, Vector2((bsize.x / 2.0) - (str_width / 2.0), -bsize.y + 24), count_str, HORIZONTAL_ALIGNMENT_CENTER, -1, 20, Color(1, 1, 1, alpha))
+			var str_width: float = index_font.get_string_size(count_str).x
+			var add_x: float = 0.0
+			var add_alpha: float = 0.0
+			var add_str: String = "/%d" % [song_list_size]
+			var add_str_size: float = index_font.get_string_size(add_str).x
+			if i == selected_index and (state == State.SONG_SELECT or state == State.SONG_TO_DIFF or stupid_fucking_alpha_hack_i_will_remove_someday):
+				add_alpha = minf(1.0, box_transition)
+				add_x = lerpf(0.0, add_str_size, add_alpha)
+				if state == State.SONG_TO_DIFF:
+					add_alpha = 1.0
+				if state == State.DIFF_SELECT:
+					add_alpha = 0.0
+				draw_string(index_font, Vector2((bsize.x / 2.0) + (str_width) - (add_str_size / 2.0), -bsize.y + 24), add_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 1, 1, add_alpha * alpha))
+				str_width += add_x
+			draw_string(index_font, Vector2((bsize.x / 2.0) - (str_width / 2.0), -bsize.y + 24), count_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 1, 1, alpha))
 		
 		if state >= State.DIFF_SELECT and i == selected_index:
 			var clr: Color = Color.WHITE

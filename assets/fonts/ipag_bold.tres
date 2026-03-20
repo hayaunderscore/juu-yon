@@ -1,0 +1,7 @@
+[gd_resource type="FontVariation" format=3 uid="uid://boxwxwx06tcl5"]
+
+[ext_resource type="FontFile" uid="uid://cd45agtyt8161" path="res://assets/fonts/ipag.ttf" id="1_bt5qj"]
+
+[resource]
+base_font = ExtResource("1_bt5qj")
+variation_embolden = 1.0
