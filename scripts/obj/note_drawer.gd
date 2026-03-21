@@ -83,6 +83,7 @@ func _ready() -> void:
 # scroll_[x/y]_t = scroll_[x/y] × (px_width_note_field / 4) × (bpm_note / 60 (s))  (#NMSCROLL), or otherwise 0
 func get_note_position(ms, bpm, scroll: Vector2, beat: float):
 	# print("HI")
+	scroll.x *= 1.1
 	if bemani_scroll and ms >= time: 
 		return get_note_hbscroll_position(scroll, beat)
 	return Vector2((scroll.x * speed_multiplier.x * (lane_width.x/4) * (bpm / 60)) * (ms - time),

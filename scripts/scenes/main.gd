@@ -984,6 +984,18 @@ func _input(event: InputEvent) -> void:
 	
 	handle_note_input(0, event)
 
+@onready var dancers: Array[TaikoDancer] = [
+	null,
+	$DancerContainer/Dancer1/Dancer,
+	$DancerContainer/Dancer2/Dancer,
+	$DancerContainer/Dancer3/Dancer,
+	null,
+]
+func _update_dancers():
+	for dancer in dancers:
+		if not dancer: continue
+		dancer.beat = beat
+
 func _physics_process(delta: float) -> void:
 	if not chart: return
 	
@@ -1000,6 +1012,7 @@ func _physics_process(delta: float) -> void:
 	handle_play_events()
 	handle_branch_timeline()
 	evaluate_branch()
+	_update_dancers()
 	
 	if current_note_list.size() <= 0: return
 	if Globals.players_auto[0]: auto_play()

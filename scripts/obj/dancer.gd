@@ -19,11 +19,14 @@ const DANCERS_PATH: String = "res://assets/game/dancers/"
 static var DANCERS_CACHE: Dictionary[String, Array] = {}
 
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var overlay: Sprite2D = $Overlay
 @export var dancer_texture_prefix: String = "tetsuo"
 @export var dancer_number: int = 0:
 	set(value):
 		if value == dancer_number: return
 		dancer_number = mini(4, maxi(value, 0))
+		if is_inside_tree():
+			_update_textures_and_intervals()
 
 @export var state: DancerState = DancerState.APPEAR:
 	set(value):
@@ -32,6 +35,7 @@ static var DANCERS_CACHE: Dictionary[String, Array] = {}
 		if is_inside_tree():
 			_update_textures_and_intervals()
 var beat: float = 0.0
+var index: int = 0
 var current_interval: float
 var current_order: PackedInt64Array
 
@@ -49,6 +53,12 @@ var disappear_order: PackedInt64Array
 var disappear_frames: Vector2i
 var disappear_pattern: AppearPattern = AppearPattern.STILL
 
+var shakushi: bool = false
+var overlay_order: PackedInt64Array
+
+var auto_beat: bool = false
+var bpm: float = 120.0
+
 func _update_textures_and_intervals():
 	var lowercase_state: String = (DancerState.find_key(state) as String).to_lower()
 	current_interval = get("%s_interval" % [lowercase_state])
@@ -59,6 +69,31 @@ func _update_textures_and_intervals():
 	var key: String = dancer_texture_prefix + "_" + lowercase_state
 	if DANCERS_CACHE[key].size() - 1 > dancer_number:
 		sprite.texture = DANCERS_CACHE[key][dancer_number]
+	
+	index = 0
+	sprite.frame = 0
+	sprite.offset = Vector2.ZERO
+	overlay.offset = Vector2.ZERO
+	
+	var conf_path: String = DANCERS_PATH + dancer_texture_prefix + "/dancer.cfg"
+	if not FileAccess.file_exists(conf_path): return
+	var conf: ConfigFile = ConfigFile.new()
+	conf.load(conf_path)
+	
+	var id: String = "dancer%d" % [dancer_number]
+	sprite.offset = conf.get_value("offsets", id, Vector2.ZERO)
+	overlay.offset = sprite.offset
+	var overlay_enabled: bool = conf.get_value("overlays", "%s_overlay" % [id], false)
+	if overlay_enabled:
+		var path: String = DANCERS_PATH + dancer_texture_prefix
+		overlay.texture = load("%s/%d_overlay.png" % [path, dancer_number])
+		overlay.hframes = conf.get_value("overlays", "%s_overlay_hframes" % [id], 1)
+		overlay.vframes = conf.get_value("overlays", "%s_overlay_vframes" % [id], 1)
+		overlay.show()
+		shakushi = conf.get_value("overlays", "%s_overlay_shakushi" % [id], false)
+		overlay_order = conf.get_value("overlays", "%s_overlay_order" % [id], [])
+	else:
+		overlay.hide()
 
 func _init_dancers():
 	if DirAccess.dir_exists_absolute(DANCERS_PATH + dancer_texture_prefix):
@@ -86,7 +121,22 @@ func _init_dancers():
 func _ready() -> void:
 	_init_dancers()
 	_update_textures_and_intervals()
+	auto_beat = get_tree().current_scene == self
+
+var _last_interval: int = 0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if Engine.is_editor_hint(): return
+	
+	if auto_beat:
+		var elapsed: float = Time.get_ticks_msec() / 1000.0
+		beat = elapsed * (bpm / 60)
+	
+	var _current_interval: int = floori(beat * (current_interval / 4.0))
+	if _current_interval != _last_interval:
+		_last_interval = _current_interval
+		index = _current_interval % current_order.size()
+		sprite.frame = current_order[index] - 1
+		if overlay_order.size() > 0:
+			overlay.frame = overlay_order[sprite.frame] - 1

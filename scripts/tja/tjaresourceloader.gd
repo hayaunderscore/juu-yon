@@ -657,7 +657,7 @@ func _load(path: String, original_path: String, use_sub_threads: bool, cache_mod
 					nidx += 1
 					current_note_data.append(cur_note)
 					# Phonetizations may be incorrect in branches for now
-					get_se_note(current_note_data, 60 * meter / bpm, no, time)
+					get_se_note(current_note_data, (60 * meter / bpm) * 1.05, no, time)
 				time += 60.0 * (meter / notes_in_measure) / bpm
 		
 		if notes_in_measure == 0:

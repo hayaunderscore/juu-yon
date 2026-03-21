@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://cdridus52x07j" path="res://scenes/objects/bubble_counter.tscn" id="33_5q0nq"]
 [ext_resource type="Texture2D" uid="uid://h3nsnq5cscbm" path="res://assets/game/mob/default.png" id="34_j8jky"]
 [ext_resource type="Script" uid="uid://3xkbrv8bitif" path="res://scripts/obj/mob.gd" id="35_kmb1v"]
+[ext_resource type="PackedScene" uid="uid://bbd56m4uda8ds" path="res://scenes/objects/dancer.tscn" id="36_c6pm6"]
 [ext_resource type="Script" uid="uid://co1dpc8rpsbnr" path="res://scripts/obj/pause_time.gd" id="38_pibwh"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_j8jky"]
@@ -56,7 +57,7 @@ gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pibwh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c6pm6"]
 resource_local_to_scene = true
 shader = ExtResource("7_yq6so")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -217,7 +218,7 @@ region_rect = Rect2(512, 0, 256, 256)
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
-material = SubResource("ShaderMaterial_pibwh")
+material = SubResource("ShaderMaterial_c6pm6")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.042000003
@@ -742,7 +743,7 @@ anchors_preset = -1
 anchor_top = 0.53300005
 anchor_right = 1.0
 anchor_bottom = 0.90000004
-offset_top = -1.7600403
+offset_top = 16.23996
 offset_bottom = -2.0
 theme_override_constants/separation = 0
 
@@ -754,13 +755,24 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Dancer" parent="DancerContainer/Dancer1" unique_id=346037729 instance=ExtResource("36_c6pm6")]
+layout_mode = 2
+dancer_number = 1
+
 [node name="Dancer2" type="CenterContainer" parent="DancerContainer" unique_id=1111677132]
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Dancer" parent="DancerContainer/Dancer2" unique_id=2090441354 instance=ExtResource("36_c6pm6")]
+layout_mode = 2
+
 [node name="Dancer3" type="CenterContainer" parent="DancerContainer" unique_id=2136521928]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Dancer" parent="DancerContainer/Dancer3" unique_id=1191016757 instance=ExtResource("36_c6pm6")]
+layout_mode = 2
+dancer_number = 2
 
 [node name="Dancer4" type="CenterContainer" parent="DancerContainer" unique_id=1566358839]
 layout_mode = 2
