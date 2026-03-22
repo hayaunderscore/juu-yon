@@ -989,24 +989,26 @@ func _input(event: InputEvent) -> void:
 	handle_note_input(0, event)
 
 @onready var dancers: Array[TaikoDancer] = [
-	null,
+	$DancerContainer/Dancer0/Dancer,
 	$DancerContainer/Dancer1/Dancer,
 	$DancerContainer/Dancer2/Dancer,
 	$DancerContainer/Dancer3/Dancer,
-	null,
+	$DancerContainer/Dancer4/Dancer,
 ]
 func _update_dancers():
 	for dancer in dancers:
 		if not dancer: continue
+		dancer.bpm = %Chara.bpm
 		dancer.beat = beat
 
 var _processed_dancers: bool = false
 func _init_dancers():
 	if _processed_dancers: return
 	_processed_dancers = true
-	for dancer in dancers:
-		if not dancer: continue
-		dancer.appear()
+	dancers[2].appear()
+
+func _appear_dancer(idx: int):
+	dancers[idx].appear()
 
 func _physics_process(delta: float) -> void:
 	if not chart: return

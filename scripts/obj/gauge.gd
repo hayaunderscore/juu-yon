@@ -6,6 +6,8 @@ signal filled_soul
 signal unfilled_soul
 signal rainbow_soul
 signal unrainbow_soul
+signal dancer_start(dancer_number: int)
+signal dancer_kill(dancer_number: int)
 
 @onready var meter: TextureRect = $Meter
 @onready var rainbow_parallax: Parallax2D = %Rainbow
@@ -28,6 +30,11 @@ var difficulty: TJAChartInfo.CourseType
 const value_snap: float = 100.0 / 57.0
 const clear_max: float = 100 - value_snap
 const clear_start: float = snappedf(78.6, value_snap) - value_snap + (value_snap / 2.0)
+const fifths_value: float = clear_max / 5.0
+const dancer_two_start: float = fifths_value
+const dancer_three_start: float = fifths_value*2
+const dancer_four_start: float = fifths_value*3
+const dancer_five_start: float = fifths_value*4
 
 # For now, each star is kept with the same exact rate
 const table: Array[Dictionary] = [
@@ -72,6 +79,7 @@ func _update_signals(prev: float):
 		fire_tween = create_tween()
 		fire_tween.tween_property(fire, "scale", Vector2.ZERO, 0.1)
 		rainbow_parallax.hide()
+	_call_dancer_signals(prev)
 	value = clampf(value, 0.0, clear_max)
 
 func _physics_process(delta: float) -> void:
@@ -80,3 +88,13 @@ func _physics_process(delta: float) -> void:
 	if value >= clear_max:
 		soul.visible = true
 		soul.self_modulate.a = 0.0 if soul.self_modulate.a == 1.0 else 1.0
+
+func _call_dancer_signals(prev: float):
+	if prev < dancer_two_start and value >= dancer_two_start:
+		dancer_start.emit(1)
+	if prev < dancer_three_start and value >= dancer_three_start:
+		dancer_start.emit(3)
+	if prev < dancer_four_start and value >= dancer_four_start:
+		dancer_start.emit(0)
+	if prev < dancer_five_start and value >= dancer_five_start:
+		dancer_start.emit(4)

@@ -751,11 +751,15 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Dancer" parent="DancerContainer/Dancer0" unique_id=346037729 instance=ExtResource("36_c6pm6")]
+layout_mode = 2
+dancer_number = 3
+
 [node name="Dancer1" type="CenterContainer" parent="DancerContainer" unique_id=650695601]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Dancer" parent="DancerContainer/Dancer1" unique_id=346037729 instance=ExtResource("36_c6pm6")]
+[node name="Dancer" parent="DancerContainer/Dancer1" unique_id=180427566 instance=ExtResource("36_c6pm6")]
 layout_mode = 2
 dancer_number = 1
 
@@ -778,6 +782,10 @@ dancer_number = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Dancer" parent="DancerContainer/Dancer4" unique_id=1553955849 instance=ExtResource("36_c6pm6")]
+layout_mode = 2
+dancer_number = 4
+
 [node name="Mob" type="Sprite2D" parent="." unique_id=1029649261]
 position = Vector2(0, 784)
 texture = ExtResource("34_j8jky")
@@ -789,6 +797,7 @@ process_mode = 3
 script = ExtResource("38_pibwh")
 
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
+[connection signal="dancer_start" from="Gauge" to="." method="_appear_dancer"]
 [connection signal="filled_soul" from="Gauge" to="." method="_on_gauge_filled_soul"]
 [connection signal="rainbow_soul" from="Gauge" to="." method="_on_gauge_rainbow_soul"]
 [connection signal="unfilled_soul" from="Gauge" to="." method="_on_gauge_unfilled_soul"]

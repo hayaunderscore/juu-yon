@@ -59,6 +59,7 @@ var overlay_order: PackedInt64Array
 var overlay_appearance_frames: PackedInt64Array
 
 var auto_beat: bool = false
+var inactive: bool = false
 var bpm: float = 120.0
 
 func _update_textures_and_intervals():
@@ -132,51 +133,79 @@ func _ready() -> void:
 	_init_dancers()
 	_update_textures_and_intervals()
 	auto_beat = get_tree().current_scene == self
+	inactive = true
 	# appear()
 
 var start_beat: float = 0.0
+var tween: Tween
+var shakushi_tween: Tween
+
 func appear():
+	inactive = false
 	start_beat = beat
 	state = DancerState.APPEAR
+	if appear_pattern == AppearPattern.VERTICAL:
+		if tween: 
+			tween.kill()
+		else:
+			sprite.offset.y = current_offset.y + 380
+			overlay.offset.y = current_offset.y + 380
+		tween = create_tween()
+		tween.set_parallel(true)
+		var time: float = 4.0 / current_interval * 16
+		tween.tween_property(sprite, "offset:y", current_offset.y, time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(overlay, "offset:y", current_offset.y, time / 2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(time / 2)
 
 var _last_interval: int = 0
+var _last_frame: int = 0
 var elapsed: float = 0.0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	if inactive:
+		sprite.offset.y = current_offset.y + 380
+		overlay.offset.y = current_offset.y + 380
+		return
 	elapsed += delta
+	
+	if tween:
+		tween.set_speed_scale(bpm / 60.0)
+	if shakushi_tween:
+		shakushi_tween.set_speed_scale(bpm / 60.0)
 	
 	if auto_beat:
 		beat = elapsed * (bpm / 60)
 	
-	var _current_interval: int = floori((beat - start_beat) * (current_interval / 4.0))
-	if _current_interval != _last_interval:
-		_last_interval = _current_interval
-		index = _current_interval % current_order.size()
+	var _interval: int = floori((beat - start_beat) * (current_interval / 4.0))
+	if state == DancerState.LOOP:
+		_interval = floori((beat) * (current_interval / 4.0))
+	if _interval != _last_interval:
+		_last_interval = _interval
+		# print("num: %d, interval: %d" % [dancer_number, _last_interval])
+		index = _interval % current_order.size()
 		sprite.frame = current_order[index] - 1
 		if overlay_order.size() > 0:
 			overlay.frame = overlay_order[sprite.frame] - 1
 		if state == DancerState.APPEAR:
-			if _current_interval >= current_order.size():
+			if _interval >= current_order.size():
 				start_beat = beat
 				state = DancerState.LOOP
 				overlay.z_index = -1
+		if state == DancerState.LOOP and shakushi:
+			if (sprite.frame == 2 or sprite.frame == 0 or sprite.frame == 6 or sprite.frame == 8) and _last_frame != sprite.frame:
+				if shakushi_tween: shakushi_tween.kill()
+				shakushi_tween = create_tween()
+				shakushi_tween.tween_property(overlay, "offset:y", current_offset.y - 32, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+				shakushi_tween.tween_property(overlay, "offset:y", current_offset.y, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		_last_frame = sprite.frame
 	
 	if state == DancerState.APPEAR:
 		if overlay_appearance_frames.size() == 2 and overlay.visible:
 			overlay.frame = overlay_appearance_frames[0] - 1
 		if appear_pattern == AppearPattern.VERTICAL:
-			var ang: float = ((beat - start_beat) * (current_interval / 48.0)) * PI
-			if ang < 3*PI/2:
-				sprite.offset.y = current_offset.y - ((sin(ang) * 1.5 if ang < (PI / 2) else sin(ang) + 0.5) + 0.5) * 32
 			if shakushi and overlay.visible:
 				overlay.z_index = 0
-				var q: float = ang - (PI / 2.0)
-				if ang < (PI / 2.0):
-					overlay.offset.y = current_offset.y - (q*4) * 56
-				elif ang < (5*PI/4):
-					overlay.offset.y = current_offset.y - ((sin(q * 2.0) * 2.0 if q < (PI / 4.0) else sin(q * 2.0) + 1.0) * 56)
 	
 	if state == DancerState.DISAPPEAR:
 		if overlay_appearance_frames.size() == 2 and overlay.visible:
