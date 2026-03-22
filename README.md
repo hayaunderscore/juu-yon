@@ -56,6 +56,19 @@ For development of the actual game:
 For art assets (as seen on the `art-assets/` folder):
 - [Inkscape](https://inkscape.org/)
 
+# Notes
+
+These aren't rules per se, though please still follow these when making contributions.
+
+- When making commit messages, please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+  - The message itself must atleast show what the commit does, but can be anything else otherwise
+	- e.g. (`fix: annoying bug fuuuuck`)
+  - Available scopes include `main`, `ui`, and `tja`, which handles main gameplay, menus/ui, and the TJA parser respectively.
+	- These are not needed, though are included for clearness (I will also use this myself, soon!)
+- Any contributions regarding art assets must be 720p.
+  - If possible, if you're using Inkscape to create the assets, please provide the Inkscape SVG file as well.
+- No AI generated contributions please.
+
 # License
 
 Licensed under MIT.
