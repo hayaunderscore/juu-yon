@@ -662,6 +662,7 @@ func update_elapsed(delta):
 	# Handle pausing properly...
 	_song_system_elapsed -= _pause_time.time
 
+
 func _process(delta: float) -> void:
 	if not chart: return
 	
@@ -669,6 +670,9 @@ func _process(delta: float) -> void:
 	update_elapsed(delta)
 	
 	beat = calculate_beat_from_ms(elapsed, chart.bpm_log)
+	if not _processed_dancers:
+		_update_dancers()
+		_init_dancers()
 	var min: float = floor(elapsed / 60.0)
 	var sec: float = fmod(elapsed, 60.0)
 	%TimeLeft.text = "%02d:%02d" % [min, sec]
@@ -995,6 +999,14 @@ func _update_dancers():
 	for dancer in dancers:
 		if not dancer: continue
 		dancer.beat = beat
+
+var _processed_dancers: bool = false
+func _init_dancers():
+	if _processed_dancers: return
+	_processed_dancers = true
+	for dancer in dancers:
+		if not dancer: continue
+		dancer.appear()
 
 func _physics_process(delta: float) -> void:
 	if not chart: return

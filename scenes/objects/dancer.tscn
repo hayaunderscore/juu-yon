@@ -12,6 +12,7 @@ state = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=222301807]
 texture = ExtResource("2_quclu")
+offset = Vector2(0, 16)
 hframes = 4
 vframes = 4
 
@@ -19,5 +20,6 @@ vframes = 4
 visible = false
 z_index = -1
 texture = ExtResource("3_jbapi")
+offset = Vector2(0, 16)
 hframes = 6
 frame = 1

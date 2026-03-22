@@ -38,6 +38,7 @@ var beat: float = 0.0
 var index: int = 0
 var current_interval: float
 var current_order: PackedInt64Array
+var current_offset: Vector2
 
 var appear_interval: float = 4.0
 var appear_order: PackedInt64Array
@@ -55,6 +56,7 @@ var disappear_pattern: AppearPattern = AppearPattern.STILL
 
 var shakushi: bool = false
 var overlay_order: PackedInt64Array
+var overlay_appearance_frames: PackedInt64Array
 
 var auto_beat: bool = false
 var bpm: float = 120.0
@@ -72,8 +74,12 @@ func _update_textures_and_intervals():
 	
 	index = 0
 	sprite.frame = 0
+	current_offset = Vector2.ZERO
 	sprite.offset = Vector2.ZERO
 	overlay.offset = Vector2.ZERO
+	shakushi = false
+	appear_pattern = AppearPattern.STILL
+	disappear_pattern = AppearPattern.STILL
 	
 	var conf_path: String = DANCERS_PATH + dancer_texture_prefix + "/dancer.cfg"
 	if not FileAccess.file_exists(conf_path): return
@@ -83,6 +89,9 @@ func _update_textures_and_intervals():
 	var id: String = "dancer%d" % [dancer_number]
 	sprite.offset = conf.get_value("offsets", id, Vector2.ZERO)
 	overlay.offset = sprite.offset
+	current_offset = sprite.offset
+	appear_pattern = conf.get_value("appear", "pattern")[dancer_number]
+	disappear_pattern = conf.get_value("appear", "pattern")[dancer_number]
 	var overlay_enabled: bool = conf.get_value("overlays", "%s_overlay" % [id], false)
 	if overlay_enabled:
 		var path: String = DANCERS_PATH + dancer_texture_prefix
@@ -92,6 +101,7 @@ func _update_textures_and_intervals():
 		overlay.show()
 		shakushi = conf.get_value("overlays", "%s_overlay_shakushi" % [id], false)
 		overlay_order = conf.get_value("overlays", "%s_overlay_order" % [id], [])
+		overlay_appearance_frames = conf.get_value("overlays", "%s_overlay_appearance_frames" % [id], [1, 1])
 	else:
 		overlay.hide()
 
@@ -122,21 +132,52 @@ func _ready() -> void:
 	_init_dancers()
 	_update_textures_and_intervals()
 	auto_beat = get_tree().current_scene == self
+	# appear()
+
+var start_beat: float = 0.0
+func appear():
+	start_beat = beat
+	state = DancerState.APPEAR
 
 var _last_interval: int = 0
+var elapsed: float = 0.0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	elapsed += delta
 	
 	if auto_beat:
-		var elapsed: float = Time.get_ticks_msec() / 1000.0
 		beat = elapsed * (bpm / 60)
 	
-	var _current_interval: int = floori(beat * (current_interval / 4.0))
+	var _current_interval: int = floori((beat - start_beat) * (current_interval / 4.0))
 	if _current_interval != _last_interval:
 		_last_interval = _current_interval
 		index = _current_interval % current_order.size()
 		sprite.frame = current_order[index] - 1
 		if overlay_order.size() > 0:
 			overlay.frame = overlay_order[sprite.frame] - 1
+		if state == DancerState.APPEAR:
+			if _current_interval >= current_order.size():
+				start_beat = beat
+				state = DancerState.LOOP
+				overlay.z_index = -1
+	
+	if state == DancerState.APPEAR:
+		if overlay_appearance_frames.size() == 2 and overlay.visible:
+			overlay.frame = overlay_appearance_frames[0] - 1
+		if appear_pattern == AppearPattern.VERTICAL:
+			var ang: float = ((beat - start_beat) * (current_interval / 48.0)) * PI
+			if ang < 3*PI/2:
+				sprite.offset.y = current_offset.y - ((sin(ang) * 1.5 if ang < (PI / 2) else sin(ang) + 0.5) + 0.5) * 32
+			if shakushi and overlay.visible:
+				overlay.z_index = 0
+				var q: float = ang - (PI / 2.0)
+				if ang < (PI / 2.0):
+					overlay.offset.y = current_offset.y - (q*4) * 56
+				elif ang < (5*PI/4):
+					overlay.offset.y = current_offset.y - ((sin(q * 2.0) * 2.0 if q < (PI / 4.0) else sin(q * 2.0) + 1.0) * 56)
+	
+	if state == DancerState.DISAPPEAR:
+		if overlay_appearance_frames.size() == 2 and overlay.visible:
+			overlay.frame = overlay_appearance_frames[1] - 1
