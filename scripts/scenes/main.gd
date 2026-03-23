@@ -583,6 +583,7 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 	var anim: AnimationPlayer = note.get_node("AnimationPlayer")
 	spr.texture = TaikoNoteDrawer.notes[type]
 	note.type = type
+	note.balloon = balloon
 	note_curve.add_child(note)
 	# Create judge effect
 	if not skip_judge: 
