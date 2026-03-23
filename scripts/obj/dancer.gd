@@ -62,7 +62,11 @@ var auto_beat: bool = false
 var inactive: bool = false
 var bpm: float = 120.0
 
+signal dancer_number_or_state_changed
+
 func _update_textures_and_intervals():
+	dancer_number_or_state_changed.emit()
+	
 	var lowercase_state: String = (DancerState.find_key(state) as String).to_lower()
 	current_interval = get("%s_interval" % [lowercase_state])
 	current_order = get("%s_order" % [lowercase_state])
@@ -72,6 +76,8 @@ func _update_textures_and_intervals():
 	var key: String = dancer_texture_prefix + "_" + lowercase_state
 	if DANCERS_CACHE[key].size() - 1 > dancer_number:
 		sprite.texture = DANCERS_CACHE[key][dancer_number]
+	
+	sprite.frame = 0
 	
 	index = 0
 	sprite.frame = 0
@@ -140,7 +146,7 @@ var start_beat: float = 0.0
 var tween: Tween
 var shakushi_tween: Tween
 
-func appear():
+func appear(s_beat: float = 0.0):
 	inactive = false
 	start_beat = beat
 	state = DancerState.APPEAR
@@ -155,6 +161,11 @@ func appear():
 		var time: float = 4.0 / current_interval * 16
 		tween.tween_property(sprite, "offset:y", current_offset.y, time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(overlay, "offset:y", current_offset.y, time / 2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(time / 2)
+		tween.set_parallel(false)
+		tween.tween_property(overlay, "offset:y", current_offset.y - 92, time / 4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await dancer_number_or_state_changed
+	if not is_zero_approx(s_beat):
+		start_beat = s_beat
 
 var _last_interval: int = 0
 var _last_frame: int = 0
@@ -179,7 +190,7 @@ func _process(delta: float) -> void:
 	
 	var _interval: int = floori((beat - start_beat) * (current_interval / 4.0))
 	if state == DancerState.LOOP:
-		_interval = floori((beat) * (current_interval / 4.0))
+		_interval = floori(abs(beat - start_beat) * (current_interval / 4.0))
 	if _interval != _last_interval:
 		_last_interval = _interval
 		# print("num: %d, interval: %d" % [dancer_number, _last_interval])
@@ -189,7 +200,7 @@ func _process(delta: float) -> void:
 			overlay.frame = overlay_order[sprite.frame] - 1
 		if state == DancerState.APPEAR:
 			if _interval >= current_order.size():
-				start_beat = beat
+				# start_beat = beat
 				state = DancerState.LOOP
 				overlay.z_index = -1
 		if state == DancerState.LOOP and shakushi:

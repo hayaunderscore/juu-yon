@@ -219,6 +219,7 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 	if gogo and state != State.SPIN: return
 	if state >= State.BALLOON: return
 	if state == State.SPIN and frame != spin_frames - 1: return
+	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var prev: State = state
 	_cant_change_state = false
 	state = State.COMBO
@@ -229,7 +230,6 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 		atlas.atlas = spin_texture
 		atlas.region = Rect2((spin_frames - 1) * (spin_texture.get_width() / spin_frames), 0, spin_texture.get_width() / spin_frames, spin_texture.get_height())
 		spin_current_frame = 0
-	if _combo_tween: _combo_tween.custom_step(9999); _combo_tween.kill()
 	var cur_y: float = position.y
 	var prev_puchi_chara_y: float = puchichara.position.y
 	_combo_tween = create_tween()

@@ -31,10 +31,10 @@ const value_snap: float = 100.0 / 57.0
 const clear_max: float = 100 - value_snap
 const clear_start: float = snappedf(78.6, value_snap) - value_snap + (value_snap / 2.0)
 const fifths_value: float = clear_max / 5.0
-const dancer_two_start: float = fifths_value
-const dancer_three_start: float = fifths_value*2
-const dancer_four_start: float = fifths_value*3
-const dancer_five_start: float = fifths_value*4
+const dancer_two_start: float = snappedf(fifths_value, value_snap) - value_snap + (value_snap / 2.0)
+const dancer_three_start: float = snappedf(fifths_value*2, value_snap) - value_snap + (value_snap / 2.0)
+const dancer_four_start: float = snappedf(fifths_value*3, value_snap) - value_snap + (value_snap / 2.0)
+const dancer_five_start: float = snappedf(fifths_value*4, value_snap) - value_snap + (value_snap / 2.0)
 
 # For now, each star is kept with the same exact rate
 const table: Array[Dictionary] = [

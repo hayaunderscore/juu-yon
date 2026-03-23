@@ -1005,10 +1005,12 @@ var _processed_dancers: bool = false
 func _init_dancers():
 	if _processed_dancers: return
 	_processed_dancers = true
-	dancers[2].appear()
+	var dancer_time: float = 4.0 / dancers[2].appear_interval * 16
+	dancer_time /= (last_tja_meta.start_bpm / 60.0)
+	dancers[2].appear(calculate_beat_from_ms(-$Timer.wait_time + dancer_time, chart.bpm_log) + 0.73)
 
 func _appear_dancer(idx: int):
-	dancers[idx].appear()
+	dancers[idx].appear(dancers[2].start_beat)
 
 func _physics_process(delta: float) -> void:
 	if not chart: return

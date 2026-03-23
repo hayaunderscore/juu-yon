@@ -706,44 +706,13 @@ scaling_speed = 0.05
 return_speed = 0.1
 metadata/_custom_type_script = "uid://c6ihd62tvky4e"
 
-[node name="Footer" type="TextureRect" parent="." unique_id=1953270415]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -480.0
-offset_top = -72.0
-offset_right = 480.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = ExtResource("24_y6deb")
-
-[node name="Pause" parent="." unique_id=408960774 instance=ExtResource("26_2wyq8")]
-layout_mode = 1
-metadata/_edit_lock_ = true
-
-[node name="RollBubble" parent="." unique_id=1010660350 instance=ExtResource("33_5q0nq")]
-modulate = Color(1, 1, 1, 0)
-z_index = -1
-layout_mode = 0
-offset_left = 228.0
-offset_top = -32.0
-offset_right = 532.0
-offset_bottom = 156.0
-
-[node name="EndTimer" type="Timer" parent="." unique_id=2140970583]
-wait_time = 2.0
-one_shot = true
-
 [node name="DancerContainer" type="HBoxContainer" parent="." unique_id=347286960]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.53300005
 anchor_right = 1.0
 anchor_bottom = 0.90000004
-offset_top = 16.23996
+offset_top = 0.23995972
 offset_bottom = -2.0
 theme_override_constants/separation = 0
 
@@ -785,6 +754,37 @@ size_flags_horizontal = 3
 [node name="Dancer" parent="DancerContainer/Dancer4" unique_id=1553955849 instance=ExtResource("36_c6pm6")]
 layout_mode = 2
 dancer_number = 4
+
+[node name="Footer" type="TextureRect" parent="." unique_id=1953270415]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -72.0
+offset_right = 480.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("24_y6deb")
+
+[node name="Pause" parent="." unique_id=408960774 instance=ExtResource("26_2wyq8")]
+layout_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="RollBubble" parent="." unique_id=1010660350 instance=ExtResource("33_5q0nq")]
+modulate = Color(1, 1, 1, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 228.0
+offset_top = -32.0
+offset_right = 532.0
+offset_bottom = 156.0
+
+[node name="EndTimer" type="Timer" parent="." unique_id=2140970583]
+wait_time = 2.0
+one_shot = true
 
 [node name="Mob" type="Sprite2D" parent="." unique_id=1029649261]
 position = Vector2(0, 784)
