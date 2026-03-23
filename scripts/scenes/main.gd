@@ -327,16 +327,20 @@ var popin: PackedScene = preload("uid://dj3s7wst6dpip")
 var score_real: int = 0
 func create_score_diff(val: int):
 	var prev: int = score_real
+	var simple: bool = Configuration.get_section_key("Game", "simple_mode")
 	score_real = val
-	var diff: int = val - prev
-	var score_pop: TaikoNumber = popin.instantiate()
-	var anim: AnimationPlayer = score_pop.get_node("AnimationPlayer")
-	score_pop.value = diff
-	anim.play("default")
-	%Score.add_child(score_pop)
-	if score_delay:
-		await anim.animation_finished
-	%Score.value += diff
+	if not simple:
+		var diff: int = val - prev
+		var score_pop: TaikoNumber = popin.instantiate()
+		var anim: AnimationPlayer = score_pop.get_node("AnimationPlayer")
+		score_pop.value = diff
+		anim.play("default")
+		%Score.add_child(score_pop)
+		if score_delay:
+			await anim.animation_finished
+		%Score.value += diff
+	else:
+		%Score.value = score_real
 
 var elapsed: float = 0.0
 var game_elapsed: float = 0.0 # Compared to elapsed, this is always mapped to the music!
@@ -532,6 +536,7 @@ var runner: PackedScene = load("uid://df4qsuaq2603f")
 @onready var runner_spot: Marker2D = $RunnerSpot
 
 func create_runner(tadpole: bool):
+	if Configuration.get_section_key("Game", "simple_mode"): return
 	var type: TaikoRunner.RunnerType = runner_type if not tadpole else TaikoRunner.RunnerType.TADPOLE
 	var runner_node: TaikoRunner = runner.instantiate()
 	runner_node.runner_type = type
@@ -565,6 +570,17 @@ var gogo_firework: PackedScene = preload("uid://cs0tdie35o5om")
 @export var firework_noise: FastNoiseLite
 var noise_y: float = 0.0
 func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType = JudgeType.GOOD):
+	# Add scores first, we can cancel everything else on simple mode...
+	if not skip_judge: 
+		var j: int = judgetype
+		if (type == 3 or type == 4) and judgetype != JudgeType.BAD:
+			j += 1
+		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
+		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
+	# Return when on simple mode. No funny effects!
+	if Configuration.get_section_key("Game", "simple_mode"): return
+	
+	# Otherwise...
 	var balloon: bool = false
 	var balloon_tex: AtlasTexture
 	var rainbow: TextureRect
@@ -585,14 +601,6 @@ func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType
 	note.type = type
 	note.balloon = balloon
 	note_curve.add_child(note)
-	# Create judge effect
-	if not skip_judge: 
-		# TODO create score effect
-		var j: int = judgetype
-		if (type == 3 or type == 4) and judgetype != JudgeType.BAD:
-			j += 1
-		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
-		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
 	# Gogo fireworks lmao
 	if %Chara.gogo and %Gauge.value >= %Gauge.clear_start:
 		for i in range(4):
@@ -997,6 +1005,7 @@ func _input(event: InputEvent) -> void:
 	$DancerContainer/Dancer4/Dancer,
 ]
 func _update_dancers():
+	if Configuration.get_section_key("Game", "simple_mode"): return
 	for dancer in dancers:
 		if not dancer: continue
 		dancer.bpm = %Chara.bpm
@@ -1006,11 +1015,17 @@ var _processed_dancers: bool = false
 func _init_dancers():
 	if _processed_dancers: return
 	_processed_dancers = true
+	
+	if Configuration.get_section_key("Game", "simple_mode"):
+		$DancerContainer.visible = false
+		return
+	
 	var dancer_time: float = 4.0 / dancers[2].appear_interval * 16
 	dancer_time /= (last_tja_meta.start_bpm / 60.0)
 	dancers[2].appear(calculate_beat_from_ms(-$Timer.wait_time + dancer_time, chart.bpm_log) + 0.73)
 
 func _appear_dancer(idx: int):
+	if Configuration.get_section_key("Game", "simple_mode"): return
 	dancers[idx].appear(dancers[2].start_beat)
 
 func _physics_process(delta: float) -> void:

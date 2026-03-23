@@ -9,6 +9,7 @@ var config: Dictionary = {
 		"default_score_mode": ScoreHandler.ScoreType.AC14 as int,
 		"display_stats": false,
 		"one_euro": false,
+		"simple_mode": false,
 		"max_fps": 60,
 	},
 	"Player1": {

@@ -19,7 +19,7 @@
 atlas = ExtResource("1_elhpt")
 region = Rect2(0, 0, 384, 384)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywl84"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y8owl"]
 resource_local_to_scene = true
 shader = ExtResource("11_f7jsj")
 shader_parameter/color = Color(0, 0, 0, 1)
@@ -92,7 +92,7 @@ centered = false
 hframes = 8
 
 [node name="Bubble" parent="Balloon" unique_id=1010660350 instance=ExtResource("11_y8owl")]
-material = SubResource("ShaderMaterial_ywl84")
+material = SubResource("ShaderMaterial_y8owl")
 offset_left = 80.0
 offset_top = -8.0
 offset_right = 256.0

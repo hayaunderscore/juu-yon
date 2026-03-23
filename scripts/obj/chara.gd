@@ -137,6 +137,7 @@ var rainbow: bool = false
 
 @onready var puchichara: Sprite2D = $Puchichara
 var puchi_ref: PuchicharaDB.Puchichara
+var _simple: bool = false
 
 func update_puchichara():
 	var puchi_name: String = Globals.player_puchi[player_number - 1]
@@ -155,6 +156,7 @@ func update_puchichara():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	_simple = Configuration.get_section_key("Game", "simple_mode")
 	update_puchichara()
 	# Get textures based on the selected skin
 	var skin: String = Globals.player_skins[player_number - 1]
@@ -242,6 +244,8 @@ func do_combo_animation(height: float = 24, return_to_idle: bool = true):
 		_combo_tween.tween_property(self, "state", State.IDLE, 0)
 
 func set_alpha(alpha: float):
+	if (state == State.BALLOON or state == State.BALLOON_POP or state == State.BALLOON_FAIL) and _simple:
+		alpha = 0.0
 	var sh: ShaderMaterial = material as ShaderMaterial
 	sh.set_shader_parameter("alpha", alpha)
 
@@ -267,6 +271,9 @@ func start_balloon_animation():
 	_balloon_counter.get_node("CenterContainer").position = balloon_offset
 	_balloon_counter.show()
 	balloon_spr.show()
+	if _simple:
+		balloon_spr.self_modulate.a = 0.0
+	set_alpha(1.0)
 	frame = 0
 
 var _balloon_tween: Tween
@@ -323,7 +330,7 @@ func fail_balloon():
 	_balloon_tween.tween_callback(func(): 
 		_cant_change_state = false
 		state = State.IDLE
-		z_index -= 2
+		z_index = prev_z_index
 	).set_delay(0.05)
 	_balloon_tween.tween_method(set_alpha, 0.0, 1.0, 0.05).set_delay(0.05)
 
