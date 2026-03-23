@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://d1oi5rdfqby8" path="res://assets/game/lane/judge.png" id="11_trceg"]
 [ext_resource type="Script" uid="uid://dfh3ic8o0y2fo" path="res://scripts/obj/note_drawer.gd" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://cmmdexdosfbag" path="res://assets/fonts/Modified-DFPKanteiryu-XB.ttf" id="13_trceg"]
+[ext_resource type="FontVariation" uid="uid://boxwxwx06tcl5" path="res://assets/fonts/ipag_bold.tres" id="14_5poiv"]
 [ext_resource type="Texture2D" uid="uid://xwh2qxjob23t" path="res://assets/game/gogo/fire.png" id="16_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://dljrgp74jl37o" path="res://assets/game/taiko/flower.png" id="17_fuf3a"]
 [ext_resource type="Script" uid="uid://uxy42j8dmd2e" path="res://scripts/obj/beatsprite2d.gd" id="17_yc10j"]
@@ -57,7 +58,7 @@ gradient = SubResource("Gradient_pm3ni")
 width = 960
 height = 176
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c6pm6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5poiv"]
 resource_local_to_scene = true
 shader = ExtResource("7_yq6so")
 shader_parameter/color = Color(1, 1, 0, 1)
@@ -218,7 +219,7 @@ region_rect = Rect2(512, 0, 256, 256)
 [node name="Chara" parent="." unique_id=308592822 instance=ExtResource("3_jkv2x")]
 unique_name_in_owner = true
 z_index = -1
-material = SubResource("ShaderMaterial_c6pm6")
+material = SubResource("ShaderMaterial_5poiv")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.042000003
@@ -295,14 +296,14 @@ alignment = 1
 [node name="TimeLeft" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=139333196]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_fonts/font = ExtResource("14_5poiv")
 theme_override_font_sizes/font_size = 16
 text = "00:00"
 
 [node name="Beat" type="Label" parent="TaikoArea/SongBorder/MarginContainer/VBoxContainer" unique_id=1875648584]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("13_trceg")
+theme_override_fonts/font = ExtResource("14_5poiv")
 theme_override_font_sizes/font_size = 16
 text = "0.00"
 

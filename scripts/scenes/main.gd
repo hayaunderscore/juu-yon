@@ -712,6 +712,12 @@ func pop_balloon(note: Dictionary):
 			create_score_diff(score_handler.calc_balloon_pop(score_real, 0, %Chara.gogo))
 		chart.draw_data.erase(rolln.get("cached_index", chart.draw_data.find_key(rolln)))
 
+func auto_big_note_press(type: int):
+	taiko.combo += 1
+	for side in range(2):
+		taiko.taiko_input(type, side)
+		await get_tree().create_timer(randf_range(0.02, 0.05)).timeout
+
 func auto_play():
 	auto_roll()
 	while current_note_list.size() > 0 and current_note_list[-1]["time"] < elapsed:
@@ -737,15 +743,11 @@ func auto_play():
 				add_note_to_gauge(type)
 				# %Gauge.add_good()
 			3:
-				taiko.combo += 1
-				for side in range(2):
-					taiko.taiko_input(0, side)
+				auto_big_note_press(0)
 				add_note_to_gauge(type)
 				# %Gauge.add_good()
 			4:
-				taiko.combo += 1
-				for side in range(2):
-					taiko.taiko_input(1, side)
+				auto_big_note_press(1)
 				add_note_to_gauge(type)
 				# %Gauge.add_good()
 			5, 6, 7:
