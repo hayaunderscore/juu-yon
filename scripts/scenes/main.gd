@@ -479,7 +479,7 @@ var ok_tex_hit: Array[Texture2D] = [
 	preload("uid://dbrb5yxudsjmk"),
 	preload("uid://870vju77rh3d"),
 ]
-func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false):
+func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false, ok_dir: int = 0):
 	if not bad:
 		var effect_table: Array[Texture2D] = good_tex_effect if good else ok_tex_effect
 		var hit_table: Array[Texture2D] = good_tex_hit if good else ok_tex_hit
@@ -514,7 +514,7 @@ func create_judge_effect(good: bool = true, big: bool = false, bad: bool = false
 			base.queue_free()
 			note.queue_free()
 		)
-	judge_create(JudgeType.BAD if bad else JudgeType.GOOD if good else JudgeType.OK)
+	judge_create(JudgeType.BAD if bad else JudgeType.GOOD if good else JudgeType.OK, ok_dir)
 
 enum JudgeType {
 	BAD,
@@ -525,6 +525,8 @@ enum JudgeType {
 
 var judge_bad: Texture2D = preload("uid://htanu7exw36e")
 var judge_ok: Texture2D = preload("uid://bv3mhdwnknuf5")
+var judge_ok_early: Texture2D = preload("uid://c534wvri6u0xq")
+var judge_ok_late: Texture2D = preload("uid://c6vn05or5mq0")
 var judge_good: Texture2D = preload("uid://biohn4qhfd10f")
 
 var good_hits: int = 0
@@ -545,12 +547,14 @@ func create_runner(tadpole: bool):
 	runner_spot.add_child(runner_node)
 	runner_node.jump(bpm)
 
-func judge_create(type: JudgeType):
-	var var_name: String = "%s_hits" % [(JudgeType.find_key(type) as String).to_lower()]
+func judge_create(type: JudgeType, dir: int = 0):
 	add_hit_to_gauge(type)
 	create_runner(type == JudgeType.BAD)
 	var judge: Sprite2D = Sprite2D.new()
-	judge.texture = get("judge_%s" % [(JudgeType.find_key(type) as String).to_lower()])
+	var judge_texture: String = "judge_%s" % [(JudgeType.find_key(type) as String).to_lower()]
+	if dir != 0 and type == JudgeType.OK:
+		judge_texture += "_%s" % ["early" if dir == -1 else "late"]
+	judge.texture = get(judge_texture)
 	judge.modulate.a = 0.0
 	judge.offset.y = -48
 	%JudgePoint.add_child(judge)
@@ -569,14 +573,14 @@ var gogo_firework: PackedScene = preload("uid://cs0tdie35o5om")
 @onready var firework_rect: Control = $GogoFireworks
 @export var firework_noise: FastNoiseLite
 var noise_y: float = 0.0
-func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType = JudgeType.GOOD):
+func add_note_to_gauge(type: int, skip_judge: bool = false, judgetype: JudgeType = JudgeType.GOOD, ok_dir: int = 0):
 	# Add scores first, we can cancel everything else on simple mode...
 	if not skip_judge: 
 		var j: int = judgetype
 		if (type == 3 or type == 4) and judgetype != JudgeType.BAD:
 			j += 1
 		create_score_diff(score_handler.calc_score(score_real, taiko.combo, j, %Chara.gogo)[0])
-		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD)
+		create_judge_effect(judgetype == JudgeType.GOOD, type == 3 or type == 4, judgetype == JudgeType.BAD, ok_dir)
 	# Return when on simple mode. No funny effects!
 	if Configuration.get_section_key("Game", "simple_mode"): return
 	
@@ -779,20 +783,25 @@ var drumrolls: Array[bool] = [false, false, false, false, false, true, true, tru
 func hit_note(type: int, time: float) -> JudgeType:
 	if drumrolls[type]: return JudgeType.ROLL
 	var judgetype: int = JudgeType.BAD
+	var ok_dir: int = 0
 	if time - judge_times[chart.course][JudgeType.GOOD] <= game_elapsed and game_elapsed <= (time + judge_times[chart.course][JudgeType.GOOD]):
 		judgetype = JudgeType.GOOD
 	elif time - judge_times[chart.course][JudgeType.OK] <= game_elapsed and game_elapsed <= (time + judge_times[chart.course][JudgeType.OK]):
 		judgetype = JudgeType.OK
+		if game_elapsed < time:
+			ok_dir = 1
+		elif game_elapsed > time:
+			ok_dir = -1
 	# Change score!
 	if judgetype != JudgeType.BAD:
 		taiko.combo += 1
-		add_note_to_gauge(type, false, judgetype)
+		add_note_to_gauge(type, false, judgetype, ok_dir)
 		%Chara.idiot = false
 		if %Chara.state == %Chara.State.FAIL:
 			%Chara.state = %Chara.State.IDLE
 	else:
 		taiko.combo = 0
-		create_judge_effect(false, false, true)
+		create_judge_effect(false, false, true, ok_dir)
 		%Chara.idiot = true
 		if %Chara.state == %Chara.State.IDLE:
 			%Chara.state = %Chara.State.FAIL
